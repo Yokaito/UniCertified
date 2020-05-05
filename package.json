@@ -1,0 +1,19 @@
+{
+  "name": "UniCertified",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Yokaito/UniCertified.git",
+  "author": "Guilherme Fontes <guilhermefamorim2020@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "yarn sucrase-node src/server.js"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3",
+    "sucrase": "^3.13.0"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
