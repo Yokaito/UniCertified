@@ -7,13 +7,29 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "start": "yarn sucrase-node src/server.js"
+    "start": "yarn sucrase-node src/server.js",
+    "commit": "git-cz"
   },
   "devDependencies": {
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
+    "commitizen": "^4.1.0",
+    "cz-conventional-changelog": "3.2.0",
+    "husky": "^4.2.5",
     "nodemon": "^2.0.3",
     "sucrase": "^3.13.0"
   },
   "dependencies": {
     "express": "^4.17.1"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
