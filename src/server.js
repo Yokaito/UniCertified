@@ -8,6 +8,6 @@ app.get('/', (req, res) => {
     return res.json({ users })
 });
 
-app.listen(80, () => {
-    console.log('App listening on port 80!');
+app.listen(3000, () => {
+    console.log('App listening on port 3000!');
 });
