@@ -3,7 +3,7 @@ import express from 'express'
 const app = express()
 
 app.get('/', (req, res) => {
-    const users = ['Configurando o debugger da aplicação']
+    const users = ['Guilherme']
 
     return res.json({ users })
 });
