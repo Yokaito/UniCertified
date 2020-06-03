@@ -1,12 +1,9 @@
 import express from 'express'
+import routes from './routes'
 
 const app = express()
 
-app.get('/', (req, res) => {
-    const users = ['Guilherme']
-
-    return res.json({ users })
-});
+app.use(routes)
 
 app.listen(3000, () => {
     console.log('App listening on port 3000!');
