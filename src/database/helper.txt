@@ -1,0 +1,34 @@
+yarn sequelize db:migrate inicia o banco de dados
+yarn sequelize migration:create --name=create-users cria uma nova tabela crie em sequencia 
+
+
+belongs to many =  n pra n
+belongs to = 1 pra 1
+has many = 1 pra n
+has one = 1 pra 1
+
+
+chave estrangeira
+
+id_foreign: {
+   type: Sequelize.INTEGER,
+   alowNull: false,
+   references: {model: 'users', key: 'id'},
+   onUpdate: 'CASCADE',
+   onDelete: 'CASCADE'
+}
+
+class User extends Model {
+    static init(connection){
+        super.init({
+            name: DataType.STRING
+        }, {
+            sequelize: connection
+        })
+    }
+
+    static associate(models){
+       this.belongsTo(models.user, {foreignkey: 'id_user', as: 'user to type'})
+    }
+}
+
