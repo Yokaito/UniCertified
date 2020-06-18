@@ -1,11 +1,12 @@
 module.exports = {
   dialect: 'mysql',
-  host: 'sql10.freemysqlhosting.net',
-  username: 'sql10344928',
-  password: 'mJiwCPTPH1',
-  database: 'sql10344928',
+  host: 'localhost',
+  username: 'root',
+  password: 'Adjiguix5',
+  database: 'unicertified',
   define: {
     timestamps: true,
-    underscored: true
+    underscored: true,
+    freezeTableName: true
   }
 }
