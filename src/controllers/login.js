@@ -1,7 +1,6 @@
-
-const express = require('express')
-const User = require('../models/user')
-const type_user = require('../models/type_user')
+import express from 'express'
+import user from '../models/user'
+import type_user from '../models/type_user'
 
 const router = express.Router()
 
