@@ -1,10 +1,18 @@
 import express from 'express'
-import routes from './routes'
+import bodyParser from 'body-parser'
+import exphbs from 'express-handlebars'
+import path from 'path'
+require('./database')
 
 const app = express()
 
-app.use(routes)
+app.engine('handlebars', exphbs({defaultLayout: 'main'}))
+app.set('view engine', 'handlebars')
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')))
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
-app.listen(3000, () => {
-    console.log('App listening on port 3000!');
-});
+require('./controllers/index')(app)
+
+app.listen(3000, () => { console.log('App listening on port 3000!') });
