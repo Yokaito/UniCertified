@@ -3,7 +3,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('history_certified', { 
-      id_history_certified: {
+      id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
@@ -16,17 +16,17 @@ module.exports = {
       id_certified_foreign: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {model: 'certified', key: 'id_certified'}
+        references: {model: 'certified', key: 'id'}
       },
       id_user_foreign: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {model: 'user', key: 'id_user'}
+        references: {model: 'user', key: 'id'}
       },
       id_type_action_foreign: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {model: 'type_action', key: 'id_type_action'}
+        references: {model: 'type_action', key: 'id'}
       },
       created_at: {
         type: Sequelize.DATE,

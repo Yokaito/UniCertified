@@ -3,7 +3,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('user', { 
-      id_user: {
+      id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
@@ -25,12 +25,12 @@ module.exports = {
       id_type_user_foreign: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {model: 'type_user', key: 'id_type_user'},
+        references: {model: 'type_user', key: 'id'},
       },
       id_state_foreign: {
         type: Sequelize.INTEGER,
         allowNull: true,
-        references: {model: 'state', key: 'id_state'},
+        references: {model: 'state', key: 'id'},
       },
       last_access_date_user: {
         type: Sequelize.DATE,
@@ -43,7 +43,7 @@ module.exports = {
       id_activation_state_foreign: {
         type: Sequelize.INTEGER,
         allowNull: true,
-        references: {model: 'activation_state', key: 'id_activation_state'},
+        references: {model: 'activation_state', key: 'id'},
       },
       created_at: {
         type: Sequelize.DATE,
