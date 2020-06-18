@@ -3,7 +3,6 @@ const { Model, DataTypes } = require('sequelize')
 class user extends Model {
     static init(connection){
         super.init({
-            id_user: DataTypes.INTEGER,
             email_user: DataTypes.STRING,
             name_user: DataTypes.STRING,
             password_user: DataTypes.STRING,
@@ -15,9 +14,9 @@ class user extends Model {
     }
 
     static associate(models){
-        this.belongsTo(models.state, { foreignKey: 'id_state_foreign', as: 'user has state'})
-        this.belongsTo(models.type_user, { foreignKey: 'id_type_user_foreign', as: 'user has type'})
-        this.belongsTo(models.activation_state, { foreignKey: 'id_activation_state_foreign', as: 'user has activation state'})
+        this.belongsTo(models.state, { foreignKey: 'id_state_foreign'})
+        this.belongsTo(models.type_user, { foreignKey: 'id_type_user_foreign'})
+        this.belongsTo(models.activation_state, { foreignKey: 'id_activation_state_foreign'})
     }
 }
 
