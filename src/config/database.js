@@ -8,5 +8,6 @@ module.exports = {
     timestamps: true,
     underscored: true,
     freezeTableName: true
-  }
+  },
+  timezone: '-03:00'
 }

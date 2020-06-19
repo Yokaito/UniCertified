@@ -123,7 +123,8 @@ $('.ui.large.form.register').submit(function(event){
                 senha_conf_usuario: $("input[name='cadastro_conf_senha']").val(),
             }, 
             (response) => {
-                console.log(response)
+                if(!response)
+                    console.log(response)
             }
         )   
     }
