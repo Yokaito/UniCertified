@@ -1,4 +1,6 @@
 const { Model, DataTypes } = require('sequelize')
+import bcrypt from 'bcryptjs'
+
 
 class user extends Model {
     static init(connection){
@@ -9,9 +11,15 @@ class user extends Model {
             last_access_date_user: DataTypes.DATE,
             activation_key_user: DataTypes.INTEGER
         }, {
+            hooks: {
+                beforeSave: (user, options) =>{
+                    var salt =  bcrypt.genSaltSync(10)
+                    user.password_user = bcrypt.hashSync(user.password_user, salt)    
+                }
+            },
             sequelize: connection
         })
-    }
+    }   
 
     static associate(models){
         this.belongsTo(models.state, { foreignKey: 'id_state_foreign'})
