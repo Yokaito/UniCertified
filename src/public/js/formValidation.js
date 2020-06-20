@@ -32,8 +32,8 @@ $('.ui.large.form.register')
                 prompt: 'Informe um email valido.'          
             },
             {
-                type: 'minLength[15]',
-                prompt: 'O email deve conter no mínimo 8 caracteres.'
+                type: 'minLength[5]',
+                prompt: 'O email deve conter no mínimo 5 caracteres.'
             },
             {
                 type: 'maxLength[40]',
@@ -57,8 +57,8 @@ $('.ui.large.form.register')
                 prompt: 'Informe um email.'          
             },
             {
-                type: 'minLength[15]',
-                prompt: 'O email deve conter no mínimo 8 caracteres.'
+                type: 'minLength[5]',
+                prompt: 'O email deve conter no mínimo 5 caracteres.'
             },
             {
                 type: 'maxLength[40]',
@@ -96,7 +96,7 @@ $('.ui.large.form.register')
             },
             {
                 type: 'minLength[5]',
-                prompt: 'A senha deve conter no mínimo 8 caracteres.'
+                prompt: 'A senha deve conter no mínimo 5 caracteres.'
             },
             {
                 type: 'maxLength[40]',
