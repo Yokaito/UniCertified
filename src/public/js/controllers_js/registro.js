@@ -123,8 +123,32 @@ $('.ui.large.form.register').submit(function(event){
                 senha_conf_usuario: $("input[name='cadastro_conf_senha']").val(),
             }, 
             (response) => {
-                if(!response)
-                    console.log(response)
+                if(response.success){
+                    swal({
+                        closeOnEsc: false,
+                        closeOnClickOutside: false,
+                        title: response.success,
+                        icon: "success",
+                    }).then((value) => {
+                        swal({
+                            closeOnEsc: false,
+                            closeOnClickOutside: false,
+                            title: 'Ative sua conta',
+                            text: 'Um email de confirmação foi enviado para o seu email',
+                            icon: 'info'
+                        }).then((value2) => { 
+                           if(value2) 
+                                window.location.replace(response.link);
+                        })   
+
+                    })
+                }else{
+                    swal({
+                        title: response.error,
+                        icon: "error",
+                    });
+                }
+                
             }
         )   
     }

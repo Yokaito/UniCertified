@@ -32,3 +32,23 @@ class User extends Model {
     }
 }
 
+
+
+Aqui e um join dentro de outro ou seja e so colocar os includes dentro da pesquisa
+Office.findAll({
+  include: [
+    { 
+      model: City,
+      as: 'city',
+      required : true , <----- Make sure will create inner join
+      include: [
+            {
+                model: Country, 
+                as: 'country' ,
+                required : true , // <----- Make sure will create inner join
+                where : { 'id' : 1 } // <-------- Here
+            }]
+    }
+  ]
+});
+

@@ -2,3 +2,5 @@ node_modules
 yarn.lock
 helper.js
 src/views/teste.html
+src/database/helper.txt
+.env

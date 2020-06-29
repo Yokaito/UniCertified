@@ -1,0 +1,15 @@
+body {
+    background-color: #353535;
+  }
+  body > .grid {
+    height: 100%;
+  }
+  .image {
+    margin-top: -100px;
+  }
+  .column {
+    max-width: 450px;
+  }
+  .swal-button {
+    background-color: #2185d0;
+  }
