@@ -1,0 +1,15 @@
+<div class="ui middle aligned center aligned grid">
+    <div class="column">
+        <h2 class="ui blue image header">
+            <img src="/assets/logo_test.png" class="image">
+            <div class="content">Status Conta | UniCertified</div>
+        </h2>
+        <div class="ui stacked segment">
+            {{#if success}}
+                <h4>{{success}} <a href="/login">login.</a></h4>
+            {{else}}
+                <h4>{{error}}</h4>
+            {{/if}}           
+        </div>        
+    </div>
+</div>

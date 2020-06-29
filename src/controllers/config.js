@@ -6,7 +6,7 @@ import type_action from '../models/type_action'
 
 const router = express.Router()
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
     res.render('config', {
         title: 'UniCertified | Config',
         style: 'login.css'

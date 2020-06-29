@@ -4,24 +4,31 @@
             <img src="/assets/logo_test.png" class="image">
             <div class="content">Login | UniCertified</div>
         </h2>
-        <form action="/login/auth" method="POST" class="ui large form">
-             <div class="ui stacked segment">
+        <form class="ui large form login">
+            <div class="ui stacked segment">
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="user icon"></i>
-                        <input type="text" name="email" placeholder="Endereço de Email">
+                        <input type="text" name="login_email" placeholder="Endereço de Email">
                     </div>
                 </div>
                 <div class="field">
                     <div class="ui left icon input">
                       <i class="lock icon"></i>
-                      <input type="password" name="password" placeholder="Senha">
+                      <input type="password" name="login_senha" placeholder="Senha">
                     </div>
                 </div>
-                <button class="ui fluid large blue submit button">Login</button>
+                <div class="two fields">
+                    <div class="field">
+                        <a class="ui fluid large blue button" href="/registro" target="_blank">Cadastro</a>                     
+                    </div>
+                    <div class="field">
+                         <div class="ui fluid large blue submit button">Login</div>
+                    </div>
+                </div>         
             </div>          
             <div class="ui error message"></div>          
         </form>
-        <div class="ui message">Novo Aqui? <a href="/registro"> Cadastre-se</a></div>
+        <div class="ui message"><a href="/registro/recuperar_senha" >Esqueceu sua senha ?</a></div>
     </div>
 </div>

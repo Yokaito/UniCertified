@@ -16,11 +16,14 @@ const generated_certificates = require('../models/generated_certificates')
 
 const connection = new sequelize(dbConfig)
 
+/* Tabelas que nao contem chaves estrangeiras */
 activation_state.init(connection)
 type_user.init(connection)
 state.init(connection)
 type_action.init(connection)
 type_certified.init(connection)
+
+/* Tabelas que contem chaves estrangeiras */
 user.init(connection)
 history_user.init(connection)
 certified.init(connection)
@@ -29,6 +32,13 @@ model_certified.init(connection)
 certified_generated.init(connection)
 generated_certificates.init(connection)
 
+/* Todas as tabelas que contem chaves estrangeiras precisam ser iniciadas com o associate para realizar a conexao entre as chaves */
 user.associate(connection.models)
+history_user.associate(connection.models)
+certified.associate(connection.models)
+history_certified.associate(connection.models)
+model_certified.associate(connection.models)
+certified_generated.associate(connection.models)
+generated_certificates.associate(connection.models)
 
 module.exports = connection
