@@ -62,7 +62,7 @@ $('.ui.large.form.login').submit(function(event){
                         icon: "error",
                     })
                 }else
-                console.log(response_login);
+                    window.location.replace(response_login.link);
                 
                 
             })

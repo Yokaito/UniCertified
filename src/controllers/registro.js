@@ -1,4 +1,4 @@
-import express, { response } from 'express'
+import express from 'express'
 import User from '../models/user'
 import HUser from '../models/history_user'
 import hash from '../functions/hash'
@@ -7,13 +7,21 @@ import bcrypt from 'bcryptjs'
 
 const router = express.Router()
 
+router.use((req, res ,next) => {
+    if(!req.session.user)
+        next()
+    else
+        res.redirect('/dashboard')
+
+})
+
 
 router.get('/', (req, res) => { 
     res.render('register', {
         style: 'controllers_css/registro.css',
         js: 'controllers_js/registro.js',
         title: 'UniCertified | Cadastro'
-    })
+    })    
 });
 
 router.get('/ativar', async (req, res) => {
@@ -78,17 +86,15 @@ router.get('/ativar', async (req, res) => {
                 error: 'Token incorreto.',
                 style: 'controllers_css/registro.css'
             })
-        } 
-        
-    }
-    
-
+        }         
+    }    
 })
 
 
 /* Criar o metodo de registro com email ⚠️ */
 
 router.post('/registrar', async (req, res) => {
+
     let data = req.body
     let count_errors = 0  
     let token = hash()   
@@ -146,13 +152,12 @@ router.post('/registrar', async (req, res) => {
         })
     }else{
         res.send({ error: 'Ocorreu um erro nos dados enviados'})
-    }      
+    }       
 });
 
 
 router.get('/recuperar_senha', (req, res) => {
     /* 🔴 (Como enviar as resposta pro front end) Basta enviar as respostas junto com o res.render enviando a resposta para receber no handlebars */
-
     if(req.query.tokenr && req.query.email){
         if(req.query.tokenr == req.cookies['tokenr'] && req.session.tokenr == req.query.tokenr && req.session.tokenr == req.cookies['tokenr']){
             let count_errors = 0
@@ -194,6 +199,7 @@ router.get('/recuperar_senha', (req, res) => {
 })
 
 router.post('/recuperar_senha/trocar', (req,res) => {
+    
     let data = req.body
     let count_errors = 0
     if(!(data.email_usuario != ' ' && (data.email_usuario.length >= 5 && data.email_usuario.length <= 40) && data.email_usuario.match(/[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,6}/g)))
@@ -252,7 +258,7 @@ router.post('/recuperar_senha/trocar', (req,res) => {
     }else{
             res.session = null
             res.send({ error: 'Token ou email alterado do original', text: 'Recomeçe o processo', link: process.env.URL_FRONT_RECUPERAR_SENHA})       
-    }        
+    }    
 })
 
 router.post('/recuperar_senha/auth', (req, res) => {
@@ -289,10 +295,7 @@ router.post('/recuperar_senha/auth', (req, res) => {
         })
     }else{
         res.send({ error: 'Ocorreu um erro nos dados enviados'})
-    }   
-    
-
-    
+    }
 })
 
 

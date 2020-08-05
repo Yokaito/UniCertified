@@ -1,4 +1,4 @@
-import express, { response } from 'express'
+import express from 'express'
 import User from '../models/user'
 import HUser from '../models/history_user'
 import type_user from '../models/type_user'
@@ -8,14 +8,21 @@ import send_email from '../functions/email'
 
 const router = express.Router()
 
+router.use((req, res, next) => {
+    if(req.session.user){
+        res.redirect('/dashboard')
+    }else{
+        next()
+    }    
+})
+
 router.get('/', (req, res) => {
-    /* ✅ Criar a parte de cadastro e verificacao de ativacao de conta para quando o usuario tentar logar e a conta nao estiver ativa ele reenviar o email com um novo token para realizar a ativacao da conta */
-        
+    /* ✅ Criar a parte de cadastro e verificacao de ativacao de conta para quando o usuario tentar logar e a conta nao estiver ativa ele reenviar o email com um novo token para realizar a ativacao da conta */    
     res.render('login', {
         js: 'controllers_js/login.js',
         style: 'controllers_css/login.css',
         title: 'UniCertified | Login'      
-    })
+    })   
 });
 
 router.get('/lista', async (req, res) => { 
@@ -68,7 +75,7 @@ router.post('/auth', async (req, res) => {
                             ativacao: response_findOne.get('id_activation_state_foreign')
                         }
 
-                        res.send(req.session.user);
+                        res.send({link: process.env.URL_REDIRECT_DASHBOARD});
                     }else{
                         res.send({ error: 'Senha incorreta'})
                     }    
@@ -105,8 +112,7 @@ router.post('/auth', async (req, res) => {
         
     }else{
         res.send({ error: 'Ocorreu um erro nos dados enviados'})
-    }
-    
+    }   
     
 })
 

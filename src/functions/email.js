@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 import hbs from 'nodemailer-express-handlebars'
-import path, { dirname } from 'path'
+import path from 'path'
 import nodemailerConf from '../config/nodemailer'
 
 var transport = nodemailer.createTransport(nodemailerConf);
