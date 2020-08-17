@@ -7,6 +7,8 @@ class user extends Model {
         super.init({
             email_user: DataTypes.STRING,
             name_user: DataTypes.STRING,
+            course_user: DataTypes.STRING,
+            half_user: DataTypes.INTEGER,
             password_user: DataTypes.STRING,
             last_access_date_user: DataTypes.DATE,
             activation_key_user: DataTypes.INTEGER

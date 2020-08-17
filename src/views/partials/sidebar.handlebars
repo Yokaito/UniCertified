@@ -1,0 +1,71 @@
+<!-- SideBar -->
+    <div class="ui sidebar inverted vertical menu sidebar-menu" id="sidebar">
+        <div class="item">
+            <div class="header">Geral</div>
+            <div class="menu">
+                <a href="/dashboard" class="item">
+                    <div>
+                        <i class="tachometer alternate icon"></i> Dashboard
+                    </div>
+                </a>
+                <a href="/dashboard/certificado" class="item">
+                    <div>
+                        <i class="file alternate outline icon"></i> Certificados
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        {{#ifCond user.tipo_usuario '<=' 2}}
+        <div class="item">
+            <div class="header">Administração</div>
+            <div class="menu">
+                <a href="#" class="item">
+                    <div>
+                        <i class="icon search"></i> Procurar
+                    </div>                    
+                </a>
+                <a href="#" class="item">
+                    <div>
+                        <i class="icon chart bar"></i> Estatiscas
+                    </div>                    
+                </a>
+            </div>
+        </div>
+        {{/ifCond}}
+        <!-- <a href="#" class="item">
+            <div>
+                <i class="icon chart line"></i>Charts
+            </div>
+        </a>
+        <a href="#" class="item">
+            <div>
+                <i class="icon lightblub"></i>App
+            </div>
+        </a> -->
+        <!-- <div class="item">
+            <div class="header">Other</div>
+            <div class="menu">
+                <a href="#" class="item">
+                    <div>
+                        <i class="icon users"></i>Messages
+                    </div>                    
+                </a>
+                <a href="#" class="item">
+                    <div>
+                        <i class="icon cugs"></i>Calendar
+                    </div>                    
+                </a>
+            </div>
+        </div> -->
+        <!-- Search Bar -->
+        <div class="item">
+            <form action="#">
+                <div class="ui mini action input">
+                    <input type="text" placeholder="Search...">
+                    <button class="ui mini icon button" type="submit"><i class="search icon"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- SideBar -->

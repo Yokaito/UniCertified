@@ -7,7 +7,7 @@ import bcrypt from 'bcryptjs'
 
 const router = express.Router()
 
-router.use((req, res ,next) => {
+router.use((req, res ,next) => { /* Middlawares que verifica se a sessao esta ativa */
     if(!req.session.user)
         next()
     else

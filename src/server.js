@@ -12,7 +12,38 @@ require('./database')
 
 const app = express()
 
-app.engine('handlebars', exphbs({defaultLayout: 'main'})) /* Define qual o layout main */
+app.engine('handlebars', exphbs({
+    defaultLayout: 'main',
+
+    helpers:{
+        ifCond: function (v1, operator, v2, options) {
+            switch (operator) {
+                case '==':
+                    return (v1 == v2) ? options.fn(this) : options.inverse(this);
+                case '===':
+                    return (v1 === v2) ? options.fn(this) : options.inverse(this);
+                case '!=':
+                    return (v1 != v2) ? options.fn(this) : options.inverse(this);
+                case '!==':
+                    return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+                case '<':
+                    return (v1 < v2) ? options.fn(this) : options.inverse(this);
+                case '<=':
+                    return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+                case '>':
+                    return (v1 > v2) ? options.fn(this) : options.inverse(this);
+                case '>=':
+                    return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+                case '&&':
+                    return (v1 && v2) ? options.fn(this) : options.inverse(this);
+                case '||':
+                    return (v1 || v2) ? options.fn(this) : options.inverse(this);
+                default:
+                    return options.inverse(this);
+            }
+        }
+    }
+})) /* Define qual o layout main */
 app.set('view engine', 'handlebars') /* Define o compilador sendo o handlebars */
 app.set('views', path.join(__dirname, 'views')); /* Define as pastas das views  */
 app.use(express.static(path.join(__dirname, 'public'))) /* Define quais sao as pastas publicas que podem ser acessadas */

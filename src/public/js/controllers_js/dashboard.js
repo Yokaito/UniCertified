@@ -1,0 +1,137 @@
+function clicks(){
+    $('.deletarCertificado').on('click', function(){
+        var id = $(this).data("id")
+        $('.ui.mini.modal.delete')
+            .modal({
+                closable  : false,
+                onDeny    : function(){
+                    window.alert('Wait not yet!');
+                    return true;
+                },
+                onApprove : function() {
+                    window.alert('Certificado com id:'+id);
+                }
+            })
+            .modal('show')
+        ;
+    })
+
+    $('.editarCertificado').on('click', function(){
+        var id = $(this).data('id')
+        var trs = $(this).closest('tr')
+        var tds = trs[0].cells
+        console.log(id);
+        console.log(tds[1].textContent);
+        console.log(tds[2].textContent);
+        console.log(tds[3].textContent);
+    })
+}    
+
+$(document).ready(function(){
+    clicks()
+    $('.ui.dropdown').dropdown()
+    $('.sidebar-menu-toggler').on('click', function(){
+        var target = $(this).data('target')
+        $(target).sidebar({
+            dimPage: true,
+            transition: 'overlay',
+            mobileTransition: 'overlay'
+        }).sidebar('toggle')
+    })
+    $('.comentario')
+        .popup({
+            inline: true
+        })
+    ;
+    
+    $('.ui.form.cadastrarCertificado')
+        .form({
+            inline: true,
+            on: 'blur',
+            fields: {
+                nome: {
+                    identifier: 'nome_certificado',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Informe um nome'
+                        },
+                        {
+                            type: 'minLength[5]',
+                            prompt: 'O nome deve conter no mínimo 5 caracteres.'
+                        },
+                        {
+                            type: 'maxLength[45]',
+                            prompt: 'O nome deve conter no máximo 40 caracteres.'
+                        }
+                    ]
+                },
+                valor: {
+                    identifier: 'valor_certificado',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Informe um valor'
+                        }
+                    ]
+                },
+                tipo_certificado: {
+                    identifier: 'tipo_certificado',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Escolha um tipo'
+                        }
+                    ]
+                }
+            }
+        })    
+
+    $('.novoCertificado').on('click', function(){
+        var formCertificado = $('.cadastrarCertificado')       
+        $('.ui.modal.tiny.criar')
+            .modal({
+                closable  : false,
+                onDeny    : function(){
+                    $("input[name='nome_certificado']").val('')
+                    $("input[name='valor_certificado']").val('')
+                    return true;
+                },
+                onApprove : function() {                    
+                    if(formCertificado.form('is valid')){
+                        $.post('/dashboard/certificado/newcertificado', {
+                            nome_certificado: $("input[name='nome_certificado']").val(),
+                            valor_certificado: $("input[name='valor_certificado']").val(),
+                            tipo_certificado: $('select[name=tipo_certificado]').val()
+                        },(response) => {
+                            if(response.success){
+                                swal({
+                                    closeOnEsc: false,
+                                    closeOnClickOutside: false,
+                                    title: response.success,
+                                    icon: "success",
+                                })
+                                $('.tBody tr:last').after(response.html)
+                                clicks()
+                            }else{
+                                swal({
+                                    closeOnEsc: false,
+                                    closeOnClickOutside: false,
+                                    title: response.error,
+                                    icon: "error",
+                                })
+                            }
+                            
+                        })
+                        $("input[name='nome_certificado']").val('')
+                        $("input[name='valor_certificado']").val('')
+                        return true
+                    }
+                    return false                    
+                }
+            })
+            .modal('show')
+        ;
+    });   
+    
+})

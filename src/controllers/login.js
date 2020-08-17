@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { response } from 'express'
 import User from '../models/user'
 import HUser from '../models/history_user'
 import type_user from '../models/type_user'
@@ -16,8 +16,8 @@ router.use((req, res, next) => {
     }    
 })
 
-router.get('/', (req, res) => {
-    /* ✅ Criar a parte de cadastro e verificacao de ativacao de conta para quando o usuario tentar logar e a conta nao estiver ativa ele reenviar o email com um novo token para realizar a ativacao da conta */    
+router.get('/', async (req, res) => { 
+    /* ✅ Criar a parte de cadastro e verificacao de ativacao de conta para quando o usuario tentar logar e a conta nao estiver ativa ele reenviar o email com um novo token para realizar a ativacao da conta */ 
     res.render('login', {
         js: 'controllers_js/login.js',
         style: 'controllers_css/login.css',
@@ -64,12 +64,13 @@ router.post('/auth', async (req, res) => {
                             { last_access_date_user: new Date() },
                             { where: { id: response_findOne.get('id') }}
                         )
-
                         req.session.user = {
                             session_hash: hash(),
                             id: response_findOne.get('id'),
                             nome: response_findOne.get('name_user'),
                             email: response_findOne.get('email_user'),
+                            curso: response_findOne.get('course_user'),
+                            semestre: response_findOne.get('half_user'),
                             tipo_usuario: response_findOne.get('id_type_user_foreign'),
                             estado_usuario: response_findOne.get('id_state_foreign'),
                             ativacao: response_findOne.get('id_activation_state_foreign')

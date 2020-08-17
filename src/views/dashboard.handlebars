@@ -1,0 +1,123 @@
+{{> topnav}}
+{{> sidebar}}
+ <!-- Content -->
+    <div class="pusher">
+        <div class="main-content">
+            </br>   
+            {{> breadcrumb}}           
+            {{#ifCond user.tipo_usuario '<=' 2}}
+            <div class="ui grid stackable padded">
+                <div class="four wide computer eight wide tablet sixteen wide mobile column">
+                    <div class="ui fluid card">
+                        <div class="content">
+                            <div class="ui right floated header">
+                                <i class="fas fa-receipt"></i>
+                            </div>
+                            <div class="header">
+                                <div class="ui header">{{total_certificados}}</div>
+                            </div>
+                            <div class="meta">Certificados</div>
+                        </div>
+                        <div class="extra content">
+                            <div class="ui fluid button">Mais Informações</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="four wide computer eight wide tablet sixteen wide mobile column">
+                    <div class="ui fluid card">
+                        <div class="content">
+                            <div class="ui right floated header">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="header">
+                                <div class="ui header">{{total_alunos}}</div>
+                            </div>
+                            <div class="meta">Alunos</div>
+                        </div>
+                        <div class="extra content">
+                            <div class="ui fluid button">Mais Informações</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="four wide computer eight wide tablet sixteen wide mobile column">
+                    <div class="ui fluid card">
+                        <div class="content">
+                            <div class="ui right floated header green">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="header">
+                                <div class="ui header">{{alunos_aprovados}}</div>
+                            </div>
+                            <div class="meta">Alunos Aprovados</div>
+                        </div>
+                        <div class="extra content">
+                            <div class="ui fluid button">Mais Informações</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="four wide computer eight wide tablet sixteen wide mobile column">
+                    <div class="ui fluid card">
+                        <div class="content">
+                            <div class="ui right floated header red">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="header">
+                                <div class="ui header">{{alunos_reprovados}}</div>
+                            </div>
+                            <div class="meta">Alunos Reprovados</div>
+                        </div>
+                        <div class="extra content">
+                            <div class="ui fluid button">Mais Informações</div>
+                        </div>
+                    </div>
+                </div>            
+            </div>  
+            {{/ifCond}}         
+            <div class="ui grid stackable padded">
+                <div class="column">
+                    <table class="ui celled table">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Nome Certificado</th>
+                                <th>Valor</th>
+                                <th>Tipo</th>
+                                <th>Criado Por</th>                            
+                                <th>Criado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each certificados}}
+                                <tr id_certificado="{{this.id}}">
+                                    {{!-- Aprovado --}}
+                                    {{#ifCond this.status '==' 1}}
+                                    <td width="3%" class="center aligned positive" data-tooltip="Aprovado" data-position="top center" data-variation="mini">
+                                        <i class="icon checkmark"></i>
+                                    </td>
+                                    {{/ifCond}}
+                                    {{!-- Em Analise --}}
+                                    {{#ifCond this.status '==' 2}}
+                                    <td width="3%" class="center aligned warning" data-tooltip="Em Analise" data-position="top center" data-variation="mini">
+                                        <i class="orange icon spinner"></i>
+                                    </td>
+                                    {{/ifCond}}
+                                    {{!-- Reprovado --}}
+                                    {{#ifCond this.status '==' 3}}
+                                    <td width="3%" class="center aligned error" data-tooltip="Reprovado" data-position="top center" data-variation="mini">
+                                        <i class="icon attention"></i>
+                                    </td>
+                                    {{/ifCond}}
+                                    <td>{{this.nome_certificado}}</td>
+                                    <td>{{this.valor_certificado}}</td>
+                                    <td>{{this.tipo_certificado}}</td>
+                                    <td width="15%"><a href="#">{{this.nome_usuario}}</a></td>                                  
+                                    <td width="15%">{{this.criado_em}}</td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                      </table>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Content -->   
