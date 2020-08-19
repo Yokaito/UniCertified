@@ -5,6 +5,7 @@ import path from 'path'
 import cookie_parser from 'cookie-parser'
 import session from 'express-session'
 import helmet from 'helmet'
+import morgan from 'morgan'
 
 require('dotenv').config()
 
@@ -63,6 +64,7 @@ app.use(session( /* Utilizar a session */
     }
 ))
 app.use(helmet()) /* Medidas de Seguranca */
+app.use(morgan('dev'))
 
 require('./controllers/index')(app)
 

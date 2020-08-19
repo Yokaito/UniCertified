@@ -99,29 +99,35 @@ $(document).ready(function(){
                 },
                 onApprove : function() {                    
                     if(formCertificado.form('is valid')){
-                        $.post('/dashboard/certificado/newcertificado', {
-                            nome_certificado: $("input[name='nome_certificado']").val(),
-                            valor_certificado: $("input[name='valor_certificado']").val(),
-                            tipo_certificado: $('select[name=tipo_certificado]').val()
-                        },(response) => {
-                            if(response.success){
-                                swal({
-                                    closeOnEsc: false,
-                                    closeOnClickOutside: false,
-                                    title: response.success,
-                                    icon: "success",
-                                })
-                                $('.tBody tr:last').after(response.html)
-                                clicks()
-                            }else{
-                                swal({
-                                    closeOnEsc: false,
-                                    closeOnClickOutside: false,
-                                    title: response.error,
-                                    icon: "error",
-                                })
+                        var data = new FormData($('.cadastrarCertificado')[0])
+                        data.set('nome_certificado', $('input[name="nome_certificado"]').val())
+                        data.set('valor_certificado', $("input[name='valor_certificado']").val())
+                        data.set('tipo_certificado', $('select[name=tipo_certificado]').val())
+                        $.ajax({
+                            type: 'POST',
+                            url: "/dashboard/certificado/newcertificado",  
+                            data: data,  
+                            processData: false, 
+                            contentType: false, 
+                            success: function (response){
+                                if(response.success){
+                                    swal({
+                                        closeOnEsc: false,
+                                        closeOnClickOutside: false,
+                                        title: response.success,
+                                        icon: "success",
+                                    })
+                                    $('.tBody tr:last').after(response.html)
+                                    clicks()
+                                }else{
+                                    swal({
+                                        closeOnEsc: false,
+                                        closeOnClickOutside: false,
+                                        title: response.error,
+                                        icon: "error",
+                                    })
+                                }
                             }
-                            
                         })
                         $("input[name='nome_certificado']").val('')
                         $("input[name='valor_certificado']").val('')
@@ -132,6 +138,11 @@ $(document).ready(function(){
             })
             .modal('show')
         ;
-    });   
+    });    
     
+    $('.mostrarImagemCertificado').on('click', function(){
+        var urlFoto = $(this).attr('data-foto')
+        $('.modificarImagem').attr('src', urlFoto)
+        $('.ui.basic.modal.mostrarImagem').modal('show')
+    })    
 })

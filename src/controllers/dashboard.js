@@ -5,6 +5,8 @@ import TypeCertified from '../models/type_certified'
 import Certificado from '../models/certified'
 import StatusCertified from '../models/state'
 import formatarData from '../functions/formatDate'
+import multer from 'multer'
+import multerConfig from '../config/multer'
 
 const router = express.Router()
 
@@ -156,6 +158,8 @@ router.get('/certificado', async (req, res) => {
                     status: certificado.id_state_foreign,
                     nome_certificado: certificado.name_certified,
                     valor_certificado: certificado.value_certified,
+                    picture_certificado: certificado.picture_certified,
+                    comments_ceritifcado: certificado.comments_certified,
                     tipo_certificado: certificado.type_certified.get('name_type_certified'),
                     nome_usuario: req.session.user.nome,
                     criado_em: formatarData(certificado.createdAt)
@@ -187,8 +191,9 @@ router.get('/certificado', async (req, res) => {
     })
 })
 
-router.post('/certificado/newcertificado', async (req, res) => {
+router.post('/certificado/newcertificado', multer(multerConfig).single('file') ,async (req, res) => {
     let certificado = req.body /* vem o nome,valor e tipo */
+    let file = req.file
     var estado = null
     var data_tooltip = null
     var icon = null
@@ -201,10 +206,10 @@ router.post('/certificado/newcertificado', async (req, res) => {
     await Certificado.create({
         name_certified: certificado.nome_certificado,
         value_certified: certificado.valor_certificado,
-        /* Criar para receber a imagem do certificado */
+        picture_certified: file.filename,
         id_type_certified_foreign: certificado.tipo_certificado,
         id_user_foreign: req.session.user.id,
-        id_state_foreign: 2 /* Em Analise */
+        id_state_foreign: 2
     }).then(response => {
         if(!response)
             res.send({ error: 'Houve um erro interno ao registrar'})

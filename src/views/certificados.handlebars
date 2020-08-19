@@ -97,8 +97,8 @@
                                 <td>{{this.valor_certificado}}</td>                                
                                 <td>{{this.tipo_certificado}}</td>                                
                                 <td width="5%" class="center aligned">
-                                    <a href="#">
-                                        <i class="large file image icon"></i>
+                                    <a>
+                                        <i class="large file image icon mostrarImagemCertificado" data-foto="http://localhost:3000/tmp/uploads/{{this.picture_certificado}}"></i>
                                     </a>                                    
                                 </td>                                                          
                                 <td width="8%" class="center aligned">
@@ -138,7 +138,7 @@
   <div class="header">Novo Certificado</div>
   <div class="content">
     <p></p>
-    <form class="ui form cadastrarCertificado">
+    <form class="ui form cadastrarCertificado" enctype="multipart/form-data">
       <div class="ui stacked segment">
         <div class="field">
           <div class="ui left icon input">
@@ -150,6 +150,11 @@
           <div class="ui left icon input">
             <i class="user icon"></i>
             <input type="number" name="valor_certificado" placeholder="Valor Certificado">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui input">
+            <input type="file" name="file" placeholder="Imagem certificado">
           </div>
         </div>
         <div class="field">
@@ -189,4 +194,10 @@
       <i class="checkmark icon"></i>
     </div>   
   </div>
+</div>
+
+<div class="ui basic modal mostrarImagem">  
+  <div class="image">
+      <img class="modificarImagem" src="" width="825" height="500">
+    </div>
 </div>

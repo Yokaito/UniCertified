@@ -5,7 +5,8 @@ class certified extends Model {
         super.init({
             name_certified: DataTypes.STRING,
             value_certified: DataTypes.INTEGER,
-            picture_certified: DataTypes.BLOB
+            picture_certified: DataTypes.STRING,
+            comments_certified: DataTypes.STRING
 
         }, {
             sequelize: connection
