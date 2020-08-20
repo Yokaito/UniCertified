@@ -9,7 +9,7 @@ module.exports = {
             callback(null, path.resolve(__dirname, '..', 'public', 'tmp', 'uploads'))
         },
         filename: (req, file, callback) => {
-            crypto.randomBytes(8, (err, hash) => {
+            crypto.randomBytes(16, (err, hash) => {
                 if (err) callback(err)
 
                 const FileName = `${req.session.user.id}-${hash.toString('hex')}-${file.originalname}`

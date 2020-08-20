@@ -5,11 +5,29 @@ function clicks(){
             .modal({
                 closable  : false,
                 onDeny    : function(){
-                    window.alert('Wait not yet!');
                     return true;
                 },
                 onApprove : function() {
-                    window.alert('Certificado com id:'+id);
+                    $.post('/dashboard/certificado/deletacertificado', {id}, 
+                        (response) => {
+                            if(response.success){
+                                swal({
+                                    closeOnEsc: false,
+                                    closeOnClickOutside: false,
+                                    title: response.success,
+                                    icon: "success",
+                                }).then((value) =>{
+                                    location.reload()
+                                })
+                            }else{
+                                swal({
+                                    closeOnEsc: false,
+                                    closeOnClickOutside: false,
+                                    title: response.error,
+                                    icon: "error",
+                                })
+                            }
+                        })
                 }
             })
             .modal('show')
@@ -72,6 +90,19 @@ $(document).ready(function(){
                         {
                             type: 'empty',
                             prompt: 'Informe um valor'
+                        },
+                        {
+                            type   : 'integer[1..40]',
+                            prompt : 'Informe um valor inteiro entre (0-40)'
+                        }
+                    ]
+                },
+                file: {
+                    identifier: 'file',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Envie uma foto do certificado.'
                         }
                     ]
                 },
@@ -116,9 +147,9 @@ $(document).ready(function(){
                                         closeOnClickOutside: false,
                                         title: response.success,
                                         icon: "success",
+                                    }).then((value) =>{
+                                        location.reload()
                                     })
-                                    $('.tBody tr:last').after(response.html)
-                                    clicks()
                                 }else{
                                     swal({
                                         closeOnEsc: false,

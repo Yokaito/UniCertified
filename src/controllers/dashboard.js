@@ -7,6 +7,8 @@ import StatusCertified from '../models/state'
 import formatarData from '../functions/formatDate'
 import multer from 'multer'
 import multerConfig from '../config/multer'
+import fs from 'fs'
+import path from 'path'
 
 const router = express.Router()
 
@@ -191,75 +193,131 @@ router.get('/certificado', async (req, res) => {
     })
 })
 
-router.post('/certificado/newcertificado', multer(multerConfig).single('file') ,async (req, res) => {
+router.post('/certificado/newcertificado', multer(multerConfig).single('file') , async (req, res) => {
     let certificado = req.body /* vem o nome,valor e tipo */
     let file = req.file
     var estado = null
     var data_tooltip = null
     var icon = null
     var estado_certificado = null
+    var count_error = 0
+
+    if(!(certificado.nome_certificado != ' '  && (certificado.nome_certificado.length >= 5 && certificado.nome_certificado.length <= 45)))
+        count_error += 1
+    if(!(certificado.valor_certificado != ' ' && (certificado.valor_certificado > 0 && certificado.valor_certificado <= 40)))
+        count_error += 1    
     /* Criar as validações dos campos de entrada e retornar os erros devidos */
     TypeCertified.findByPk(certificado.tipo_certificado).then(responseFindByPK => { 
-        estado_certificado = responseFindByPK.getDataValue('name_type_certified')               
+        estado_certificado = responseFindByPK.getDataValue('name_type_certified')              
     })
+    if(!(estado_certificado != ' '))
+        count_error += 1
 
-    await Certificado.create({
-        name_certified: certificado.nome_certificado,
-        value_certified: certificado.valor_certificado,
-        picture_certified: file.filename,
-        id_type_certified_foreign: certificado.tipo_certificado,
-        id_user_foreign: req.session.user.id,
-        id_state_foreign: 2
-    }).then(response => {
-        if(!response)
-            res.send({ error: 'Houve um erro interno ao registrar'})
-        else{
-            
-            switch(response.getDataValue('id_state_foreign')){
-                case 1:
-                    estado = 'positive'
-                    data_tooltip = 'Aprovado'
-                    icon = 'icon checkmark'
-                    break
-                case 2:
-                    estado = 'warning' 
-                    data_tooltip = 'Em Analise'
-                    icon = 'orange icon spinner'
-                    break
-                case 3:
-                    estado = 'error'
-                    data_tooltip = 'Reprovado'
-                    icon = 'icon attention'
-                    break
-            
-            }            
-            var html = `<tr data-id="${response.getDataValue('id')}" class="${estado}">
-                <td width="3%" class="center aligned" data-tooltip="${data_tooltip}" data-position="top center" data-variation="mini"><i class="${icon}"></i></td>
-                <td>${response.getDataValue('name_certified')}</td>
-                <td>${response.getDataValue('value_certified')}</td>
-                <td>${estado_certificado}</td>
-                <td width="5%" class="center aligned">
-                    <a href="#">
-                        <i class="large file image icon"></i>
-                    </a>
-                </td>
-                <td width="8%" class="center aligned">
-                    <div class="ui tiny icon buttons">
-                        <button data-id="${response.getDataValue('id')}" class="ui button blue editarCertificado">
-                            <i class="edit icon"></i>
-                        </button>
-                        <button data-id="${response.getDataValue('id')}" class="ui button red deletarCertificado">
-                            <i class="trash icon"></i>
-                        </button>
-                    </div>
-                </td>
-            </tr>`         
-            res.send({ 
-                success: 'Cadastrado com sucesso',
-                html: html
-            })
+    if(count_error != 0)
+        res.send({ error: 'Houve um erro na criação do certificado'})
+    else{
+        await Certificado.create({
+            name_certified: certificado.nome_certificado,
+            value_certified: certificado.valor_certificado,
+            picture_certified: file.filename,
+            id_type_certified_foreign: certificado.tipo_certificado,
+            id_user_foreign: req.session.user.id,
+            id_state_foreign: 2
+        }).then(response => {
+            if(!response)
+                res.send({ error: 'Houve um erro interno ao registrar'})
+            else{
+                
+                switch(response.getDataValue('id_state_foreign')){
+                    case 1:
+                        estado = 'positive'
+                        data_tooltip = 'Aprovado'
+                        icon = 'icon checkmark'
+                        break
+                    case 2:
+                        estado = 'warning' 
+                        data_tooltip = 'Em Analise'
+                        icon = 'orange icon spinner'
+                        break
+                    case 3:
+                        estado = 'error'
+                        data_tooltip = 'Reprovado'
+                        icon = 'icon attention'
+                        break
+                
+                }            
+                var html = `<tr data-id="${response.getDataValue('id')}" class="${estado}">
+                    <td width="3%" class="center aligned" data-tooltip="${data_tooltip}" data-position="top center" data-variation="mini"><i class="${icon}"></i></td>
+                    <td>${response.getDataValue('name_certified')}</td>
+                    <td>${response.getDataValue('value_certified')}</td>
+                    <td>${estado_certificado}</td>
+                    <td width="5%" class="center aligned">
+                        <a>
+                            <i class="large file image icon mostrarImagemCertificado" data-foto="http://localhost:3000/tmp/uploads/${response.getDataValue('picture_certified')}"></i>
+                        </a>
+                    </td>
+                    <td width="8%" class="center aligned">
+                        <div class="ui tiny icon buttons">
+                            <button data-id="${response.getDataValue('id')}" class="ui button blue editarCertificado">
+                                <i class="edit icon"></i>
+                            </button>
+                            <button data-id="${response.getDataValue('id')}" class="ui button red deletarCertificado">
+                                <i class="trash icon"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>`         
+                res.send({ 
+                    success: 'Cadastrado com sucesso',
+                    html: html
+                })
+            }
+        })
+    }
+    
+    
+})
+
+router.post('/certificado/editcertificado', async (req, res) => {
+
+})
+router.post('/certificado/deletacertificado', async (req, res) => {
+    var certificado = null
+    var count_error = 0
+
+    await Certified.findByPk(req.body.id).then(response => {
+        if(response){
+            certificado = {
+                id: response.getDataValue('id'),
+                ownerId: response.getDataValue('id_user_foreign'),
+                picture: response.getDataValue('picture_certified'),
+            }  
+        }else{
+            count_error += 1
         }
-    })
+              
+    })    
+    if(!(certificado != null && req.session.user.id == certificado.ownerId))        
+        count_error += 1
+
+    
+    if(count_error != 0) 
+        res.send({ error: 'Ocorreu um erro ao tentar excluir o certificado'})
+    else{
+        await Certified.destroy({
+            where: {
+                id_user_foreign: certificado.ownerId
+            }
+        }).then(response => {
+            fs.readdirSync(path.resolve(__dirname, '..', 'public', 'tmp', 'uploads' )).forEach(file => {
+                if(file == certificado.picture){
+                    fs.unlinkSync(path.resolve(__dirname, '..', 'public', 'tmp', 'uploads')+'/'+file)
+                }                
+            })
+        })
+        
+        res.send({ success: 'Certificado excluido com sucesso' })
+    }
 })
 
 router.get('/logout', (req, res) => {

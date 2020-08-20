@@ -4,3 +4,4 @@ helper.js
 src/views/teste.html
 src/database/helper.txt
 .env
+src/public/tmp/uploads/*
