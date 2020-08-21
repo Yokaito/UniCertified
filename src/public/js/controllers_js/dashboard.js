@@ -38,10 +38,47 @@ function clicks(){
         var id = $(this).data('id')
         var trs = $(this).closest('tr')
         var tds = trs[0].cells
-        console.log(id);
-        console.log(tds[1].textContent);
-        console.log(tds[2].textContent);
-        console.log(tds[3].textContent);
+        var formCertificado = $('.editarCertificadoForm')
+        var inputNome = $('input[name="new_nome_certificado"]')
+        var inputValor =  $('input[name="new_valor_certificado"]')
+        var inputTipo = $('select[name="new_tipo_certificado"]')
+        
+        inputNome.val(tds[1].textContent)
+        inputValor.val(tds[2].textContent)
+        inputTipo.val(tds[3].dataset.type).change()
+
+        $('.ui.modal.tiny.editar').modal({
+            closable : false,
+            onDeny: () => {  
+                inputNome.val('')
+                inputValor.val('')              
+                return true
+            },
+            onApprove: () => {
+                if(formCertificado.form('is valid')){
+                    var data = new FormData($('.editarCertificadoForm')[0])
+                    data.set('id', id)
+                    /* data.set('nome', inputNome.val())
+                    data.set('valor', inputValor.val())
+                    data.set('tipo', inputTipo.val()) */
+                    $.ajax({
+                        type: 'POST',
+                        url: "/dashboard/certificado/editcertificado",  
+                        data: data,  
+                        processData: false, 
+                        contentType: false,
+                        success: (response) => {
+                            console.log(response);
+                        } 
+                    })
+
+                    return true
+                }
+                return false
+            }
+        }).modal('show')
+        
+        
     })
 }    
 
@@ -117,6 +154,53 @@ $(document).ready(function(){
                 }
             }
         })    
+
+        $('.ui.form.editarCertificadoForm')
+        .form({
+            inline: true,
+            on: 'blur',
+            fields: {
+                nome: {
+                    identifier: 'new_nome_certificado',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Informe um nome'
+                        },
+                        {
+                            type: 'minLength[5]',
+                            prompt: 'O nome deve conter no mínimo 5 caracteres.'
+                        },
+                        {
+                            type: 'maxLength[45]',
+                            prompt: 'O nome deve conter no máximo 40 caracteres.'
+                        }
+                    ]
+                },
+                valor: {
+                    identifier: 'new_valor_certificado',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Informe um valor'
+                        },
+                        {
+                            type   : 'integer[1..40]',
+                            prompt : 'Informe um valor inteiro entre (0-40)'
+                        }
+                    ]
+                },
+                tipo_certificado: {
+                    identifier: 'new_tipo_certificado',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Escolha um tipo'
+                        }
+                    ]
+                }
+            }
+        })
 
     $('.novoCertificado').on('click', function(){
         var formCertificado = $('.cadastrarCertificado')       

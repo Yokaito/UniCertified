@@ -60,8 +60,8 @@
                                 <th>Nome Certificado</th>
                                 <th>Valor</th>
                                 <th>Tipo</th>                            
-                                <th>Foto</th>                                
-                                <th>Ações</th>                            
+                                <th>Foto</th>                                                           
+                                <th>Ações</th>                           
                               </tr>
                             </thead>
                             <tbody class="tBody">   
@@ -93,25 +93,35 @@
                                   <i class="icon attention"></i>
                                 </td>
                                 {{/ifCond}}
-                                <td>{{this.nome_certificado}}</td>
+                                <td >{{this.nome_certificado}}</td>
                                 <td>{{this.valor_certificado}}</td>                                
-                                <td>{{this.tipo_certificado}}</td>                                
+                                <td data-type="{{this.numero_tipo_certificado}}">{{this.tipo_certificado}}</td>                                
                                 <td width="5%" class="center aligned">
                                     <a>
                                         <i class="large file image icon mostrarImagemCertificado" data-foto="http://localhost:3000/tmp/uploads/{{this.picture_certificado}}"></i>
                                     </a>                                    
-                                </td>                                                          
+                                </td>
+                                {{#ifCond this.status '!=' 2}}
+                                <td width="8%" class="center aligned" >
+                                  <div data-tooltip="Esse certificado não pode mais ser alterado" data-position="left center">
+                                    <i class="icon attention red link"></i>
+                                  </div>                            
+                                    
+                                </td>
+                                {{/ifCond}}     
+                                {{#ifCond this.status '==' 2}}                                                     
                                 <td width="8%" class="center aligned">
-                                    <div class="ui tiny icon buttons">
+                                    <div class="ui tiny icon buttons">                                        
                                         <button data-id="{{this.id}}" class="ui button blue editarCertificado">
                                           <i class="edit icon"></i>
                                         </button>
                                         
                                         <button data-id="{{this.id}}" class="ui button red deletarCertificado">
                                           <i class="trash icon"></i>
-                                        </button>
+                                        </button>                                                                               
                                     </div>
-                                </td>                                
+                                </td> 
+                                {{/ifCond}}                                
                             </tr>       
                             {{/each}}                             
                                                  
@@ -159,6 +169,51 @@
         </div>
         <div class="field">
           <select class="ui dropdown" name="tipo_certificado">
+            {{#each tipos_certificados}}
+            <option value="{{this.id}}">{{this.nome_tipo_certificado}}</option>
+            {{/each}}
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="actions">
+    <div class="ui cancel red left labeled icon button">
+        Cancelar
+      <i class="close icon"></i>
+    </div> 
+    <div class="ui approve positive left labeled icon button">
+        Criar
+      <i class="checkmark icon"></i>
+    </div>   
+  </div>
+</div>
+
+<div class="ui modal tiny editar">
+  <div class="header">Novo Certificado</div>
+  <div class="content">
+    <p></p>
+    <form class="ui form editarCertificadoForm" enctype="multipart/form-data">
+      <div class="ui stacked segment">
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="text" name="new_nome_certificado" placeholder="Nome Certificado">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="number" name="new_valor_certificado" placeholder="Valor Certificado">
+          </div>
+        </div>
+        <div class="field" data-tooltip="Arquivos Permitidos: JPGE e PNG. Tamanho Maximo: 5Mb" data-position="top center" data-variation="very wide">
+          <div class="ui input">
+            <input type="file" name="file" placeholder="Imagem certificado">            
+          </div>
+        </div>
+        <div class="field">
+          <select class="ui dropdown" name="new_tipo_certificado">
             {{#each tipos_certificados}}
             <option value="{{this.id}}">{{this.nome_tipo_certificado}}</option>
             {{/each}}

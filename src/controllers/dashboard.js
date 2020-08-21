@@ -162,6 +162,7 @@ router.get('/certificado', async (req, res) => {
                     valor_certificado: certificado.value_certified,
                     picture_certificado: certificado.picture_certified,
                     comments_ceritifcado: certificado.comments_certified,
+                    numero_tipo_certificado: certificado.id_type_certified_foreign,
                     tipo_certificado: certificado.type_certified.get('name_type_certified'),
                     nome_usuario: req.session.user.nome,
                     criado_em: formatarData(certificado.createdAt)
@@ -278,8 +279,9 @@ router.post('/certificado/newcertificado', multer(multerConfig).single('file') ,
     
 })
 
-router.post('/certificado/editcertificado', async (req, res) => {
-
+router.post('/certificado/editcertificado', multer(multerConfig).single('file') ,async (req, res) => {
+    console.log(req.body);
+    res.sendStatus(200)
 })
 router.post('/certificado/deletacertificado', async (req, res) => {
     var certificado = null
@@ -291,6 +293,7 @@ router.post('/certificado/deletacertificado', async (req, res) => {
                 id: response.getDataValue('id'),
                 ownerId: response.getDataValue('id_user_foreign'),
                 picture: response.getDataValue('picture_certified'),
+                state: response.getDataValue('id_state_foreign')
             }  
         }else{
             count_error += 1
@@ -298,6 +301,8 @@ router.post('/certificado/deletacertificado', async (req, res) => {
               
     })    
     if(!(certificado != null && req.session.user.id == certificado.ownerId))        
+        count_error += 1
+    if(state != 2)
         count_error += 1
 
     
