@@ -7,8 +7,7 @@ import StatusCertified from '../models/state'
 import formatarData from '../functions/formatDate'
 import multer from 'multer'
 import multerConfig from '../config/multer'
-import fs from 'fs'
-import path from 'path'
+import fsCertificado from '../functions/fs_certificado'
 
 const router = express.Router()
 
@@ -84,6 +83,7 @@ router.get('/', async (req, res) => {
                         nome_certificado: certificado.name_certified,
                         valor_certificado: certificado.value_certified,
                         tipo_certificado: certificado.type_certified.get('name_type_certified'),
+                        id_aluno: certificado.id_user_foreign,
                         nome_usuario: certificado.user.get('name_user'),                  
                         criado_em: formatarData(certificado.createdAt),                        
                     }
@@ -280,9 +280,67 @@ router.post('/certificado/newcertificado', multer(multerConfig).single('file') ,
 })
 
 router.post('/certificado/editcertificado', multer(multerConfig).single('file') ,async (req, res) => {
-    console.log(req.body);
-    res.sendStatus(200)
+    var certificado = req.body
+    var file = typeof req.file == 'undefined' ? null : req.file
+    var count_error = 0
+    var estado_certificado    
+
+    if(!(certificado.new_nome_certificado != ' '  && (certificado.new_nome_certificado.length >= 5 && certificado.new_nome_certificado.length <= 45)))
+        count_error += 1
+    if(!(certificado.new_valor_certificado != ' ' && (certificado.new_valor_certificado > 0 && certificado.new_valor_certificado <= 40)))
+        count_error += 1 
+
+    TypeCertified.findByPk(certificado.new_tipo_certificado).then(responseFindByPK => { 
+        estado_certificado = responseFindByPK.getDataValue('name_type_certified')              
+    })
+    
+    if(!(estado_certificado != ' '))
+        count_error += 1
+
+    if(count_error != 0){
+        if(file != null)
+            fsCertificado.deletarCertificado(file.filename)
+        
+        res.send({ error: 'Um erro ocorreu'})
+    }else{
+        var oldNameCertificado = null
+        var newNameCertificado = null
+
+        await Certified.findByPk(certificado.id).then(response => {
+            oldNameCertificado = response.getDataValue('picture_certified')
+        })
+
+        if(file == null){
+            newNameCertificado = oldNameCertificado
+        }else{
+            newNameCertificado = file.filename
+            fsCertificado.deletarCertificado(oldNameCertificado)
+        }
+
+        await Certified.update({
+                name_certified: certificado.new_nome_certificado,
+                value_certified: certificado.new_valor_certificado,
+                id_type_certified_foreign: certificado.new_tipo_certificado,
+                picture_certified: newNameCertificado,
+                updated_at: new Date()
+            },
+            {
+                where: {
+                    id: certificado.id
+                }
+            }
+            
+        ).then(response => {
+            if(response)
+                res.send({ success: 'Certificado atualizado com sucesso' })
+            else
+                res.send({ error: 'Ocorreu um erro interno, tente novamente' })
+
+        })
+
+    }
 })
+
 router.post('/certificado/deletacertificado', async (req, res) => {
     var certificado = null
     var count_error = 0
@@ -302,7 +360,7 @@ router.post('/certificado/deletacertificado', async (req, res) => {
     })    
     if(!(certificado != null && req.session.user.id == certificado.ownerId))        
         count_error += 1
-    if(state != 2)
+    if(certificado.state != 2)
         count_error += 1
 
     
@@ -311,14 +369,11 @@ router.post('/certificado/deletacertificado', async (req, res) => {
     else{
         await Certified.destroy({
             where: {
+                id: certificado.id,
                 id_user_foreign: certificado.ownerId
             }
         }).then(response => {
-            fs.readdirSync(path.resolve(__dirname, '..', 'public', 'tmp', 'uploads' )).forEach(file => {
-                if(file == certificado.picture){
-                    fs.unlinkSync(path.resolve(__dirname, '..', 'public', 'tmp', 'uploads')+'/'+file)
-                }                
-            })
+            fsCertificado.deletarCertificado(certificado.picture)
         })
         
         res.send({ success: 'Certificado excluido com sucesso' })
