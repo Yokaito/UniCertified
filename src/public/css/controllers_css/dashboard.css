@@ -22,3 +22,12 @@
         display: none !important;
     }
 }
+
+body{
+    overflow: hidden;    
+}
+
+.pusher{
+    overflow-y: auto; 
+    height: 100%;
+}
