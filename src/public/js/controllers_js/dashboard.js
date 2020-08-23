@@ -1,4 +1,89 @@
+function clicks(){
+    $('.deletarCertificado').on('click', function(){
+        var id = $(this).data("id")
+        $('.ui.mini.modal.delete')
+            .modal({
+                closable  : false,
+                onDeny    : function(){
+                    return true;
+                },
+                onApprove : function() {
+                    $.post('/dashboard/certificado/deletacertificado', {id}, 
+                        (response) => {
+                            if(response.success){
+                                swal({
+                                    closeOnEsc: false,
+                                    closeOnClickOutside: false,
+                                    title: response.success,
+                                    icon: "success",
+                                }).then((value) =>{
+                                    location.reload()
+                                })
+                            }else{
+                                swal({
+                                    closeOnEsc: false,
+                                    closeOnClickOutside: false,
+                                    title: response.error,
+                                    icon: "error",
+                                })
+                            }
+                        })
+                }
+            })
+            .modal('show')
+        ;
+    })
+
+    $('.editarCertificado').on('click', function(){
+        var id = $(this).data('id')
+        var trs = $(this).closest('tr')
+        var tds = trs[0].cells
+        var formCertificado = $('.editarCertificadoForm')
+        var inputNome = $('input[name="new_nome_certificado"]')
+        var inputValor =  $('input[name="new_valor_certificado"]')
+        var inputTipo = $('select[name="new_tipo_certificado"]')
+        
+        inputNome.val(tds[1].textContent)
+        inputValor.val(tds[2].textContent)
+        inputTipo.val(tds[3].dataset.type).change()
+
+        $('.ui.modal.tiny.editar').modal({
+            closable : false,
+            onDeny: () => {  
+                inputNome.val('')
+                inputValor.val('')              
+                return true
+            },
+            onApprove: () => {
+                if(formCertificado.form('is valid')){
+                    var data = new FormData($('.editarCertificadoForm')[0])
+                    data.set('id', id)
+                    /* data.set('nome', inputNome.val())
+                    data.set('valor', inputValor.val())
+                    data.set('tipo', inputTipo.val()) */
+                    $.ajax({
+                        type: 'POST',
+                        url: "/dashboard/certificado/editcertificado",  
+                        data: data,  
+                        processData: false, 
+                        contentType: false,
+                        success: (response) => {
+                            console.log(response);
+                        } 
+                    })
+
+                    return true
+                }
+                return false
+            }
+        }).modal('show')
+        
+        
+    })
+}    
+
 $(document).ready(function(){
+    clicks()
     $('.ui.dropdown').dropdown()
     $('.sidebar-menu-toggler').on('click', function(){
         var target = $(this).data('target')
@@ -13,14 +98,7 @@ $(document).ready(function(){
             inline: true
         })
     ;
-    $('.redirecionaTabela').on('click', function(){
-        var id = $(this).data('id')
-        $.post('/admin/procurar/criartabela', {id}, response => {
-            if(response.success)
-                window.location.href = '/admin/procurar'
-        })
-    })
-
+    
     $('.ui.form.cadastrarCertificado')
         .form({
             inline: true,
@@ -75,9 +153,9 @@ $(document).ready(function(){
                     ]
                 }
             }
-    })    
+        })    
 
-    $('.ui.form.editarCertificadoForm')
+        $('.ui.form.editarCertificadoForm')
         .form({
             inline: true,
             on: 'blur',
@@ -122,7 +200,7 @@ $(document).ready(function(){
                     ]
                 }
             }
-    })
+        })
 
     $('.novoCertificado').on('click', function(){
         var formCertificado = $('.cadastrarCertificado')       
@@ -181,110 +259,5 @@ $(document).ready(function(){
         var urlFoto = $(this).attr('data-foto')
         $('.modificarImagem').attr('src', urlFoto)
         $('.ui.basic.modal.mostrarImagem').modal('show')
-    })
-
-    $('.deletarCertificado').on('click', function(){
-        var id = $(this).data("id")
-        $('.ui.mini.modal.delete')
-            .modal({
-                closable  : false,
-                onDeny    : function(){
-                    return true;
-                },
-                onApprove : function() {
-                    $.post('/dashboard/certificado/deletacertificado', {id}, 
-                        (response) => {
-                            if(response.success){
-                                swal({
-                                    closeOnEsc: false,
-                                    closeOnClickOutside: false,
-                                    title: response.success,
-                                    icon: "success",
-                                }).then((value) =>{
-                                    location.reload()
-                                })
-                            }else{
-                                swal({
-                                    closeOnEsc: false,
-                                    closeOnClickOutside: false,
-                                    title: response.error,
-                                    icon: "error",
-                                })
-                            }
-                        })
-                }
-            })
-            .modal('show')
-        ;
-    })
-
-    $('.editarCertificado').on('click', function(){
-        var id = $(this).data('id')
-        var trs = $(this).closest('tr')
-        var tds = trs[0].cells
-        var formCertificado = $('.editarCertificadoForm')
-        var inputNome = $('input[name="new_nome_certificado"]')
-        var inputValor =  $('input[name="new_valor_certificado"]')
-        var inputTipo = $('select[name="new_tipo_certificado"]')
-        var inputFile = $('input[name="file"]')
-        
-        inputNome.val(tds[1].textContent)
-        inputValor.val(tds[2].textContent)
-        inputTipo.val(tds[3].dataset.type).change()
-
-        $('.ui.modal.tiny.editar').modal({
-            closable : false,
-            onDeny: () => {  
-                inputNome.val('')
-                inputValor.val('')      
-                inputFile.val('')        
-                return true
-            },
-            onApprove: () => {
-                if(formCertificado.form('is valid')){
-                    var data = new FormData($('.editarCertificadoForm')[0])
-                    data.set('id', id)
-                    /* data.set('nome', inputNome.val())
-                    data.set('valor', inputValor.val())
-                    data.set('tipo', inputTipo.val()) */
-                    $.ajax({
-                        type: 'POST',
-                        url: "/dashboard/certificado/editcertificado",  
-                        data: data,  
-                        processData: false, 
-                        contentType: false,
-                        success: (response) => {
-                            if(response.success){
-                                inputNome.val('')
-                                inputValor.val('')      
-                                inputFile.val('')
-                                swal({
-                                    closeOnEsc: false,
-                                    closeOnClickOutside: false,
-                                    title: response.success,
-                                    icon: "success",
-                                }).then(() =>{
-                                    location.reload()
-                                })
-                            }else{
-                                swal({
-                                    closeOnEsc: false,
-                                    closeOnClickOutside: false,
-                                    title: response.error,
-                                    icon: "error",
-                                }).then(() => {
-                                    location.reload()
-                                })
-                            }
-                        } 
-                    })
-
-                    return true
-                }
-                return false
-            }
-        }).modal('show')
-        
-        
     })    
 })
