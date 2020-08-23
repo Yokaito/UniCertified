@@ -75,47 +75,85 @@
             {{/ifCond}}         
             <div class="ui grid stackable padded">
                 <div class="column">
-                    <table class="ui celled table">
-                        <thead>
-                            <tr>
-                                <th>Status</th>
-                                <th>Nome Certificado</th>
-                                <th>Valor</th>
-                                <th>Tipo</th>
-                                <th>Criado Por</th>                            
-                                <th>Criado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each certificados}}
-                                <tr id_certificado="{{this.id}}">
-                                    {{!-- Aprovado --}}
-                                    {{#ifCond this.status '==' 1}}
-                                    <td width="3%" class="center aligned positive" data-tooltip="Aprovado" data-position="top center" data-variation="mini">
-                                        <i class="icon checkmark"></i>
-                                    </td>
-                                    {{/ifCond}}
-                                    {{!-- Em Analise --}}
-                                    {{#ifCond this.status '==' 2}}
-                                    <td width="3%" class="center aligned warning" data-tooltip="Em Analise" data-position="top center" data-variation="mini">
-                                        <i class="orange icon spinner"></i>
-                                    </td>
-                                    {{/ifCond}}
-                                    {{!-- Reprovado --}}
-                                    {{#ifCond this.status '==' 3}}
-                                    <td width="3%" class="center aligned error" data-tooltip="Reprovado" data-position="top center" data-variation="mini">
-                                        <i class="icon attention"></i>
-                                    </td>
-                                    {{/ifCond}}
-                                    <td>{{this.nome_certificado}}</td>
-                                    <td>{{this.valor_certificado}}</td>
-                                    <td>{{this.tipo_certificado}}</td>
-                                    <td width="15%"><a href="#">{{this.nome_usuario}}</a></td>                                  
-                                    <td width="15%">{{this.criado_em}}</td>
+                    <div class="ui segment">
+                        {{#ifCond user.tipo_usuario '==' 3}}
+                        <h4 class="ui horizontal divider header">
+                            <i class="table icon"></i>Seus Certificados
+                        </h4>
+                        <table class="ui celled table">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Nome Certificado</th>
+                                    <th>Horas</th>
+                                    <th>Tipo</th>                         
+                                    <th>Atualizado em</th>
                                 </tr>
-                            {{/each}}
-                        </tbody>
-                      </table>
+                            </thead>
+                            <tbody>
+                                {{#each certificados}}
+                                    <tr id_certificado="{{this.id}}">
+                                        {{!-- Aprovado --}}
+                                        {{#ifCond this.status '==' 1}}
+                                        <td width="3%" class="center aligned positive" data-tooltip="Aprovado" data-position="top center" data-variation="mini">
+                                            <i class="icon checkmark"></i>
+                                        </td>
+                                        {{/ifCond}}
+                                        {{!-- Em Analise --}}
+                                        {{#ifCond this.status '==' 2}}
+                                        <td width="3%" class="center aligned warning" data-tooltip="Em Analise" data-position="top center" data-variation="mini">
+                                            <i class="orange icon spinner"></i>
+                                        </td>
+                                        {{/ifCond}}
+                                        {{!-- Reprovado --}}
+                                        {{#ifCond this.status '==' 3}}
+                                        <td width="3%" class="center aligned error" data-tooltip="Reprovado" data-position="top center" data-variation="mini">
+                                            <i class="icon attention"></i>
+                                        </td>
+                                        {{/ifCond}}
+                                        <td>{{this.nome_certificado}}</td>
+                                        <td>{{this.valor_certificado}}</td>
+                                        <td>{{this.tipo_certificado}}</td>                               
+                                        <td width="15%">{{this.criado_em}}</td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                        {{/ifCond}}
+                        {{#ifCond user.tipo_usuario '<=' 2}}
+                        <h4 class="ui horizontal divider header">
+                            <i class="table icon"></i>Certificado dos Alunos
+                        </h4>
+                        <table class="ui celled table">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Nome Certificado</th>
+                                    <th>Horas</th>
+                                    <th>Tipo</th>
+                                    <th>Criado Por</th>                            
+                                    <th>Atualizado em</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each certificados}}
+                                    {{#ifCond this.status '==' 2}}
+                                    <tr id_certificado="{{this.id}}">
+                                        <td width="3%" class="center aligned warning" data-tooltip="Em Analise" data-position="top center" data-variation="mini">
+                                            <i class="orange icon spinner"></i>
+                                        </td>
+                                        <td>{{this.nome_certificado}}</td>
+                                        <td>{{this.valor_certificado}}</td>
+                                        <td>{{this.tipo_certificado}}</td>
+                                        <td width="15%"><a href="#" class="redirecionaTabela" data-id="{{this.id_aluno}}">{{this.nome_usuario}}</a></td>                                  
+                                        <td width="15%">{{this.criado_em}}</td>
+                                    </tr>
+                                    {{/ifCond}}
+                                {{/each}}
+                            </tbody>
+                        </table>
+                        {{/ifCond}}
+                      </div>
                 </div>
             </div>
         </div>
