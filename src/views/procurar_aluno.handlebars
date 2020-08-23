@@ -1,15 +1,33 @@
 {{> topnav}}
 {{> sidebar}}
- <!-- Content -->
-    <div class="pusher">
-        <div class="main-content">
-            <br>
-            {{> breadcrumb}}
-            <div class="ui grid stackable padded">
-                <div class="column">
-                    <div class="ui segment">                                              
-                        <h2 class="ui dividing header">Certificados</h2>
-                        {{#ifCond user.estado_usuario '==' 1}}
+
+<div class="pusher">
+    <div class="main-content">
+        </br>   
+        {{> breadcrumb}}           
+        <div class="ui grid stackable padded">
+            <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
+                <div class="ui segment">
+                    <div class="ui column centered grid">
+                        <div class="row">
+                            <div class="ui search">
+                                <div class="ui big icon input">
+                                    <input class="prompt" type="text" placeholder="Procurar Alunos...">
+                                    <i class="search icon"></i>
+                                </div>
+                                <div class="results"></div>
+                            </div>
+                        </div>
+                        <h4 class="ui horizontal divider header">
+                            <i class="table icon"></i>
+                            Aluno
+                        </h4>
+                    </div>  
+                    {{!-- Comeco Tabela --}}
+                    
+                    <div class="ui segment">
+                        {{#if aluno}}
+                        {{#ifCond aluno.estado '==' 1}}
                         <a class="ui rigth corner label green comentario">
                             <i class="tiny checkmark icon"></i>
                         </a>                        
@@ -17,7 +35,7 @@
                            Aprovado
                         </div>
                         {{/ifCond}}
-                        {{#ifCond user.estado_usuario '==' 2}}
+                        {{#ifCond aluno.estado '==' 2}}
                         <a class="ui rigth corner label orange comentario">
                             <i class="tiny spinner icon"></i>
                         </a>                        
@@ -25,7 +43,7 @@
                            Em Analise
                         </div>
                         {{/ifCond}}
-                        {{#ifCond user.estado_usuario '==' 3}}
+                        {{#ifCond aluno.estado '==' 3}}
                         <a class="ui rigth corner label red comentario">
                             <i class="tiny attention icon"></i>
                         </a>                        
@@ -39,17 +57,18 @@
                                 <img src="https://semantic-ui.com/images/wireframe/image.png">
                               </div>
                               <div class="content">
-                                <a class="header">{{user.nome}}</a>
+                                <a class="header dataid" data-id="{{aluno.id}}">{{aluno.nome}}</a>
                                 <div class="meta">
-                                  <span>Curso: {{user.curso}}</span><br>
-                                  <span>Semestre: {{user.semestre}}</span><br>                                  
+                                  <span>Curso: {{aluno.curso}}</span><br>
+                                  <span>Semestre: {{aluno.semestre}}</span><br>    
+                                  <span>Email: {{aluno.email}}</span>                              
                                 </div>
                                 <div class="description">
                                   <p></p>
                                 </div>
-                                {{!-- <div class="extra">
+                                <div class="extra">
                                     <button class="mini ui button blue">Editar</button>
-                                </div> --}}
+                                </div> 
                               </div>
                             </div>
                         </div>
@@ -58,7 +77,7 @@
                               <tr>
                                 <th>Status</th>
                                 <th>Nome Certificado</th>
-                                <th>Valor</th>
+                                <th>Pontos</th>
                                 <th>Tipo</th>                            
                                 <th>Foto</th>                                                           
                                 <th>Ações</th>                           
@@ -66,61 +85,65 @@
                             </thead>
                             <tbody class="tBody">   
                             {{#each certificados}}
-                            {{#ifCond this.status '==' 1}}
+                            {{#ifCond this.estado '==' 1}}
                             <tr data-id="{{this.id}}" class="positive">
                             {{/ifCond}}
-                            {{#ifCond this.status '==' 2}}
+                            {{#ifCond this.estado '==' 2}}
                             <tr data-id="{{this.id}}" class="warning">
                             {{/ifCond}}
-                            {{#ifCond this.status '==' 3}}
+                            {{#ifCond this.estado '==' 3}}
                             <tr data-id="{{this.id}}" class="error">
                             {{/ifCond}}                            
                                 {{!-- Aprovado --}}
-                                {{#ifCond this.status '==' 1}}
+                                {{#ifCond this.estado '==' 1}}
                                 <td width="3%" class="center aligned" data-tooltip="Aprovado" data-position="top center" data-variation="mini">
                                   <i class="icon checkmark"></i>
                                 </td>
                                 {{/ifCond}}
                                 {{!-- Em Analise --}}
-                                {{#ifCond this.status '==' 2}}
+                                {{#ifCond this.estado '==' 2}}
                                 <td width="3%" class="center aligned" data-tooltip="Em Analise" data-position="top center" data-variation="mini">
                                   <i class="orange icon spinner"></i>
                                 </td>
                                 {{/ifCond}}
                                 {{!-- Reprovado --}}
-                                {{#ifCond this.status '==' 3}}
+                                {{#ifCond this.estado '==' 3}}
                                 <td width="3%" class="center aligned" data-tooltip="Reprovado" data-position="top center" data-variation="mini">
                                   <i class="icon attention"></i>
                                 </td>
                                 {{/ifCond}}
-                                <td >{{this.nome_certificado}}</td>
-                                <td>{{this.valor_certificado}}</td>                                
-                                <td data-type="{{this.numero_tipo_certificado}}">{{this.tipo_certificado}}</td>                                
+                                <td >{{this.nome}}</td>
+                                <td>{{this.valor}}</td>                                
+                                <td data-type="{{this.numero_tipo}}">{{this.tipo}}</td>                                
                                 <td width="5%" class="center aligned">
                                     <a>
-                                        <button class="ui tiny circular icon blue button mostrarImagemCertificado" data-foto="http://localhost:3000/tmp/uploads/{{this.picture_certificado}}">
+                                        <button class="ui tiny circular icon blue button mostrarImagemCertificado" data-foto="http://localhost:3000/tmp/uploads/{{this.foto}}">
                                           <i class="file image outline icon"></i>
                                         </button>
                                     </a>                                    
                                 </td>
-                                {{#ifCond this.status '!=' 2}}
+                                {{#ifCond this.estado '!=' 2}}
                                 <td width="8%" class="center aligned" >
-                                  <div data-tooltip="Esse certificado não pode mais ser alterado" data-position="left center">
-                                    <i class="icon attention red link"></i>
-                                  </div>                            
-                                    
+                                  <div class="ui tiny icon buttons" >
+                                    <button class="ui button red" data-tooltip="Esse certificado não pode mais ser alterado" data-position="left center">
+                                      <i class="attention icon"></i>
+                                    </button>  
+                                    <button data-id="{{this.id}}" class="ui button yellow habilitarEdicao" data-tooltip="Habilitar Edição" data-position="left center">
+                                      <i class="icon undo"></i>
+                                    </button>                                       
+                                  </div>  
                                 </td>
                                 {{/ifCond}}     
-                                {{#ifCond this.status '==' 2}}                                                     
+                                {{#ifCond this.estado '==' 2}}                                                     
                                 <td width="8%" class="center aligned">
                                     <div class="ui tiny icon buttons">                                        
                                         <button data-id="{{this.id}}" class="ui button blue editarCertificado">
                                           <i class="edit icon"></i>
                                         </button>
                                         
-                                        <button data-id="{{this.id}}" class="ui button red deletarCertificado">
-                                          <i class="trash icon"></i>
-                                        </button>                                                                               
+                                        <button data-id="{{this.id}}" class="ui button teal alterarEstado">
+                                          <i class="tag icon"></i>
+                                        </button>                                                      
                                     </div>
                                 </td> 
                                 {{/ifCond}}                                
@@ -131,128 +154,72 @@
                             <tfoot class="full-width">
                                 <tr>
                                   <th colspan="7">
-                                    <div class="ui right floated small primary labeled icon button novoCertificado">
-                                      <i class="file alternate icon"></i> Novo Certificado
-                                    </div>
+                                    {{!-- <div class="ui floated">
+                                      <div class="ui label green">
+                                        <i class="table icon"></i>
+                                        <a class="detail">Total de Pontos:</a> 23                                 
+                                      </div>
+                                    </div> --}} 
+                                    <div class="ui right floated small green labeled icon button" data-tooltip="Somado apenas certificados aprovados" data-position="left center">
+          <i class="table icon"></i> Pontos Totais: {{total}}
+        </div>
                                   </th>
                                 </tr>
                               </tfoot>
                         </table>
-                        </div>
-                </div>
-            </div>
-        </div>
+                        {{/if}}
+                    </div>
+                    
+                    {{!-- Termino Tabela --}}
+                </div>                
+            </div>                     
+        </div>       
     </div>
-<!-- Content -->   
-
-{{!-- Modals --}}
-<div class="ui modal tiny criar">
-  <div class="header">Novo Certificado</div>
-  <div class="content">
-    <p></p>
-    <form class="ui form cadastrarCertificado" enctype="multipart/form-data">
-      <div class="ui stacked segment">
-        <div class="field">
-          <div class="ui left icon input">
-            <i class="user icon"></i>
-            <input type="text" name="nome_certificado" placeholder="Nome Certificado">
-          </div>
-        </div>
-        <div class="field">
-          <div class="ui left icon input">
-            <i class="user icon"></i>
-            <input type="number" name="valor_certificado" placeholder="Valor Certificado">
-          </div>
-        </div>
-        <div class="field" data-tooltip="Arquivos Permitidos: JPGE e PNG. Tamanho Maximo: 5Mb" data-position="top center" data-variation="very wide">
-          <div class="ui input">
-            <input type="file" name="file" placeholder="Imagem certificado">            
-          </div>
-        </div>
-        <div class="field">
-          <select class="ui dropdown" name="tipo_certificado">
-            {{#each tipos_certificados}}
-            <option value="{{this.id}}">{{this.nome_tipo_certificado}}</option>
-            {{/each}}
-          </select>
-        </div>
-      </div>
-    </form>
-  </div>
-  <div class="actions">
-    <div class="ui cancel red left labeled icon button">
-        Cancelar
-      <i class="close icon"></i>
-    </div> 
-    <div class="ui approve positive left labeled icon button">
-        Criar
-      <i class="checkmark icon"></i>
-    </div>   
-  </div>
-</div>
-
-<div class="ui modal tiny editar">
-  <div class="header">Editar Certificado</div>
-  <div class="content">
-    <p></p>
-    <form class="ui form editarCertificadoForm" enctype="multipart/form-data">
-      <div class="ui stacked segment">
-        <div class="field">
-          <div class="ui left icon input">
-            <i class="user icon"></i>
-            <input type="text" name="new_nome_certificado" placeholder="Nome Certificado">
-          </div>
-        </div>
-        <div class="field">
-          <div class="ui left icon input">
-            <i class="user icon"></i>
-            <input type="number" name="new_valor_certificado" placeholder="Valor Certificado">
-          </div>
-        </div>
-        <div class="field" data-tooltip="Arquivos Permitidos: JPGE e PNG. Tamanho Maximo: 5Mb" data-position="top center" data-variation="very wide">
-          <div class="ui input">
-            <input type="file" name="file" placeholder="Imagem certificado">            
-          </div>
-        </div>
-        <div class="field">
-          <select class="ui dropdown" name="new_tipo_certificado">
-            {{#each tipos_certificados}}
-            <option value="{{this.id}}">{{this.nome_tipo_certificado}}</option>
-            {{/each}}
-          </select>
-        </div>
-      </div>
-    </form>
-  </div>
-  <div class="actions">
-    <div class="ui cancel red left labeled icon button">
-        Cancelar
-      <i class="close icon"></i>
-    </div> 
-    <div class="ui approve positive left labeled icon button">
-        Editar
-      <i class="checkmark icon"></i>
-    </div>   
-  </div>
-</div>
-
-<div class="ui mini modal delete">
-  <div class="header">Delete este Certificado</div>
-  <div class="content">
-    <p>Tem certeza que deseja excluir esse certificado</p>
-  </div>
-  <div class="actions">
-    <div class="ui cancel red left labeled icon button">
-        Cancelar
-      <i class="close icon"></i>
-    </div> 
-    <div class="ui approve positive left labeled icon button">
-        Deletar
-      <i class="checkmark icon"></i>
-    </div>   
-  </div>
 </div>
 
 <div class="ui basic modal mostrarImagem">  
     <img class="ui fluid image modificarImagem" src="">
 </div>
+
+<div class="ui mini modal alterarEstado">
+  <div class="header">Altera o status do Certificado</div>
+  <div class="content">
+    <form class="ui form alterarEstado">
+      
+        <div class="field">
+          {{!-- <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="textarea" name="comentario" placeholder="Comentario">
+          </div> --}}
+          <label>Comentario</label>
+          <textarea name="comentario"></textarea>
+        </div>
+      
+    </form>    
+  </div>
+  <div class="actions">
+    <div class="ui cancel red left labeled icon button">
+        Reprovar
+      <i class="close icon"></i>
+    </div> 
+    <div class="ui approve positive left labeled icon button">
+        Aprovar
+      <i class="checkmark icon"></i>
+    </div>   
+  </div>
+</div>
+
+<div class="ui mini modal habilitarEdicao">
+  <div class="header">Deseja Habilitar a edição</div>
+  <div class="actions">
+    <div class="ui cancel red left labeled icon button">
+        Cancelar
+      <i class="close icon"></i>
+    </div> 
+    <div class="ui approve positive left labeled icon button">
+        Habilitar
+      <i class="checkmark icon"></i>
+    </div>   
+  </div>
+</div>
+
