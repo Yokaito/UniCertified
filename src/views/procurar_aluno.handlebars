@@ -57,17 +57,46 @@
                                 <img src="https://semantic-ui.com/images/wireframe/image.png">
                               </div>
                               <div class="content">
-                                <a class="header dataid" data-id="{{aluno.id}}">{{aluno.nome}}</a>
+                                <a class="header dataid" data-id="{{aluno.id}}">{{aluno.nome}}</a>                                
                                 <div class="meta">
                                   <span>Curso: {{aluno.curso}}</span><br>
                                   <span>Semestre: {{aluno.semestre}}</span><br>    
-                                  <span>Email: {{aluno.email}}</span>                              
+                                  <span>Email: {{aluno.email}}</span><br>                                                    
                                 </div>
                                 <div class="description">
                                   <p></p>
                                 </div>
                                 <div class="extra">
-                                    <button class="mini ui button blue">Editar</button>
+                                    {{#ifCond aluno.estado '==' 2}}
+                                      <div class="ui tiny icon buttons">             
+                                        <button data-id="{{aluno.id}}" class="ui button teal alterarAluno">
+                                          <i class="tag icon"></i>
+                                        </button>   
+                                    </div>
+                                    {{/ifCond}}
+                                    {{#ifCond aluno.estado '!=' 2}}
+                                    <div class="ui tiny icon buttons">
+                                      <button class="ui button red" data-tooltip="Este aluno não pode ser mais alterado" data-position="top center">
+                                        <i class="attention icon"></i>
+                                      </button>  
+                                      <button data-id="{{aluno.id}}" class="ui button yellow habilitarEdicaoAluno" data-tooltip="Habilitar Edição" data-position="top center">
+                                        <i class="icon undo"></i>
+                                      </button>                                       
+                                    </div>
+                                    {{/ifCond}} 
+                                    {{#ifCond aluno.estado '!=' 1}}
+                                      {{#ifCond aluno.estado '!=' 3}}
+                                        {{#ifCond total '>=' 100}}
+                                          <div class="ui green horizontal label">Aluno pré aprovado pelo sistema</div>
+                                        {{/ifCond}}
+                                      {{/ifCond}}
+                                    {{/ifCond}}
+                                    {{#ifCond aluno.estado '==' 1}}
+                                      <div class="ui green horizontal label">Aluno Aprovado</div>
+                                    {{/ifCond}}
+                                    {{#ifCond aluno.estado '==' 3}}
+                                      <div class="ui red horizontal label">Aluno Reprovado</div>
+                                    {{/ifCond}}                                       
                                 </div> 
                               </div>
                             </div>
@@ -210,6 +239,34 @@
 </div>
 
 <div class="ui mini modal habilitarEdicao">
+  <div class="header">Deseja Habilitar a edição</div>
+  <div class="actions">
+    <div class="ui cancel red left labeled icon button">
+        Cancelar
+      <i class="close icon"></i>
+    </div> 
+    <div class="ui approve positive left labeled icon button">
+        Habilitar
+      <i class="checkmark icon"></i>
+    </div>   
+  </div>
+</div>
+
+<div class="ui mini modal alterarAluno">
+  <div class="header">Deseja Aprovar ou Reprovar o aluno</div>
+  <div class="actions">
+    <div class="ui cancel red left labeled icon button">
+        Reprovar
+      <i class="close icon"></i>
+    </div> 
+    <div class="ui approve positive left labeled icon button">
+        Aprovar
+      <i class="checkmark icon"></i>
+    </div>   
+  </div>
+</div>
+
+<div class="ui mini modal habilitarEdicaoAluno">
   <div class="header">Deseja Habilitar a edição</div>
   <div class="actions">
     <div class="ui cancel red left labeled icon button">

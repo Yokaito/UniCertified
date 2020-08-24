@@ -114,6 +114,7 @@ router.post('/procurar/criartabela', async (req, res) => {
     res.send({ success: 'Tabela sendo criada'})
 })
 
+/* Criar para todos os posts de aprovado, reprovado e habilitar a edicao o historico do usuario que fez isso */
 router.post('/procurar/alterarestado', async (req, res) => {
     var { id , comentario, acao, id_aluno } = req.body
     var count_error = 0
@@ -125,8 +126,6 @@ router.post('/procurar/alterarestado', async (req, res) => {
         count_error += 1    
     if(req.session.alunoTabela != id_aluno)
         count_error += 1 
-
-    console.log(req.session.alunoTabela);
 
     if(count_error != 0)
         res.status(200).json({ error: 'Ocorreu um erro nos dados enviados'})
@@ -191,6 +190,80 @@ router.post('/procurar/habilitaredicao', async (req,res) => {
     }
     
 
+})
+
+router.post('/procurar/alteraraluno', async (req, res ) => {
+    var { id , id_aluno, acao } = req.body
+    var count_error = 0
+    var acao = acao != 1 ? 3:1
+     
+    if(!(id != ' '))
+        count_error += 1    
+    if(req.session.alunoTabela != id_aluno)
+        count_error += 1 
+    if(id != id_aluno)
+        count_error += 1
+
+    if(count_error != 0)
+        res.status(200).json({ error: 'Ocorreu um erro nos dados enviados'})
+    else{
+        await User.update(
+            {
+                id_state_foreign: acao,
+                updated_at: new Date()
+            },
+            {
+                where: {
+                    id
+                }
+            }
+        ).then(response => {
+            if(response){
+                if(acao == 1)
+                    res.send({ success: 'Aluno aprovado com sucesso'})
+                else
+                    res.send({ success: 'Aluno reprovado com sucesso'})
+            }else
+                res.send({ error: 'Ocorreu um erro interno'})
+                
+        })
+    }
+
+})
+
+router.post('/procurar/habilitaraluno', async (req, res) => {
+    const { id, id_aluno } = req.body
+    var count_error = 0
+
+    if(!(id != ' '))
+        count_error += 1
+    if(!(id_aluno != ' '))
+        count_error += 1
+    if(req.session.alunoTabela != id_aluno)
+        count_error += 1
+    if(id != id_aluno)
+        count_error += 1
+    
+    if(count_error != 0)
+        res.send({ error: 'Ocorreu um erro interno'})
+    else{
+        User.update(
+            {
+                id_state_foreign: 2,
+                updated_at: new Date()
+            },
+            {
+                where: {
+                    id
+                }
+            }
+        ).then(response => {
+            if(response != 0)
+                res.send({ success: 'Edição habilitada com sucesso'})
+            else
+                res.send({ error: 'Ocorreu um erro interno'})
+        })
+    }
 })
 
 module.exports = app => app.use('/admin', router)

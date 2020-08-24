@@ -157,7 +157,6 @@ router.post('/registrar', async (req, res) => {
 
 
 router.get('/recuperar_senha', (req, res) => {
-    /* 🔴 (Como enviar as resposta pro front end) Basta enviar as respostas junto com o res.render enviando a resposta para receber no handlebars */
     if(req.query.tokenr && req.query.email){
         if(req.query.tokenr == req.cookies['tokenr'] && req.session.tokenr == req.query.tokenr && req.session.tokenr == req.cookies['tokenr']){
             let count_errors = 0

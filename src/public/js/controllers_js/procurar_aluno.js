@@ -1,4 +1,5 @@
 $( document ).ready(function() {
+    $('.ui.dropdown').dropdown()
     $('.sidebar-menu-toggler').on('click', function(){
         var target = $(this).data('target')
         $(target).sidebar({
@@ -159,7 +160,7 @@ $( document ).ready(function() {
                                     icon: "success",
                                 }).then(() =>{
                                     $.post('/admin/procurar/criartabela', 
-                                    {id: $('.header.dataid').data('id')},
+                                    {id: id_aluno},
                                     (response) => {
                                         location.reload()
                                     })
@@ -179,5 +180,107 @@ $( document ).ready(function() {
                 }
             }
             ).modal('show');
+    })
+
+    $('button.alterarAluno').on('click', function(){
+        var id = $(this).data('id')
+        var id_aluno = $('.header.dataid').data('id')
+
+        $('.ui.mini.modal.alterarAluno').modal({
+            onDeny: function(){
+                $.post('/admin/procurar/alteraraluno', {id, id_aluno, acao: 0}, response => {
+                    if(response.success){
+                        swal({
+                            closeOnEsc: false,
+                            closeOnClickOutside: false,
+                            title: response.success,
+                            icon: "success",
+                        }).then(() =>{
+                            $.post('/admin/procurar/criartabela', 
+                            {id: $('.header.dataid').data('id')},
+                            (response) => {
+                                location.reload()
+                            })
+                        })
+                    }else{
+                        swal({
+                            closeOnEsc: false,
+                            closeOnClickOutside: false,
+                            title: response.error,
+                            icon: "error",
+                        })
+                    }
+                })
+                return true
+            },
+            onApprove: function(){
+                $.post('/admin/procurar/alteraraluno', {id, id_aluno, acao: 1}, response => {
+                    if(response.success){
+                        swal({
+                            closeOnEsc: false,
+                            closeOnClickOutside: false,
+                            title: response.success,
+                            icon: "success",
+                        }).then(() =>{
+                            $.post('/admin/procurar/criartabela', 
+                            {id: $('.header.dataid').data('id')},
+                            (response) => {
+                                location.reload()
+                            })
+                        })
+                    }else{
+                        swal({
+                            closeOnEsc: false,
+                            closeOnClickOutside: false,
+                            title: response.error,
+                            icon: "error",
+                        })
+                    }
+                })
+                return true
+            }
+        }).modal('show')
+
+    })
+
+    $('button.habilitarEdicaoAluno').on('click', function(){
+        var id = $(this).data('id')
+        var id_aluno = $('.header.dataid').data('id')
+        
+        $('.ui.mini.modal.habilitarEdicaoAluno')
+            .modal({
+                onDeny:function(){
+                    return true
+                },
+                onApprove:function(){
+                    $.post('/admin/procurar/habilitaraluno',
+                    {id, id_aluno},
+                    response => {
+                        if(response.success){
+                            swal({
+                                closeOnEsc: false,
+                                closeOnClickOutside: false,
+                                title: response.success,
+                                icon: "success",
+                            }).then(() => {
+                                $.post('/admin/procurar/criartabela', 
+                                    {id: id_aluno},
+                                    (response) => {
+                                        location.reload()
+                                    })
+                            })
+                        }else{
+                            swal({
+                                closeOnEsc: false,
+                                closeOnClickOutside: false,
+                                title: response.error,
+                                icon: "error",
+                            })
+                        }
+                    }    
+                    )
+                    return true
+                }
+            }).modal('show')
     })
 });

@@ -141,6 +141,7 @@ router.get('/', async (req, res) => {
 router.get('/certificado', async (req, res) => {
     var CertificadoUser = null
     var TipoCertificado = null
+    var valor_total = 0
     await Certificado.findAll({
         include: [
             {
@@ -161,7 +162,7 @@ router.get('/certificado', async (req, res) => {
                     nome_certificado: certificado.name_certified,
                     valor_certificado: certificado.value_certified,
                     picture_certificado: certificado.picture_certified,
-                    comments_ceritifcado: certificado.comments_certified,
+                    comments_certificado: certificado.comments_certified,
                     numero_tipo_certificado: certificado.id_type_certified_foreign,
                     tipo_certificado: certificado.type_certified.get('name_type_certified'),
                     nome_usuario: req.session.user.nome,
@@ -169,7 +170,13 @@ router.get('/certificado', async (req, res) => {
                 }
             )
         })
+
+        CertificadoUser.forEach(c => {
+            if(c.status == 1)
+                valor_total += c.valor_certificado
+        })
     })
+
 
     await TypeCertified.findAll().then(response => {
         TipoCertificado = response.map(tipo_certificado => {
@@ -189,6 +196,7 @@ router.get('/certificado', async (req, res) => {
         title: 'UniCertified | Certificados',
         user: req.session.user,
         breadcrumb: 'Certificado',
+        total_pontos: valor_total,
         certificados: CertificadoUser,
         tipos_certificados: TipoCertificado
     })

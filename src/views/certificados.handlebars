@@ -45,7 +45,16 @@
                                   <span>Semestre: {{user.semestre}}</span><br>                                  
                                 </div>
                                 <div class="description">
-                                  <p></p>
+                                  {{#ifCond user.estado_usuario '!=' 1}}
+                                      {{#ifCond user.estado_usuario '!=' 3}}
+                                        {{#ifCond total_pontos '>=' 100}}
+                                          <div class="ui green horizontal label">Aluno pré aprovado pelo sistema</div>
+                                        {{/ifCond}}
+                                      {{/ifCond}}
+                                  {{/ifCond}}
+                                  {{#ifCond user.estado_usuario '==' 1}}
+                                    <div class="ui green horizontal label">Aluno aprovado</div>
+                                  {{/ifCond}}
                                 </div>
                                 {{!-- <div class="extra">
                                     <button class="mini ui button blue">Editar</button>
@@ -93,7 +102,20 @@
                                   <i class="icon attention"></i>
                                 </td>
                                 {{/ifCond}}
-                                <td >{{this.nome_certificado}}</td>
+                                {{#if this.comments_certificado}}
+                                  {{#ifCond this.status '==' 3}}
+                                    <td data-tooltip="{{this.comments_certificado}}" data-position="top center" data-variation="very wide">{{this.nome_certificado}}       <i class="info circle icon"></i></td>
+                                  {{/ifCond}}
+                                {{/if}}
+                                {{#if this.comments_certificado}}
+                                  {{#ifCond this.status '!=' 3}}
+                                    <td>{{this.nome_certificado}}</td>
+                                  {{/ifCond}}
+                                {{else}}
+                                   {{#ifCond this.status '!=' 3}}
+                                    <td>{{this.nome_certificado}}</td>
+                                   {{/ifCond}}
+                                {{/if}}                                                              
                                 <td>{{this.valor_certificado}}</td>                                
                                 <td data-type="{{this.numero_tipo_certificado}}">{{this.tipo_certificado}}</td>                                
                                 <td width="5%" class="center aligned">
@@ -130,9 +152,13 @@
                             </tbody>
                             <tfoot class="full-width">
                                 <tr>
-                                  <th colspan="7">
+                                  <th></th>
+                                  <th colspan="5">
                                     <div class="ui right floated small primary labeled icon button novoCertificado">
                                       <i class="file alternate icon"></i> Novo Certificado
+                                    </div>
+                                    <div class="ui small green labeled icon button" data-tooltip="Somado apenas certificados aprovados" data-position="right center">
+                                      <i class="table icon"></i> Pontos Totais: {{total_pontos}}
                                     </div>
                                   </th>
                                 </tr>
