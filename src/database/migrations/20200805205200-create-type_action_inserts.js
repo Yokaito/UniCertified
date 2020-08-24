@@ -23,6 +23,46 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date()
       },
+      { 
+        name_type_action: 'Aprovar Aluno',
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      { 
+        name_type_action: 'Reprovar Aluno',
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      { 
+        name_type_action: 'Habilitar Edição Aluno',
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      { 
+        name_type_action: 'Aprovar Certificado',
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      { 
+        name_type_action: 'Reprovar Certificado',
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      { 
+        name_type_action: 'Habilitar Edição Certificado',
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      { 
+        name_type_action: 'Criou um Certificado',
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      { 
+        name_type_action: 'Deletou um Certificado',
+        created_at: new Date(),
+        updated_at: new Date()
+      },
   ]);
   },
   down: (queryInterface, Sequelize) => {
