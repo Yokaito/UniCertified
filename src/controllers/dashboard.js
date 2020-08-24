@@ -8,6 +8,7 @@ import formatarData from '../functions/formatDate'
 import multer from 'multer'
 import multerConfig from '../config/multer'
 import fsCertificado from '../functions/fs_certificado'
+import hCertified from '../models/history_certified'
 
 const router = express.Router()
 
@@ -236,7 +237,12 @@ router.post('/certificado/newcertificado', multer(multerConfig).single('file') ,
             if(!response)
                 res.send({ error: 'Houve um erro interno ao registrar'})
             else{
-                
+                hCertified.create({
+                    action_date_certified: new Date(),
+                    id_certified_foreign: response.getDataValue('id'),
+                    id_user_foreign: req.session.user.id,
+                    id_type_action_foreign: 11 /* Criar Certificado */
+                })
                 switch(response.getDataValue('id_state_foreign')){
                     case 1:
                         estado = 'positive'
@@ -339,9 +345,15 @@ router.post('/certificado/editcertificado', multer(multerConfig).single('file') 
             }
             
         ).then(response => {
-            if(response)
+            if(response){
+                hCertified.create({
+                    action_date_certified: new Date(),
+                    id_certified_foreign: response.getDataValue('id'),
+                    id_user_foreign: req.session.user.id,
+                    id_type_action_foreign: 13 /* Editou um certificado */
+                })
                 res.send({ success: 'Certificado atualizado com sucesso' })
-            else
+            }else
                 res.send({ error: 'Ocorreu um erro interno, tente novamente' })
 
         })
@@ -375,13 +387,21 @@ router.post('/certificado/deletacertificado', async (req, res) => {
     if(count_error != 0) 
         res.send({ error: 'Ocorreu um erro ao tentar excluir o certificado'})
     else{
+        hCertified.create({
+            action_date_certified: new Date(),
+            id_certified_foreign: certificado.id,
+            id_user_foreign: req.session.user.id,
+            id_type_action_foreign: 13 /* Excluiu um certificado */
+        })
         await Certified.destroy({
             where: {
                 id: certificado.id,
                 id_user_foreign: certificado.ownerId
             }
         }).then(response => {
-            fsCertificado.deletarCertificado(certificado.picture)
+            if(response){
+                fsCertificado.deletarCertificado(certificado.picture)
+            }            
         })
         
         res.send({ success: 'Certificado excluido com sucesso' })

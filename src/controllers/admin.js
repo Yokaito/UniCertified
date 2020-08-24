@@ -3,6 +3,7 @@ import User from '../models/user'
 import { Op } from 'sequelize'
 import Certified from '../models/certified'
 import TypeCertified from '../models/type_certified'
+import hCertified from '../models/history_certified'
 
 const router = express.Router()
 
@@ -128,7 +129,6 @@ router.post('/procurar/criartabela', async (req, res) => {
     res.send({ success: 'Tabela sendo criada'})
 })
 
-/* Criar para todos os posts de aprovado, reprovado e habilitar a edicao o historico do usuario que fez isso */
 router.post('/procurar/alterarestado', async (req, res) => {
     var { id , comentario, acao, id_aluno } = req.body
     var count_error = 0
@@ -157,10 +157,24 @@ router.post('/procurar/alterarestado', async (req, res) => {
             }
         ).then(response => {
             if(response){
-                if(acao == 1)
-                    res.send({ success: 'Certificado aprovado com sucesso'})
-                else
-                    res.send({ success: 'Certificado reprovado com sucesso'})
+                if(acao == 1){
+                    hCertified.create({
+                        action_date_certified: new Date(),
+                        id_certified_foreign: id,
+                        id_user_foreign: req.session.user.id,
+                        id_type_action_foreign: 8 /* Aprovar certificado */
+                    })
+                    res.send({ success: 'Certificado aprovado com sucesso'})                    
+                }else{
+                    hCertified.create({
+                        action_date_certified: new Date(),
+                        id_certified_foreign: id,
+                        id_user_foreign: req.session.user.id,
+                        id_type_action_foreign: 9 /* Reprovar Certificado */
+                    })
+                    res.send({ success: 'Certificado reprovado com sucesso'})  
+                }
+                                  
             }else
                 res.send({ error: 'Ocorreu um erro interno'})
                 
@@ -196,8 +210,16 @@ router.post('/procurar/habilitaredicao', async (req,res) => {
                 }
             }
         ).then(response => {
-            if(response != 0)
+            if(response != 0){
+                hCertified.create({
+                    action_date_certified: new Date(),
+                    id_certified_foreign: id,
+                    id_user_foreign: req.session.user.id,
+                    id_type_action_foreign: 10 /* Habilitar Edição */
+                })
                 res.send({ success: 'Edição habilitada com sucesso'})
+            }
+                
             else
                 res.send({ error: 'Ocorreu um erro interno'})
         })
@@ -320,9 +342,16 @@ router.post('/procurar/editarcertificado', async (req , res) => {
                 }
             }
         ).then(r => {
-            if(r)
+            if(r){
+                hCertified.create({
+                    action_date_certified: new Date(),
+                    id_certified_foreign: id,
+                    id_user_foreign: req.session.user.id,
+                    id_type_action_foreign: 13 /* Editou um Certificado */
+                })
                 res.send({ success: 'Certificado atualizado com sucesso'})
-            else
+                
+            }else
                 res.send({ error: 'Ocorreu um erro interno'})
         })
     }
