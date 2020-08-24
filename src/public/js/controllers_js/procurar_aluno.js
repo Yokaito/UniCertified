@@ -283,4 +283,65 @@ $( document ).ready(function() {
                 }
             }).modal('show')
     })
+
+    $('.editarCertificado').on('click', function(){
+        var id = $(this).data('id')
+        var trs = $(this).closest('tr')
+        var tds = trs[0].cells
+        var formCertificado = $('.editarCertificadoForm')
+        var id_aluno = $('.header.dataid').data('id')
+        var inputValor =  $('input[name="new_valor_certificado"]')
+        var inputTipo = $('select[name="new_tipo_certificado"]')
+        
+        inputValor.val(tds[2].textContent)
+        inputTipo.val(tds[3].dataset.type).change()  
+
+        $('.ui.modal.tiny.editar').modal({
+            closable : false,
+            onDeny: () => {  
+                inputValor.val('')           
+                return true
+            },
+            onApprove: () => {
+                if(formCertificado.form('is valid')){
+                    $.post('/admin/procurar/editarcertificado',
+                        {
+                            id,
+                            valor: inputValor.val(),
+                            tipo: inputTipo.val(),
+                            id_aluno
+                        },
+                        r => {
+                            if(r.success){
+                                inputValor.val(' ')
+                                swal({
+                                    closeOnEsc: false,
+                                    closeOnClickOutside: false,
+                                    title: r.success,
+                                    icon: 'success'
+                                }).then(() => {
+                                    $.post('/admin/procurar/criartabela', 
+                                    {id: id_aluno},
+                                    (response) => {
+                                        location.reload()
+                                    })
+                                })
+                            }else{
+                                swal({
+                                    closeOnEsc: false,
+                                    closeOnClickOutside: false,
+                                    title: r.error,
+                                    icon: "error",
+                                })
+                            }
+                        }
+                    )
+                    return true
+                }
+                return false
+            }
+        }).modal('show')
+        
+        
+    })    
 });

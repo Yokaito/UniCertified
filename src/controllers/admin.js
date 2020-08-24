@@ -21,6 +21,7 @@ router.get('/procurar', async (req, res) => {
     var aluno = null
     var certificadoAluno = null
     var total = 0;
+    var TipoCertificado = null
     if(req.session.mostrarTabela){
         await User.findByPk(req.session.mostrarTabela).then((response) => {
             if(response){
@@ -64,6 +65,18 @@ router.get('/procurar', async (req, res) => {
                 total += c.valor 
         })
 
+        await TypeCertified.findAll().then(r => {
+            TipoCertificado = r.map(tc => {
+                return Object.assign(
+                    {},
+                    {
+                        id: tc.id,
+                        nome: tc.name_type_certified
+                    }
+                )
+            })
+        })
+
     }
 
     req.session.mostrarTabela = undefined
@@ -74,6 +87,7 @@ router.get('/procurar', async (req, res) => {
         title: 'UniCertified | Procurar Aluno',
         user: req.session.user,
         aluno: aluno,
+        TipoCertificado,
         total: total,
         certificados: certificadoAluno,
         breadcrumb: `Procurar Aluno`,
@@ -260,6 +274,54 @@ router.post('/procurar/habilitaraluno', async (req, res) => {
         ).then(response => {
             if(response != 0)
                 res.send({ success: 'Edição habilitada com sucesso'})
+            else
+                res.send({ error: 'Ocorreu um erro interno'})
+        })
+    }
+})
+
+router.post('/procurar/editarcertificado', async (req , res) => {
+    const { id, valor, tipo, id_aluno } = req.body
+    var count_error = 0
+    var msg_envio = null
+    var name_tipo = null
+
+    if(valor == ' ' && tipo == ' ' && id == ' ' && !(valor > 0 && valor <= 40)){
+        count_error += 1
+        msg_envio = 'Dados enviados invalidos'
+    }else if(!(req.session.user.tipo_usuario <= 2)){
+        count_error += 1
+        msg_envio = 'Sem permissão para realizar esta ação'
+    }
+
+    await TypeCertified.findByPk(tipo).then(r => {
+        if(r)
+            name_tipo = r.getDataValue('name_type_certified')    
+    })
+
+    if(name_tipo == null){
+        count_error += 1
+        msg_envio = 'Tipo do certificado não encontrado'
+    }
+        
+    if(count_error != 0){
+        res.send({ error: msg_envio})
+    }else{
+        await Certified.update(
+            {
+                value_certified: valor,
+                id_type_certified_foreign: tipo,
+                updated_at: new Date()
+            },
+            {
+                where: {
+                    id: id,
+                    id_user_foreign: id_aluno
+                }
+            }
+        ).then(r => {
+            if(r)
+                res.send({ success: 'Certificado atualizado com sucesso'})
             else
                 res.send({ error: 'Ocorreu um erro interno'})
         })
