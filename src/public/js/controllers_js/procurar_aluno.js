@@ -15,6 +15,36 @@ $( document ).ready(function() {
         })
     ;
 
+    $('.ui.form.editarCertificadoForm')
+        .form({
+            inline: true,
+            on: 'blur',
+            fields: {
+                valor: {
+                    identifier: 'new_valor_certificado',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Informe um valor'
+                        },
+                        {
+                            type   : 'integer[1..40]',
+                            prompt : 'Informe um valor inteiro entre (0-40)'
+                        }
+                    ]
+                },
+                tipo_certificado: {
+                    identifier: 'new_tipo_certificado',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Escolha um tipo'
+                        }
+                    ]
+                }
+            }
+    })  
+
     $('.ui.form.alterarEstado')
         .form({
             inline: true,
