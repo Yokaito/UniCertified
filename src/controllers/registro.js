@@ -122,6 +122,8 @@ router.post('/registrar', async (req, res) => {
                     email_user: data.email_usuario,
                     name_user: data.nome_usuario,
                     password_user: data.senha_usuario,
+                    half_user: 1,
+                    course_user: 'Engenharia de Software',
                     id_type_user_foreign: 3,
                     id_state_foreign: 2,
                     last_access_date_user: new Date(),
