@@ -18,6 +18,11 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date()
       },
+      {
+        name_state: 'Pré-Aprovado',
+        created_at: new Date(),
+        updated_at: new Date()
+      }
       
   ]);
   },
