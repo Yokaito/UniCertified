@@ -3,7 +3,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.changeColumn(
-      'user',
+      'certified',
       'picture_certified',
       {
         type: Sequelize.STRING(200),
@@ -14,7 +14,7 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.changeColumn(
-      'user',
+      'certified',
       'picture_certified',
       {
         type: Sequelize.BLOB,
