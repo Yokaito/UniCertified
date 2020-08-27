@@ -9,6 +9,8 @@ import multer from 'multer'
 import multerConfig from '../config/multer'
 import fsCertificado from '../functions/fs_certificado'
 import hCertified from '../models/history_certified'
+import hUser from '../models/history_user'
+import type_action from '../models/type_action'
 
 const router = express.Router()
 
@@ -345,10 +347,11 @@ router.post('/certificado/editcertificado', multer(multerConfig).single('file') 
             }
             
         ).then(response => {
+            /* Criar um find para este certificado para inserir dentro do historico pois nao esta retornando nada */
             if(response){
                 hCertified.create({
                     action_date_certified: new Date(),
-                    id_certified_foreign: response.getDataValue('id'),
+                    id_certified_foreign: certificado.id,
                     id_user_foreign: req.session.user.id,
                     id_type_action_foreign: 13 /* Editou um certificado */
                 })
@@ -406,6 +409,168 @@ router.post('/certificado/deletacertificado', async (req, res) => {
         
         res.send({ success: 'Certificado excluido com sucesso' })
     }
+})
+
+router.get('/perfil', async (req, res) => {
+    var historico_usr = null
+    var historico_cert_usr = null
+    var usuario = null
+    var contador = 0
+    var contador2 = 0
+    await hCertified.findAll(
+        {
+            include: [
+                {
+                    model: type_action,
+                    required: true,
+                    attributes: ['name_type_action']
+                },
+                {
+                    model: User,
+                    required: true,
+                    attributes: ['name_user']
+                },
+                {
+                    model: Certified,
+                    required: true,
+                    attributes: ['id', 'name_certified'],
+                    include: [{
+                        model: User,
+                        required: true,
+                        attributes: ['name_user'],
+                        where: {
+                            id: req.session.user.id
+                        }
+                    }]
+                }
+            ],
+            order: [
+                ['action_date_certified', 'DESC']
+            ]
+        },                
+    ).then(r => {
+        if(r){
+            historico_cert_usr = r.map(h => {
+                contador2 += 1
+                return Object.assign({},{
+                    id: contador2,
+                    nome_acao: h.type_action.getDataValue('name_type_action'),
+                    dono_certificado: h.certified.user.getDataValue('name_user'),
+                    nome_certificado: h.certified.getDataValue('name_certified'),
+                    nome_usuario_acao: h.user.getDataValue('name_user'),
+                    data: formatarData(h.action_date_certified) 
+                })
+            })
+        }        
+    })
+    
+    await hUser.findAll({
+        where: { 
+            id_user_foreign: req.session.user.id
+        },
+        include: [
+            {
+                model: type_action,
+                required: true
+            },
+            {
+                model: User,
+                required:  true
+            }
+        ],
+        order: [
+            ['action_data_user', 'DESC']
+        ]
+    }).then(r => {
+        if(r){
+            historico_usr = r.map(h => {
+                contador += 1
+                return Object.assign({}, {
+                    id: contador,
+                    data: formatarData(h.action_data_user),
+                    acao: h.type_action.getDataValue('name_type_action'),
+                })
+            })
+        }                                                                                                                                                                                      
+    })
+
+    await User.findByPk(req.session.user.id).then(r => {
+        usuario = {
+            id: r.id,
+            email: r.email_user,
+            nome: r.name_user,
+            semestre: r.half_user,
+        } 
+    })
+
+    var i = 1
+    var html = []
+    while (i <= 8) {
+       if(i == usuario.semestre){
+        html.push({
+            value: i,
+            selected: true
+        })
+       }else{
+        html.push({
+            value: i,
+            selected: false
+        })  
+        }i++ 
+    }
+    res.render('perfil', {
+        js: 'controllers_js/perfil.js',
+        style: 'controllers_css/dashboard.css',
+        title: 'UniCertified | Perfil',
+        user: req.session.user,
+        breadcrumb: 'Perfil',
+        historico: historico_usr,
+        historico_c: historico_cert_usr,
+        usuario,
+        html,
+    })
+})
+
+router.post('/perfil/atualizar', async (req, res) => {
+    var { id, nome, semestre } = req.body
+    var count_error = 0
+    
+    if(nome == ' ' && !(nome.length >= 5 && nome.length <= 40))
+        count_error += 1
+    if(!(semestre >= 1 && semestre <= 8))
+        count_error += 1
+    if(id != req.session.user.id)
+        count_error += 1
+
+    if(count_error != 0)
+        res.send({ error: 'Houve um erro com os dados enviados'});
+    else{
+        await User.update(
+            {
+                name_user: nome,
+                half_user: semestre,
+                updated_at: new Date()
+            },
+            {
+                where: {
+                    id
+                }
+            }
+        ).then(r => {
+            if(r){
+                hUser.create(
+                    {
+                        action_data_user: new Date(),
+                        id_type_action_foreign: 14, /* Inserção */
+                        id_user_foreign: id
+                    }
+                )
+                res.send({ success: 'Atualizado com sucesso'})
+            }else
+                res.send({ success: 'Ocorreu um erro interno'})
+        })
+    }
+
 })
 
 router.get('/logout', (req, res) => {

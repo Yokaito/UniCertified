@@ -1,0 +1,101 @@
+{{> topnav}}
+{{> sidebar}}
+
+<div class="pusher">
+    <div class="main-content">
+        <br>
+        {{> breadcrumb}}
+        <div class="ui grid stackable padded">
+            <div class="eight wide computer eight wide tablet sixteen wide mobile column">
+                <div class="ui segment">
+                    <h4 class="ui horizontal divider header">
+                        <i class="user circle icon"></i>
+                        Editar Dados
+                    </h4>
+                    <form class="ui form atualizarAlunoF">
+                        <div class="field disabled">
+                            <label>Email</label>
+                            <input type="text" name="email_user" placeholder="Email" value="{{usuario.email}}">
+                        </div>
+                        <div class="field">
+                            <label>Nome</label>
+                            <input type="text" name="name_user" placeholder="Nome" value="{{usuario.nome}}">
+                        </div>
+                        <div class="field">
+                            <label>Semestre</label>
+                            <select class="ui dropdown" name="semestre">
+                                {{#each html}}
+                                    {{#if this.selected}}
+                                        <option value="{{this.value}}" selected>{{this.value}}</option>
+                                    {{else}}
+                                        <option value="{{this.value}}">{{this.value}}</option>
+                                    {{/if}}
+                                {{/each}}
+                            </select>
+                        </div>                        
+                        <div class="ui button positive fluid atualizarAluno" data-id="{{usuario.id}}">Atualizar</div>
+                    </form>
+                </div>
+            </div> 
+            <div class="eight wide computer eight wide tablet sixteen wide mobile column">
+                <div class="ui segment">
+                    <h4 class="ui horizontal divider header">
+                        <i class="archive icon"></i>
+                        Historico da Conta
+                    </h4>
+                    <table class="ui celled table" id="tabela_historico">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Ação</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each historico}}
+                                <tr>
+                                    <td>{{this.id}}</td>
+                                    <td>{{this.acao}}</td>
+                                    <td class="center aligned">{{this.data}}</td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="eight wide computer eight wide tablet sixteen wide mobile column"></div>
+            <div class="eight wide computer eight wide tablet sixteen wide mobile column">
+                <div class="ui segment">
+                    <h4 class="ui horizontal divider header">
+                        <i class="sticky note outline icon"></i>
+                        Historico dos Certificados
+                    </h4>
+                    <table class="ui celled table" id="tabela_historico2">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Ação</th>
+                                <th>Certificado</th>
+                                <th>Quem Fez</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each historico_c}}
+                                <tr>
+                                    <td>{{this.id}}</td>
+                                    <td>{{this.nome_acao}}</td>
+                                    <td>{{this.nome_certificado}}</td>
+                                    <td>{{this.nome_usuario_acao}}</td>
+                                    <td class="center aligned">{{this.data}}</td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+                                    
+        </div>
+    </div>
+</div>
+<!-- Content --> 

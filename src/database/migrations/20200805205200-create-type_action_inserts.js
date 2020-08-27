@@ -67,7 +67,12 @@ module.exports = {
         name_type_action: 'Editou um Certificado',
         created_at: new Date(),
         updated_at: new Date()
-      }
+      },
+      {
+        name_type_action: 'Informações Pessoais Editadas',
+        created_at: new Date(),
+        updated_at: new Date()
+      },
   ]);
   },
   down: (queryInterface, Sequelize) => {

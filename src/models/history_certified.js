@@ -13,7 +13,7 @@ class history_certified extends Model {
     static associate(models){
         this.belongsTo(models.certified, { foreignKey: 'id_certified_foreign'})
         this.belongsTo(models.user, { foreignKey: 'id_user_foreign'})
-        this.belongsTo(models.state, { foreignKey: 'id_type_action_foreign'})
+        this.belongsTo(models.type_action, { foreignKey: 'id_type_action_foreign'})
     
     }
 }
