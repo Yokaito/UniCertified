@@ -379,4 +379,86 @@ router.post('/procurar/habilitaraluno', async (req, res) => {
 })
 /* Aluno */
 
+/* Listagem de Alunos */
+router.get('/listagem', async (req, res) => {
+    var cont = 1
+    var cont2 = 0
+    var cont3 = 0
+    var semestre = []
+    var user_semestre
+    var user_all
+    var listagem = req.session.mostrarListagemSemestre != undefined ? req.session.mostrarListagemSemestre : 1
+    while(cont <= 8){
+        semestre.push({
+            value: cont
+        })
+        cont++
+    }
+    
+    if(listagem){
+        await User.findAll({
+            where: {
+                half_user: listagem
+            }
+        }).then(r => {
+            if(r){
+                user_semestre = r.map(u => {
+                    cont2 += 1
+                    return Object.assign({}, {
+                        id: cont2,
+                        id_aluno: u.id,
+                        nome: u.name_user,
+                        semestre: u.half_user,
+                        estado: u.id_state_foreign
+                    })
+                })
+            }            
+        })
+    }
+
+    await User.findAll().then(r => {
+        if(r){
+            user_all = r.map(u => {
+                cont3 += 1
+                return Object.assign({}, {
+                    id: cont3,
+                    id_aluno: u.id,
+                    nome: u.name_user,
+                    semestre: u.half_user,
+                    estado: u.id_state_foreign
+                })
+            })
+        }
+    })
+
+    res.render('listagem', {
+        js: 'controllers_js/listagem.js',
+        style: 'controllers_css/dashboard.css',
+        title: 'UniCertified | Listagem',
+        user: req.session.user,
+        breadcrumb: `Listagem`,
+        semestre,
+        user_semestre,
+        user_all
+        
+    })
+})
+
+router.post('/listagem/semestre', async (req,res) => {
+    var id  = req.body.id
+
+    var count_error = 0
+    if(!(id >= 1 && id <= 8))
+        count_error += 1
+    
+    if(count_error != 0)
+        res.send({ error: 'Semestre nao existente'})
+    else{
+        req.session.mostrarListagemSemestre = id
+        res.send({ success: 'Tabela sendo criada'})
+    }
+    
+})
+/* Listagem de Alunos */
+
 module.exports = app => app.use('/admin', router)
