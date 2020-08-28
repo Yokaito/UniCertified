@@ -391,7 +391,9 @@ router.post('/certificado/deletacertificado', async (req, res) => {
         res.send({ error: 'Ocorreu um erro ao tentar excluir o certificado'})
     else{
         hCertified.destroy({
-            where: certificado.id
+            where: {
+                id_certified_foreign: certificado.id
+            }
         })
         await Certified.destroy({
             where: {
