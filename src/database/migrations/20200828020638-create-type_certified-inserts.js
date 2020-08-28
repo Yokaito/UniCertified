@@ -5,10 +5,12 @@ module.exports = {
     return queryInterface.bulkInsert('type_certified', [
       { 
         name_type_certified: 'Cursos',
+        first_hour: 10,
+        second_hour: 15,
+        third_hour: 20,
         created_at: new Date(),
         updated_at: new Date()
       }
-      /* 🟠 Criar os inserts de cada tipo de ceritifcado para quando criar o bando de dados os dados ja estejam la para usar como chave estrangeira */
   ]);
   },
   down: (queryInterface, Sequelize) => {
