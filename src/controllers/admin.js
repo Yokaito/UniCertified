@@ -6,6 +6,8 @@ import TypeCertified from '../models/type_certified'
 import hCertified from '../models/history_certified'
 import hUser from '../models/history_user'
 
+require('dotenv').config()
+
 const router = express.Router()
 
 
@@ -54,7 +56,7 @@ router.get('/procurar', async (req, res) => {
                     id: c.id,
                     nome: c.name_certified,
                     valor: c.value_certified,
-                    foto: c.picture_certified,
+                    foto: process.env.URL_PICTURE + c.picture_certified,
                     numero_tipo: c.id_type_certified_foreign,
                     tipo: c.type_certified.get('name_type_certified'),
                     estado: c.id_state_foreign

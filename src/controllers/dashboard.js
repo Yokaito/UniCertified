@@ -12,6 +12,8 @@ import hCertified from '../models/history_certified'
 import hUser from '../models/history_user'
 import type_action from '../models/type_action'
 
+require('dotenv').config()
+
 const router = express.Router()
 
 router.use((req, res, next) => {
@@ -164,7 +166,7 @@ router.get('/certificado', async (req, res) => {
                     status: certificado.id_state_foreign,
                     nome_certificado: certificado.name_certified,
                     valor_certificado: certificado.value_certified,
-                    picture_certificado: certificado.picture_certified,
+                    picture_certificado: process.env.URL_PICTURE + certificado.picture_certified,
                     comments_certificado: certificado.comments_certified,
                     numero_tipo_certificado: certificado.id_type_certified_foreign,
                     tipo_certificado: certificado.type_certified.get('name_type_certified'),
