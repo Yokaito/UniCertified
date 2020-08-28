@@ -144,9 +144,24 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/certificado', async (req, res) => {
+    var UserB = []
     var CertificadoUser = null
     var TipoCertificado = null
     var valor_total = 0
+    
+    await User.findByPk(req.session.user.id).then(r => {
+        UserB = {
+            id: r.id,
+            nome: r.name_user,
+            email: r.email_user,
+            curso: r.course_user,
+            semestre: r.half_user,
+            estado: r.id_state_foreign
+        }
+    })
+
+    console.log(UserB);
+
     await Certificado.findAll({
         include: [
             {
@@ -200,6 +215,7 @@ router.get('/certificado', async (req, res) => {
         style: 'controllers_css/dashboard.css',
         title: 'UniCertified | Certificados',
         user: req.session.user,
+        UserB,
         breadcrumb: 'Certificado',
         total_pontos: valor_total,
         certificados: CertificadoUser,

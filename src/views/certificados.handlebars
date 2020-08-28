@@ -9,7 +9,7 @@
                 <div class="column">
                     <div class="ui segment">                                              
                         <h2 class="ui dividing header">Certificados</h2>
-                        {{#ifCond user.estado_usuario '==' 1}}
+                        {{#ifCond UserB.estado '==' 1}}
                         <a class="ui rigth corner label green comentario">
                             <i class="tiny checkmark icon"></i>
                         </a>                        
@@ -17,7 +17,7 @@
                            Aprovado
                         </div>
                         {{/ifCond}}
-                        {{#ifCond user.estado_usuario '==' 2}}
+                        {{#ifCond UserB.estado '==' 2}}
                         <a class="ui rigth corner label orange comentario">
                             <i class="tiny spinner icon"></i>
                         </a>                        
@@ -25,7 +25,7 @@
                            Em Analise
                         </div>
                         {{/ifCond}}
-                        {{#ifCond user.estado_usuario '==' 3}}
+                        {{#ifCond UserB.estado '==' 3}}
                         <a class="ui rigth corner label red comentario">
                             <i class="tiny attention icon"></i>
                         </a>                        
@@ -39,21 +39,24 @@
                                 <img src="https://semantic-ui.com/images/wireframe/image.png">
                               </div>
                               <div class="content">
-                                <a class="header">{{user.nome}}</a>
+                                <a class="header">{{UserB.nome}}</a>
                                 <div class="meta">
-                                  <span>Curso: {{user.curso}}</span><br>
-                                  <span>Semestre: {{user.semestre}}</span><br>                                  
+                                  <span>Curso: {{UserB.curso}}</span><br>
+                                  <span>Semestre: {{UserB.semestre}}</span><br>                                  
                                 </div>
                                 <div class="description">
-                                  {{#ifCond user.estado_usuario '!=' 1}}
-                                      {{#ifCond user.estado_usuario '!=' 3}}
+                                  {{#ifCond UserB.estado '!=' 1}}
+                                      {{#ifCond UserB.estado '!=' 3}}
                                         {{#ifCond total_pontos '>=' 100}}
                                           <div class="ui green horizontal label">Aluno pré aprovado pelo sistema</div>
                                         {{/ifCond}}
                                       {{/ifCond}}
                                   {{/ifCond}}
-                                  {{#ifCond user.estado_usuario '==' 1}}
+                                  {{#ifCond UserB.estado '==' 1}}
                                     <div class="ui green horizontal label">Aluno aprovado</div>
+                                  {{/ifCond}}
+                                  {{#ifCond UserB.estado '==' 3}}
+                                    <div class="ui red horizontal label">Reprovado</div>
                                   {{/ifCond}}
                                 </div>
                                 {{!-- <div class="extra">
