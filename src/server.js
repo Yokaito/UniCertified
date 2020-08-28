@@ -68,4 +68,4 @@ app.use(morgan('dev'))
 
 require('./controllers/index')(app)
 
-app.listen(process.env.EXP_PORT, () => { console.log(`Server foi iniciado na porta ${process.env.EXP_PORT}`)});
+app.listen(process.env.PORT || 3000, () => { console.log(`Server foi iniciado na porta ${process.env.EXP_PORT}`)});
