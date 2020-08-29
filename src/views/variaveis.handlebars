@@ -1,0 +1,82 @@
+{{> topnav}}
+{{> sidebar}}
+
+<div class="pusher">
+    <div class="main-content">
+        <br>
+        {{> breadcrumb}}
+        <div class="ui grid stackable padded">
+            <div class="column">
+                <div class="ui segment">
+                    <h4 class="ui horizontal divider header">
+                        <i class="cogs icon"></i>
+                        Variáveis Ambiente
+                    </h4>
+                    <table class="ui celled table">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Nome</th>
+                                <th>Valor</th>
+                                <th>Criada Em</th>
+                                <th>Atualizada Em</th>
+                                <th class="center aligned">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each variaveis}}
+                            <tr>
+                                <td>{{this.id}}</td>
+                                <td>{{this.nome}}</td>
+                                <td>{{this.valor}}</td>
+                                <td width="15%">{{this.criada}}</td>
+                                <td width="15%">{{this.atualizada}}</td>
+                                <td width="8%" class="center aligned">
+                                    <div class="ui tiny icon buttons">                                        
+                                        <button data-id="{{this.id}}" class="ui button blue editarVariavel">
+                                          <i class="edit icon"></i>
+                                        </button>                                                      
+                                    </div>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="ui modal tiny editar">
+  <div class="header">Editar Variavel</div>
+  <div class="content">
+    <p></p>
+    <form class="ui form editarVariavelForm">
+      <div class="ui stacked segment">        
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="text" name="new_nome_variable" placeholder="Nome Variavel">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="number" name="new_value_variable" placeholder="Valor Variavel">
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="actions">
+    <div class="ui cancel red left labeled icon button">
+        Cancelar
+      <i class="close icon"></i>
+    </div> 
+    <div class="ui approve positive left labeled icon button">
+        Editar
+      <i class="checkmark icon"></i>
+    </div>   
+  </div>
+</div>

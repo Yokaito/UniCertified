@@ -7,7 +7,8 @@ module.exports = {
       'half_user',
       {
         type: Sequelize.INTEGER,
-        allowNull: true
+        allowNull: true,
+        after: 'course_user'
       }
     )
   },

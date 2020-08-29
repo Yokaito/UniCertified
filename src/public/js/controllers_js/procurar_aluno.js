@@ -65,6 +65,26 @@ $( document ).ready(function() {
                 },
             }
         })
+    
+    $('.ui.form.editarHorasForm').form({
+        inline: true,
+            on: 'blur',
+            fields: {
+                valor: {
+                    identifier: 'new_horas_aluno',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Informe um valor'
+                        },
+                        {
+                            type: 'integer[1..1000]',
+                            prompt: 'Informe um valor inteiro entre (1-1000)'
+                        }
+                    ]
+                },
+            }
+    })
 
     $('.ui.search').search({
             /* source : content, */
@@ -373,5 +393,52 @@ $( document ).ready(function() {
         }).modal('show')
         
         
-    })    
+    })   
+    
+    $('.button.editarHoras').on('click', function(){
+        var id = $(this).data('id')
+        var horas = $('.getHorasAluno').data('horas')
+        var formHoras = $('.ui.form.editarHorasForm')
+        var inputValor = $('input[name="new_horas_aluno"]')
+        inputValor.val(horas)
+        $('.ui.modal.tiny.editarHoras').modal({
+            closable : false,
+            onDeny: () => {  
+                inputValor.val('')           
+                return true
+            },
+            onApprove: () => {
+                if(formHoras.form('is valid')){
+                    $.post('/admin/procurar/editarhoras', {id, horas: inputValor.val()}, r => {
+                        if(r.success){
+                            inputValor.val('')
+                            swal({
+                                closeOnEsc: false,
+                                closeOnClickOutside: false,
+                                title: r.success,
+                                icon: 'success'
+                            }).then(() => {
+                                $.post('/admin/procurar/criartabela', 
+                                {id},
+                                (response) => {
+                                    location.reload()
+                                })
+                            })
+                        }else{
+                            swal({
+                                closeOnEsc: false,
+                                closeOnClickOutside: false,
+                                title: r.error,
+                                icon: "error",
+                            })
+                        }
+                    })
+                }else
+                    return false
+
+                inputValor.val('') 
+                return true
+            }
+        }).modal('show')
+    })
 });

@@ -156,11 +156,10 @@ router.get('/certificado', async (req, res) => {
             email: r.email_user,
             curso: r.course_user,
             semestre: r.half_user,
-            estado: r.id_state_foreign
+            estado: r.id_state_foreign,
+            horas: r.total_hours_user
         }
     })
-
-    console.log(UserB);
 
     await Certificado.findAll({
         include: [

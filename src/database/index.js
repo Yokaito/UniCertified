@@ -13,6 +13,7 @@ const history_certified = require('../models/history_certified')
 const model_certified = require('../models/model_certified')
 const certified_generated = require('../models/certified_generated')
 const generated_certificates = require('../models/generated_certificates')
+const variables = require('../models/variables')
 
 const connection = new sequelize(dbConfig)
 
@@ -22,6 +23,7 @@ type_user.init(connection)
 state.init(connection)
 type_action.init(connection)
 type_certified.init(connection)
+variables.init(connection)
 
 /* Tabelas que contem chaves estrangeiras */
 user.init(connection)

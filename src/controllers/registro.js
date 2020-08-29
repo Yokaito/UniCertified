@@ -2,6 +2,7 @@ import express from 'express'
 import User from '../models/user'
 import HUser from '../models/history_user'
 import hash from '../functions/hash'
+import variables from '../models/variables'
 import send_email from '../functions/email'
 import bcrypt from 'bcryptjs'
 
@@ -110,6 +111,19 @@ router.post('/registrar', async (req, res) => {
     else if (!(data.senha_conf_usuario != ' ' && (data.senha_conf_usuario.length >= 5 && data.senha_conf_usuario.length <= 40) && data.senha_conf_usuario == data.senha_usuario))
         count_errors += 1   
 
+
+    var horas_totais    
+    await variables.findOne({
+        where: {
+            id: 1
+        }
+    }).then(r => {
+        if(r)
+            horas_totais = r.value_variable
+        else
+            count_errors += 1
+    })
+    
     if(count_errors == 0){
         // 📍 Encontra o email
         await User.findOne({
@@ -124,6 +138,7 @@ router.post('/registrar', async (req, res) => {
                     password_user: data.senha_usuario,
                     half_user: 1,
                     course_user: 'Engenharia de Software',
+                    total_hours_user: horas_totais,
                     id_type_user_foreign: 3,
                     id_state_foreign: 2,
                     last_access_date_user: new Date(),

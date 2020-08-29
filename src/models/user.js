@@ -9,12 +9,13 @@ class user extends Model {
             name_user: DataTypes.STRING,
             course_user: DataTypes.STRING,
             half_user: DataTypes.INTEGER,
+            total_hours_user: DataTypes.INTEGER,
             password_user: DataTypes.STRING,
             last_access_date_user: DataTypes.DATE,
             activation_key_user: DataTypes.INTEGER
         }, {
             hooks: {
-                beforeSave: (user, options) =>{
+                beforeCreate: (user, options) =>{
                     var salt =  bcrypt.genSaltSync(10)
                     user.password_user = bcrypt.hashSync(user.password_user, salt)    
                 }

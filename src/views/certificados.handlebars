@@ -42,18 +42,22 @@
                                 <a class="header">{{UserB.nome}}</a>
                                 <div class="meta">
                                   <span>Curso: {{UserB.curso}}</span><br>
-                                  <span>Semestre: {{UserB.semestre}}</span><br>                                  
+                                  <span>Semestre: {{UserB.semestre}}</span><br>     
+                                  <span>Horas a Completar: {{UserB.horas}}</span>                             
                                 </div>
                                 <div class="description">
                                   {{#ifCond UserB.estado '!=' 1}}
                                       {{#ifCond UserB.estado '!=' 3}}
-                                        {{#ifCond total_pontos '>=' 100}}
+                                        {{#ifCond total_pontos '>=' UserB.horas}}
                                           <div class="ui green horizontal label">Aluno pré aprovado pelo sistema</div>
                                         {{/ifCond}}
                                       {{/ifCond}}
                                   {{/ifCond}}
                                   {{#ifCond UserB.estado '==' 1}}
                                     <div class="ui green horizontal label">Aluno aprovado</div>
+                                  {{/ifCond}}
+                                  {{#ifCond UserB.estado '==' 2}}
+                                    <div class="ui orange horizontal label">Em Analise</div>
                                   {{/ifCond}}
                                   {{#ifCond UserB.estado '==' 3}}
                                     <div class="ui red horizontal label">Reprovado</div>
@@ -107,7 +111,8 @@
                                 {{/ifCond}}
                                 {{#if this.comments_certificado}}
                                   {{#ifCond this.status '==' 3}}
-                                    <td data-tooltip="{{this.comments_certificado}}" data-position="top center" data-variation="very wide">{{this.nome_certificado}}       <i class="info circle icon"></i></td>
+                                    <td><a class="ui mini red label" style="
+                                    margin-right: 5px;" data-tooltip="{{this.comments_certificado}}" data-position="right center" data-variation="very wide">Observação</a>{{this.nome_certificado}}</td>
                                   {{/ifCond}}
                                 {{/if}}
                                 {{#if this.comments_certificado}}

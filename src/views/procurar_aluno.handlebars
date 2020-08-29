@@ -60,8 +60,9 @@
                                 <a class="header dataid" data-id="{{aluno.id}}">{{aluno.nome}}</a>                                
                                 <div class="meta">
                                   <span>Curso: {{aluno.curso}}</span><br>
-                                  <span>Semestre: {{aluno.semestre}}</span><br>    
-                                  <span>Email: {{aluno.email}}</span><br>                                                    
+                                  <span>Semestre: {{aluno.semestre}}</span><br> 
+                                  <span class="getHorasAluno" data-horas="{{aluno.horas}}">Horas a Completar: {{aluno.horas}}</span><br>   
+                                  <span>Email: {{aluno.email}}</span><br>                                         
                                 </div>
                                 <div class="description">
                                   <p></p>
@@ -71,7 +72,10 @@
                                       <div class="ui tiny icon buttons">             
                                         <button data-id="{{aluno.id}}" class="ui button teal alterarAluno">
                                           <i class="tag icon"></i>
-                                        </button>   
+                                        </button> 
+                                        <button data-id="{{aluno.id}}" class="ui button blue editarHoras">
+                                        <i class="edit icon"></i>
+                                      </button>   
                                     </div>
                                     {{/ifCond}}
                                     {{#ifCond aluno.estado '!=' 2}}
@@ -86,7 +90,7 @@
                                     {{/ifCond}} 
                                     {{#ifCond aluno.estado '!=' 1}}
                                       {{#ifCond aluno.estado '!=' 3}}
-                                        {{#ifCond total '>=' 100}}
+                                        {{#ifCond total '>=' aluno.horas}}
                                           <div class="ui green horizontal label">Aluno pré aprovado pelo sistema</div>
                                         {{/ifCond}}
                                       {{/ifCond}}
@@ -298,6 +302,33 @@
             <option value="{{this.id}}">{{this.nome}}</option>
             {{/each}}
           </select>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="actions">
+    <div class="ui cancel red left labeled icon button">
+        Cancelar
+      <i class="close icon"></i>
+    </div> 
+    <div class="ui approve positive left labeled icon button">
+        Editar
+      <i class="checkmark icon"></i>
+    </div>   
+  </div>
+</div>
+
+<div class="ui modal tiny editarHoras">
+  <div class="header">Editar Horas</div>
+  <div class="content">
+    <p></p>
+    <form class="ui form editarHorasForm">
+      <div class="ui stacked segment">        
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="number" name="new_horas_aluno" placeholder="Horas Aluno">
+          </div>
         </div>
       </div>
     </form>

@@ -38,6 +38,24 @@
             </div>
         </div>
         {{/ifCond}}
+
+        {{#ifCond user.tipo_usuario '==' 1}}
+        <div class="item">
+            <div class="header">Sistema</div>
+            <div class="menu">
+                <a href="/sistema/variaveis" class="item">
+                    <div>
+                        <i class="icon cogs"></i> Variáveis
+                    </div>                    
+                </a>
+                <a href="#" class="item">
+                    <div>
+                        <i class="icon plus"></i> Gerir Moderador
+                    </div>                    
+                </a>
+            </div>
+        </div>
+        {{/ifCond}}
         <!-- <a href="#" class="item">
             <div>
                 <i class="icon chart line"></i>Charts
@@ -64,6 +82,7 @@
             </div>
         </div> -->
         <!-- Search Bar -->
+        {{#ifCond user.tipo_usuario '<=' 2}}
         <div class="item">
             <form action="#">
                 <div class="ui mini action input">
@@ -72,5 +91,6 @@
                 </div>
             </form>
         </div>
+        {{/ifCond}}
     </div>
     <!-- SideBar -->

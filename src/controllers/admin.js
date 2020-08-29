@@ -1,7 +1,7 @@
 import express from 'express'
 import User from '../models/user' 
 import { Op } from 'sequelize'
-import Certified from '../models/certified'
+import Certified, { count } from '../models/certified'
 import TypeCertified from '../models/type_certified'
 import hCertified from '../models/history_certified'
 import hUser from '../models/history_user'
@@ -35,7 +35,8 @@ router.get('/procurar', async (req, res) => {
                     nome: response.getDataValue('name_user'),
                     curso: response.getDataValue('course_user'),
                     semestre: response.getDataValue('half_user'),
-                    estado: response.getDataValue('id_state_foreign')
+                    estado: response.getDataValue('id_state_foreign'),
+                    horas: response.getDataValue('total_hours_user')
                 } 
             }            
         })
@@ -378,6 +379,41 @@ router.post('/procurar/habilitaraluno', async (req, res) => {
                 res.send({ error: 'Ocorreu um erro interno'})
         })
     }
+})
+
+router.post('/procurar/editarhoras', async (req, res) => {
+    var { id , horas } = req.body
+    var count_error = 0
+
+    if(!(id != ' '))
+        count_error += 1
+    if(!(horas != ' ') && !(horas >= 1 && horas <= 1000))
+        count_error += 1
+
+    if(count_error != 0)
+        res.send({ error: 'Ocorreu um erro nos dados enviado'})
+    else{
+        await User.findOne({
+            where: {
+                id
+            }
+        }).then(r => {
+            if(r){
+                r.update({
+                    total_hours_user: horas
+                }).then(ru => {
+                    if(ru)
+                        res.send({ success: 'Horas do aluno atualizada com sucesso'})
+                    else
+                        res.send({ error: 'Ocorreu um erro ao atualizar as horas do aluno'})
+                })
+            }else
+                res.send({ error: 'Aluno não encontrado'})
+        })
+    }
+
+    console.log(id);
+    console.log(horas);
 })
 /* Aluno */
 
