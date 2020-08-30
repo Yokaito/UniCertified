@@ -9,65 +9,41 @@
             <div class="ui grid stackable padded">
                 <div class="four wide computer eight wide tablet sixteen wide mobile column">
                     <div class="ui fluid card">
-                        <div class="content">
-                            <div class="ui right floated header">
-                                <i class="fas fa-receipt"></i>
-                            </div>
+                        <div class="content center aligned">
                             <div class="header">
                                 <div class="ui header">{{total_certificados}}</div>
                             </div>
                             <div class="meta">Certificados</div>
                         </div>
-                        <div class="extra content">
-                            <div class="ui fluid button">Mais Informações</div>
-                        </div>
                     </div>
                 </div>
                 <div class="four wide computer eight wide tablet sixteen wide mobile column">
                     <div class="ui fluid card">
-                        <div class="content">
-                            <div class="ui right floated header">
-                                <i class="fas fa-user"></i>
-                            </div>
+                        <div class="content center aligned">
                             <div class="header">
                                 <div class="ui header">{{total_alunos}}</div>
                             </div>
                             <div class="meta">Alunos</div>
                         </div>
-                        <div class="extra content">
-                            <div class="ui fluid button">Mais Informações</div>
-                        </div>
                     </div>
                 </div>
                 <div class="four wide computer eight wide tablet sixteen wide mobile column">
                     <div class="ui fluid card">
-                        <div class="content">
-                            <div class="ui right floated header green">
-                                <i class="fas fa-user"></i>
-                            </div>
+                        <div class="content center aligned">
                             <div class="header">
                                 <div class="ui header">{{alunos_aprovados}}</div>
                             </div>
                             <div class="meta">Alunos Aprovados</div>
                         </div>
-                        <div class="extra content">
-                            <div class="ui fluid button">Mais Informações</div>
-                        </div>
                     </div>
                 </div>
                 <div class="four wide computer eight wide tablet sixteen wide mobile column">
                     <div class="ui fluid card">
-                        <div class="content">
-                            <div class="ui right floated header red">
-                                <i class="fas fa-user"></i>
-                            </div>
+                        <div class="content center aligned">
                             <div class="header">
                                 <div class="ui header">{{alunos_reprovados}}</div>
                             </div>
                             <div class="meta">Alunos Reprovados</div>
-                        </div>
-                        <div class="extra content">
-                            <div class="ui fluid button">Mais Informações</div>
                         </div>
                     </div>
                 </div>            
@@ -214,8 +190,9 @@
                         </div>
                     </div>
                 </div>    
-            {{/ifCond}}             
+            {{/ifCond}}  
+            {{> footer}}            
         </div>
     </div>
-    {{> footer}}   
+      
 <!-- Content -->   
