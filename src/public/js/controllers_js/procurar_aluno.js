@@ -441,4 +441,32 @@ $( document ).ready(function() {
             }
         }).modal('show')
     })
+
+    $('.preAprovar').on('click', function(){
+        var id = $(this).data('id')
+        var aluno = $('.header.dataid').data('id')
+        $.post('/admin/procurar/preaprovar', {id, aluno}, r => {
+            if(r.success){
+                swal({
+                    closeOnEsc: false,
+                    closeOnClickOutside: false,
+                    title: r.success,
+                    icon: 'success'
+                }).then(() => {
+                    $.post('/admin/procurar/criartabela', 
+                    {id: aluno},
+                    (response) => {
+                        location.reload()
+                    })
+                })
+            }else{
+                swal({
+                    closeOnEsc: false,
+                    closeOnClickOutside: false,
+                    title: r.error,
+                    icon: "error",
+                })
+            }
+        })
+    })
 });

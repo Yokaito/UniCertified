@@ -76,8 +76,8 @@
                                 <th>Nome Certificado</th>
                                 <th>Valor</th>
                                 <th>Tipo</th>                            
-                                <th>Foto</th>                                                           
-                                <th>Ações</th>                           
+                                <th class="center aligned">Foto</th>                                                           
+                                <th class="center aligned">Ações</th>                           
                               </tr>
                             </thead>
                             <tbody class="tBody">   
@@ -90,7 +90,10 @@
                             {{/ifCond}}
                             {{#ifCond this.status '==' 3}}
                             <tr data-id="{{this.id}}" class="error">
-                            {{/ifCond}}                            
+                            {{/ifCond}} 
+                            {{#ifCond this.status '==' 4}}
+                            <tr data-id="{{this.id}}" class="warning">
+                            {{/ifCond}}                                                      
                                 {{!-- Aprovado --}}
                                 {{#ifCond this.status '==' 1}}
                                 <td width="3%" class="center aligned" data-tooltip="Aprovado" data-position="top center" data-variation="mini">
@@ -109,21 +112,27 @@
                                   <i class="icon attention"></i>
                                 </td>
                                 {{/ifCond}}
+                                {{!-- Em Analise --}}
+                                {{#ifCond this.status '==' 4}}
+                                <td width="3%" class="center aligned" data-tooltip="Pré-Aprovado" data-position="top center" data-variation="mini">
+                                  <i class="orange icon spinner"></i>
+                                </td>
+                                {{/ifCond}}
                                 {{#if this.comments_certificado}}
                                   {{#ifCond this.status '==' 3}}
                                     <td><a class="ui mini red label" style="
                                     margin-right: 5px;" data-tooltip="{{this.comments_certificado}}" data-position="right center" data-variation="very wide">Observação</a>{{this.nome_certificado}}</td>
                                   {{/ifCond}}
                                 {{/if}}
-                                {{#if this.comments_certificado}}
-                                  {{#ifCond this.status '!=' 3}}
+                                {{#ifCond this.status '!=' 3}}
+                                  {{#ifCond this.status '==' 4}}
+                                    <td><a class="ui mini green label" style="
+                                    margin-right: 5px;" data-tooltip="Este certficado pode sofrer alterações" data-position="right center" data-variation="very wide">Pré-Aprovado</a>{{this.nome_certificado}}</td>
+                                  {{/ifCond}}
+                                  {{#ifCond this.status '!=' 4}}
                                     <td>{{this.nome_certificado}}</td>
                                   {{/ifCond}}
-                                {{else}}
-                                   {{#ifCond this.status '!=' 3}}
-                                    <td>{{this.nome_certificado}}</td>
-                                   {{/ifCond}}
-                                {{/if}}                                                              
+                                {{/ifCond}}                                                          
                                 <td>{{this.valor_certificado}}</td>                                
                                 <td data-type="{{this.numero_tipo_certificado}}">{{this.tipo_certificado}}</td>                                
                                 <td width="5%" class="center aligned">
@@ -165,9 +174,13 @@
                                     <div class="ui right floated small primary labeled icon button novoCertificado">
                                       <i class="file alternate icon"></i> Novo Certificado
                                     </div>
+                                    <div class="ui small teal labeled icon button" data-tooltip="Somado pré-aprovados e aprovados" data-position="right center">
+                                      <i class="table icon"></i> Pontos Parciais: {{total_parcial}}
+                                    </div>
                                     <div class="ui small green labeled icon button" data-tooltip="Somado apenas certificados aprovados" data-position="right center">
                                       <i class="table icon"></i> Pontos Totais: {{total_pontos}}
                                     </div>
+                                    
                                   </th>
                                 </tr>
                               </tfoot>

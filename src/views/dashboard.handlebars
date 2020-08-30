@@ -111,7 +111,26 @@
                                             <i class="icon attention"></i>
                                         </td>
                                         {{/ifCond}}
-                                        <td>{{this.nome_certificado}}</td>
+                                        {{!-- Em Analise --}}
+                                        {{#ifCond this.status '==' 4}}
+                                        <td width="3%" class="center aligned warning" data-tooltip="Pré-aprovado" data-position="top center" data-variation="mini">
+                                            <i class="orange icon spinner"></i>
+                                        </td>
+                                        {{/ifCond}}
+                                        {{#ifCond this.status '==' 4}}
+                                            <td><a class="ui mini green label" style="
+                                    margin-right: 5px;" data-tooltip="Este certficado pode sofrer alterações" data-position="right center" data-variation="very wide">Pré-Aprovado</a>{{this.nome_certificado}}</td>
+                                        {{/ifCond}}
+                                        {{#ifCond this.status '==' 3}}
+                                            <td><a class="ui mini red label" style="
+                                    margin-right: 5px;" data-tooltip="{{this.comentario_certificado}}" data-position="right center" data-variation="very wide">Observação</a>{{this.nome_certificado}}</td>
+                                        {{/ifCond}}
+                                        {{#ifCond this.status '!=' 4}}
+                                            {{#ifCond this.status '!=' 3}}
+                                                <td>{{this.nome_certificado}}</td>
+                                            {{/ifCond}}
+                                        {{/ifCond}}
+                                        
                                         <td>{{this.valor_certificado}}</td>
                                         <td>{{this.tipo_certificado}}</td>                               
                                         <td width="15%">{{this.criado_em}}</td>
@@ -124,7 +143,7 @@
                         <h4 class="ui horizontal divider header">
                             <i class="table icon"></i>Certificado dos Alunos
                         </h4>
-                        <table class="ui celled table">
+                        <table class="ui celled table Analise">
                             <thead>
                                 <tr>
                                     <th>Status</th>
@@ -139,7 +158,7 @@
                                 {{#each certificados}}
                                     {{#ifCond this.status '==' 2}}
                                     <tr id_certificado="{{this.id}}">
-                                        <td width="3%" class="center aligned warning" data-tooltip="Em Analise" data-position="top center" data-variation="mini">
+                                        <td width="5%" class="center aligned warning" data-tooltip="Em Analise" data-position="top center" data-variation="mini">
                                             <i class="orange icon spinner"></i>
                                         </td>
                                         <td>{{this.nome_certificado}}</td>
@@ -156,6 +175,46 @@
                       </div>
                 </div>
             </div>
+            {{#ifCond user.tipo_usuario '<=' 2}}
+                <div class="ui grid stackable padded">
+                    <div class="column">
+                        <div class="ui segment">
+                            <h4 class="ui horizontal divider header">
+                                <i class="table icon"></i>Certificado dos Alunos Pré-Aprovados
+                            </h4>
+                            <table class="ui celled table preAprovado">
+                                <thead>
+                                    <tr>
+                                        <th>Status</th>
+                                        <th>Nome Certificado</th>
+                                        <th>Horas</th>
+                                        <th>Tipo</th>
+                                        <th>Criado Por</th>                            
+                                        <th>Atualizado em</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each certificados}}
+                                        {{#ifCond this.status '==' 4}}
+                                        <tr id_certificado="{{this.id}}">
+                                            <td width="5%" class="center aligned warning" data-tooltip="Em Analise" data-position="top center" data-variation="mini">
+                                                <i class="orange icon spinner"></i>
+                                            </td>
+                                            <td><a class="ui mini green label" style="
+                                    margin-right: 5px;" data-tooltip="Este certficado pode sofrer alterações" data-position="right center" data-variation="very wide">Pré-Aprovado</a>{{this.nome_certificado}}</td>
+                                            <td>{{this.valor_certificado}}</td>
+                                            <td>{{this.tipo_certificado}}</td>
+                                            <td width="15%"><a href="#" class="redirecionaTabela" data-id="{{this.id_aluno}}">{{this.nome_usuario}}</a></td>                                  
+                                            <td width="15%">{{this.criado_em}}</td>
+                                        </tr>
+                                        {{/ifCond}}
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>    
+            {{/ifCond}}    
         </div>
     </div>
 <!-- Content -->   

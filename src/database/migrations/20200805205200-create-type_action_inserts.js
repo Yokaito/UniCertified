@@ -73,6 +73,17 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date()
       },
+      {
+        name_type_action: 'Pré-Aprovar Certificado' ,
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        name_type_action: 'Horas Necessárias Alteradas' ,
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      
   ]);
   },
   down: (queryInterface, Sequelize) => {

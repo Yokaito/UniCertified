@@ -126,7 +126,10 @@
                             {{/ifCond}}
                             {{#ifCond this.estado '==' 3}}
                             <tr data-id="{{this.id}}" class="error">
-                            {{/ifCond}}                            
+                            {{/ifCond}}  
+                            {{#ifCond this.estado '==' 4}}
+                            <tr data-id="{{this.id}}" class="warning">
+                            {{/ifCond}}                           
                                 {{!-- Aprovado --}}
                                 {{#ifCond this.estado '==' 1}}
                                 <td width="3%" class="center aligned" data-tooltip="Aprovado" data-position="top center" data-variation="mini">
@@ -145,7 +148,25 @@
                                   <i class="icon attention"></i>
                                 </td>
                                 {{/ifCond}}
-                                <td >{{this.nome}}</td>
+                                {{!-- Pré Aprovado --}}
+                                {{#ifCond this.estado '==' 4}}
+                                <td width="3%" class="center aligned" data-tooltip="Em Analise" data-position="top center" data-variation="mini">
+                                  <i class="orange icon spinner"></i>
+                                </td>
+                                {{/ifCond}}
+                                {{#ifCond this.estado '==' 3}}
+                                <td><a class="ui mini red label" style="
+                                    margin-right: 5px;" data-tooltip="{{this.comentario}}" data-position="right center" data-variation="very wide">Observação</a>{{this.nome}}</td>
+                                {{/ifCond}}
+                                {{#ifCond this.estado '==' 4}}
+                                <td><a class="ui mini green label" style="
+                                    margin-right: 5px;" data-tooltip="Este certficado pode sofrer alterações" data-position="right center" data-variation="very wide">Pré-Aprovado</a>{{this.nome}}</td>
+                                {{/ifCond}}
+                                {{#ifCond this.estado '!=' 3}}
+                                  {{#ifCond this.estado '!=' 4}}
+                                    <td>{{this.nome}}</td>
+                                  {{/ifCond}}
+                                {{/ifCond}}
                                 <td>{{this.valor}}</td>                                
                                 <td data-type="{{this.numero_tipo}}">{{this.tipo}}</td>                                
                                 <td width="5%" class="center aligned">
@@ -156,20 +177,25 @@
                                     </a>                                    
                                 </td>
                                 {{#ifCond this.estado '!=' 2}}
-                                <td width="8%" class="center aligned" >
-                                  <div class="ui tiny icon buttons" >
-                                    <button class="ui button red" data-tooltip="Esse certificado não pode mais ser alterado" data-position="left center">
-                                      <i class="attention icon"></i>
-                                    </button>  
-                                    <button data-id="{{this.id}}" class="ui button yellow habilitarEdicao" data-tooltip="Habilitar Edição" data-position="left center">
-                                      <i class="icon undo"></i>
-                                    </button>                                       
-                                  </div>  
-                                </td>
+                                   {{#ifCond this.estado '!=' 4}}
+                                    <td width="8%" class="center aligned" >
+                                      <div class="ui tiny icon buttons" >
+                                        <button class="ui button red" data-tooltip="Esse certificado não pode mais ser alterado" data-position="left center">
+                                          <i class="attention icon"></i>
+                                        </button>  
+                                        <button data-id="{{this.id}}" class="ui button yellow habilitarEdicao" data-tooltip="Habilitar Edição" data-position="left center">
+                                          <i class="icon undo"></i>
+                                        </button>                                       
+                                      </div>  
+                                    </td>
+                                  {{/ifCond}} 
                                 {{/ifCond}}     
                                 {{#ifCond this.estado '==' 2}}                                                     
                                 <td width="8%" class="center aligned">
-                                    <div class="ui tiny icon buttons">                                        
+                                    <div class="ui tiny icon buttons">   
+                                        <button data-tooltip="Pré-Aprovar o Certificado" data-position="left center" data-id="{{this.id}}" class="ui button green preAprovar">
+                                          <i class="check circle icon"></i>
+                                        </button>                                     
                                         <button data-id="{{this.id}}" class="ui button blue editarCertificado">
                                           <i class="edit icon"></i>
                                         </button>
@@ -179,7 +205,20 @@
                                         </button>                                                      
                                     </div>
                                 </td> 
-                                {{/ifCond}}                                
+                                {{/ifCond}} 
+                                {{#ifCond this.estado '==' 4}}                                                     
+                                <td width="8%" class="center aligned">
+                                    <div class="ui tiny icon buttons">                                      
+                                        <button data-id="{{this.id}}" class="ui button blue editarCertificado">
+                                          <i class="edit icon"></i>
+                                        </button>
+                                        
+                                        <button data-id="{{this.id}}" class="ui button teal alterarEstado">
+                                          <i class="tag icon"></i>
+                                        </button>                                                      
+                                    </div>
+                                </td> 
+                                {{/ifCond}}                               
                             </tr>       
                             {{/each}}                             
                                                  
@@ -187,15 +226,12 @@
                             <tfoot class="full-width">
                                 <tr>
                                   <th colspan="7">
-                                    {{!-- <div class="ui floated">
-                                      <div class="ui label green">
-                                        <i class="table icon"></i>
-                                        <a class="detail">Total de Pontos:</a> 23                                 
-                                      </div>
-                                    </div> --}} 
                                     <div class="ui right floated small green labeled icon button" data-tooltip="Somado apenas certificados aprovados" data-position="left center">
-          <i class="table icon"></i> Pontos Totais: {{total}}
-        </div>
+                                      <i class="table icon"></i> Pontos Totais: {{total}}
+                                    </div>
+                                    <div class="ui right floated small teal labeled icon button" data-tooltip="Somado pré-aprovados e aprovados" data-position="left center">
+                                      <i class="table icon"></i> Pontos Parciais: {{parcial}}
+                                    </div>                                    
                                   </th>
                                 </tr>
                               </tfoot>
@@ -319,7 +355,7 @@
 </div>
 
 <div class="ui modal tiny editarHoras">
-  <div class="header">Editar Horas</div>
+  <div class="header">Editar Horas Necessarias</div>
   <div class="content">
     <p></p>
     <form class="ui form editarHorasForm">

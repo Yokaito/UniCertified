@@ -25,6 +25,7 @@ router.get('/procurar', async (req, res) => {
     var aluno = null
     var certificadoAluno = null
     var total = 0;
+    var total_parcial = 0
     var TipoCertificado = null
     if(req.session.mostrarTabela){
         await User.findByPk(req.session.mostrarTabela).then((response) => {
@@ -60,16 +61,19 @@ router.get('/procurar', async (req, res) => {
                     foto: process.env.URL_PICTURE + c.picture_certified,
                     numero_tipo: c.id_type_certified_foreign,
                     tipo: c.type_certified.get('name_type_certified'),
-                    estado: c.id_state_foreign
+                    estado: c.id_state_foreign,
+                    comentario: c.comments_certified
                 })
             })
         })
 
         certificadoAluno.forEach(c => {
             if(c.estado == 1)
-                total += c.valor 
+                total += c.valor
+            if(c.estado == 1 || c.estado == 4)
+                total_parcial += c.valor
         })
-
+        
         await TypeCertified.findAll().then(r => {
             TipoCertificado = r.map(tc => {
                 return Object.assign(
@@ -94,6 +98,7 @@ router.get('/procurar', async (req, res) => {
         aluno: aluno,
         TipoCertificado,
         total: total,
+        parcial: total_parcial,
         certificados: certificadoAluno,
         breadcrumb: `Procurar Aluno`,
     }) 
@@ -287,6 +292,45 @@ router.post('/procurar/editarcertificado', async (req , res) => {
         })
     }
 })
+
+router.post('/procurar/preaprovar', async (req, res) => {
+    const {id , aluno} = req.body
+    var count_error = 0
+
+    if(!(id != ' ') && !(aluno != ' '))
+        count_error += 1
+    if(req.session.user.tipo_usuario == 3)
+        count_error += 1
+    
+    if(count_error != 0)
+        req.send({ error: 'Erro nos dados enviados'})
+    else{
+        await Certified.findOne({
+            where: {
+                id,
+                id_user_foreign: aluno
+            }
+        }).then(r => {
+            if(r){
+                r.update({
+                    id_state_foreign: 4
+                }).then(rc => {
+                    if(rc){
+                        hCertified.create({
+                            action_date_certified: new Date(),
+                            id_certified_foreign: id,
+                            id_user_foreign: aluno,
+                            id_type_action_foreign: 15 /* Pré-Aprovar Certificado */
+                        })
+                        res.send({ success: 'Certificao pré-aprovado com sucesso'})
+                    }else
+                        res.send({ error: 'Ocorreu um erro interno '})
+                })
+            }else
+                res.send({ error: 'Certificado não encontrado'})
+        })
+    }
+})
 /* Certificados */
 
 /* Aluno */
@@ -402,9 +446,14 @@ router.post('/procurar/editarhoras', async (req, res) => {
                 r.update({
                     total_hours_user: horas
                 }).then(ru => {
-                    if(ru)
+                    if(ru){
+                        hUser.create({
+                            action_data_user: new Date(),
+                            id_type_action_foreign: 16, /* Horas necessarias alteradas */
+                            id_user_foreign: id
+                        })
                         res.send({ success: 'Horas do aluno atualizada com sucesso'})
-                    else
+                    }else
                         res.send({ error: 'Ocorreu um erro ao atualizar as horas do aluno'})
                 })
             }else

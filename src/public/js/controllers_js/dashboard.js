@@ -21,6 +21,20 @@ $(document).ready(function(){
         })
     })
 
+    $('.ui.celled.table.preAprovado').DataTable({
+        searching: false,
+        "lengthChange": false,
+        "pageLength": 5
+    });
+
+    $('.ui.celled.table.Analise').DataTable({
+        searching: false,
+        "lengthChange": false,
+        "pageLength": 5
+    });
+
+    
+
     $('.ui.form.cadastrarCertificado')
         .form({
             inline: true,

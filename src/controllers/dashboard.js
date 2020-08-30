@@ -11,6 +11,7 @@ import fsCertificado from '../functions/fs_certificado'
 import hCertified from '../models/history_certified'
 import hUser from '../models/history_user'
 import type_action from '../models/type_action'
+import Sequelize from 'sequelize'
 
 require('dotenv').config()
 
@@ -119,6 +120,7 @@ router.get('/', async (req, res) => {
                         status: certificado.id_state_foreign,
                         nome_certificado: certificado.name_certified,
                         valor_certificado: certificado.value_certified,
+                        comentario_certificado: certificado.comments_certified,
                         tipo_certificado: certificado.type_certified.get('name_type_certified'),
                         nome_usuario: req.session.user.nome,
                         criado_em: formatarData(certificado.createdAt)
@@ -148,7 +150,7 @@ router.get('/certificado', async (req, res) => {
     var CertificadoUser = null
     var TipoCertificado = null
     var valor_total = 0
-    
+    var valor_parcial = 0
     await User.findByPk(req.session.user.id).then(r => {
         UserB = {
             id: r.id,
@@ -193,6 +195,9 @@ router.get('/certificado', async (req, res) => {
         CertificadoUser.forEach(c => {
             if(c.status == 1)
                 valor_total += c.valor_certificado
+
+            if(c.status == 1 || c.status == 4)
+                valor_parcial += c.valor_certificado
         })
     })
 
@@ -217,6 +222,7 @@ router.get('/certificado', async (req, res) => {
         UserB,
         breadcrumb: 'Certificado',
         total_pontos: valor_total,
+        total_parcial: valor_parcial,
         certificados: CertificadoUser,
         tipos_certificados: TipoCertificado
     })
