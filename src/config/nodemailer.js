@@ -1,10 +1,11 @@
 require('dotenv').config()
 
 module.exports = {
-    host: process.env.NM_HOST,
-    port: process.env.NM_PORT,
+    service: process.env.NM_SERVICE,
     auth: {
       user: process.env.NM_USER,
       pass: process.env.NM_PASS
-    }
+    },
+    logger: false,
+    debug: false
 }

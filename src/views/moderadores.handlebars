@@ -1,0 +1,76 @@
+{{> topnav}}
+{{> sidebar}}
+
+<div class="pusher">
+    <div class="main-content">
+        <br>
+        {{> breadcrumb}}
+        <div class="ui grid stackable padded">
+            <div class="eight wide computer eight wide tablet sixteen wide mobile column">
+                <div class="ui segment">
+                    <h4 class="ui horizontal divider header">
+                        <i class="user icon"></i>
+                        Moderadores
+                    </h4>
+                    <table class="ui celled table moderadores">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each moderadores}}
+                            <tr data-id="{{this.id}}">
+                                <td>{{this.nome}}</td>
+                                <td>{{this.tipo}}</td>
+                                <td width="10%" class="center aligned">
+                                    <div class="ui icon mini buttons">
+                                        <button data-id="{{this.id}}" data-tipo="{{this.tipo_id}}" data-tooltip="Remover Moderador" data-position="right center" class="ui button yellow removeModerador">
+                                            <i class="icon angle double right"></i>
+                                        </button>
+                                    </div>                                    
+                                </td>
+                            </tr>
+                            {{/each}}                           
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="eight wide computer eight wide tablet sixteen wide mobile column">
+                <div class="ui segment">
+                    <h4 class="ui horizontal divider header">
+                        <i class="user icon"></i>
+                        Usuarios
+                    </h4>
+                    <table class="ui celled table usuarios">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each usuarios}}
+                            <tr data-id="{{this.id}}">
+                                <td>{{this.nome}}</td>
+                                <td>{{this.tipo}}</td>
+                                <td width="10%" class="center aligned">
+                                    <div class="ui icon mini buttons">
+                                        <button data-id="{{this.id}}" data-tipo="{{this.tipo_id}}" data-tooltip="Adicionar Moderador" data-position="left center" class="ui button green addModerador">
+                                            <i class="angle double left icon"></i>
+                                        </button>
+                                    </div>                                    
+                                </td>
+                            </tr>
+                            {{/each}}  
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {{> footer}}
+    </div>
+</div>

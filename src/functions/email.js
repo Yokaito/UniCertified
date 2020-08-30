@@ -20,6 +20,6 @@ module.exports = (mailOptions) => {
         if (error) {
             return console.log(error);
         }
-        console.log('Message sent: %s', info.messageId);
+        /* console.log('Message sent: %s', info.messageId); */
     });
 }

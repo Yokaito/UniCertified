@@ -1,0 +1,42 @@
+.ui.vertical.menu.sidebar-menu{
+    margin-top: 40px !important;
+    max-height: calc(100% - 40px) !important;
+    height: calc(100% - 40px) !important;
+}
+
+.main-content{
+    margin-top: 40px;
+}
+
+@media (min-width: 768px){
+    .ui.vertical.menu.sidebar-menu{
+        visibility: visible;
+        transform: translate3d(0),0,0;
+    }  
+
+    .main-content{
+        margin-left: 15rem;
+    }
+
+    .sidebar-menu-toggler{
+        display: none !important;
+    }
+}
+
+body{ 
+    overflow: hidden;     
+} 
+ 
+.pusher{ 
+    overflow-y: auto !important;  
+    height: 100%; 
+} 
+
+.ui.section.divider{
+    border-top: 1px solid #DDDDDD;
+    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.08) inset;
+}
+
+.dataTables_filter{
+    margin-bottom: 8px;
+}

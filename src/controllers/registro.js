@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { response } from 'express'
 import User from '../models/user'
 import HUser from '../models/history_user'
 import hash from '../functions/hash'
@@ -153,7 +153,8 @@ router.post('/registrar', async (req, res) => {
                             subject: `UniCertified | Ative Sua Conta ${data.nome_usuario}`, // Subject line
                             template: 'ativacao', // qual template sera utilizado para a ativacao da conta
                             context: {
-                                link: `${process.env.NM_CONTEXT_LINK_ATIVAR}token=${token}`
+                                link: `${process.env.NM_CONTEXT_LINK_ATIVAR}token=${token}`,
+                                nome: data.nome_usuario
                             }
                             
                         }                    
@@ -243,7 +244,7 @@ router.post('/recuperar_senha/trocar', (req,res) => {
                             let mailOptions = {
                                 from: `UniCertified <${process.env.NM_EMAIL_FROM}>`, // sender address
                                 to: response_findOne.get('email_user'), // list of receivers
-                                subject: `UniCertified | Sua senha foi alterado com sucesso`, // Subject line
+                                subject: `UniCertified | Sua senha foi alterada com sucesso`, // Subject line
                                 template: 'troca_senha_conf', // qual template sera utilizado para a ativacao da conta
                                 context: {
                                     username: response_findOne.get('name_user')
@@ -298,7 +299,8 @@ router.post('/recuperar_senha/auth', (req, res) => {
                     subject: `UniCertified | Recuperação da Senha`, // Subject line
                     template: 'recuperar_senha', // qual template sera utilizado para a ativacao da conta
                     context: {
-                        link: `${process.env.NM_CONTEXT_LINK_RECUPERAR}tokenr=${tokenr}&email=${response_findOne.get('email_user')}`
+                        link: `${process.env.NM_CONTEXT_LINK_RECUPERAR}tokenr=${tokenr}&email=${response_findOne.get('email_user')}`,
+                        nome: response_findOne.get('name_user')
                     }
                 }
                 send_email(mailOptions)
