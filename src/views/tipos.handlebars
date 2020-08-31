@@ -1,0 +1,157 @@
+{{> topnav}}
+{{> sidebar}}
+
+<div class="pusher">
+    <div class="main-content">
+        <br>
+        {{> breadcrumb}}
+        <div class="ui grid stackable padded">
+            <div class="column">
+                <div class="ui segment">
+                    <h4 class="ui horizontal divider header">
+                        <i class="cogs icon"></i>
+                        Tipos de Certificados
+                    </h4>
+                    <div class="ui message warning">
+                      <div class="header">
+                        Leia Importante
+                      </div>
+                      <p>Esse valores são os que aparecem para o aluno, ao cadastrarem os certificados ou editarem.<br>Exemplo: Inserindo ou alterando um tipo, o aluno podera notar a difenca ao editar o certificado ou criar um novo.</p>
+                    </div>
+                    <table class="ui celled table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Valor 1</th>
+                                <th>Valor 2</th>
+                                <th>Valor 3</th>
+                                <th>Criado</th>
+                                <th>Atualizado</th>
+                                <th class="center aligned">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each tipos}}
+                            <tr>
+                                <td>{{this.nome}}</td>
+                                <td>{{this.valor1}}</td>
+                                <td>{{this.valor2}}</td>
+                                <td>{{this.valor3}}</td>
+                                <td width="15%">{{this.criada}}</td>
+                                <td width="15%">{{this.atualizada}}</td>
+                                <td width="8%" class="center aligned">
+                                    <div class="ui tiny icon buttons">                                        
+                                        <button data-id="{{this.id}}" class="ui button blue editarTipo">
+                                          <i class="edit icon"></i>
+                                        </button>                                                      
+                                    </div>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                        <tfoot class="full-width">
+                            <tr>
+                            <th colspan="8">
+                                <div class="ui right floated small primary labeled icon button criarTipo">
+                                <i class="paperclip icon"></i> Novo Tipo
+                                </div>
+                            </th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div> 
+        {{> footer}}
+    </div>
+</div>
+
+<div class="ui modal tiny editarTipo">
+  <div class="header">Editar Tipos Certificados</div>
+  <div class="content">
+    <p></p>
+    <form class="ui form editarTiposForm">
+      <div class="ui stacked segment">
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="text" name="nome" placeholder="Nome Tipo">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="number" name="valor1" placeholder="Valor 1">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="number" name="valor2" placeholder="Valor 2">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="number" name="valor3" placeholder="Valor 3">
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="actions">
+    <div class="ui cancel red left labeled icon button">
+        Cancelar
+      <i class="close icon"></i>
+    </div> 
+    <div class="ui approve positive left labeled icon button">
+        Atualizar
+      <i class="checkmark icon"></i>
+    </div>   
+  </div>
+</div>
+
+<div class="ui modal tiny criarTipo">
+  <div class="header">Criar Tipos Certificados</div>
+  <div class="content">
+    <p></p>
+    <form class="ui form criarTiposForm">
+      <div class="ui stacked segment">
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="text" name="nome_c" placeholder="Nome Tipo">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="number" name="valor1_c" placeholder="Valor 1">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="number" name="valor2_c" placeholder="Valor 2">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="number" name="valor3_c" placeholder="Valor 3">
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="actions">
+    <div class="ui cancel red left labeled icon button">
+        Cancelar
+      <i class="close icon"></i>
+    </div> 
+    <div class="ui approve positive left labeled icon button">
+        Criar
+      <i class="checkmark icon"></i>
+    </div>   
+  </div>
+</div>

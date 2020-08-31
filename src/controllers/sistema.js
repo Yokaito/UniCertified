@@ -4,7 +4,7 @@ import formatarData from '../functions/formatDate'
 import User from '../models/user'
 import TypeUser from '../models/type_user'
 import hUser from '../models/history_user'
-import send_email from '../functions/email'
+import TypeCertified from '../models/type_certified'
 
 require('dotenv').config()
 
@@ -181,4 +181,106 @@ router.post('/moderadores/alterar', async (req, res) => {
     }
 })
 
+router.get('/tipos', async (req, res) => {
+    var tipos
+    await TypeCertified.findAll().then(r => {
+         tipos = r.map(e => {
+            return Object.assign({},{
+                id: e.id,
+                nome: e.name_type_certified,
+                valor1: e.first_hour,
+                valor2: e.second_hour,
+                valor3: e.third_hour,
+                criada: formatarData(e.createdAt),
+                atualizada: formatarData(e.updatedAt)
+            })
+        })
+    })
+
+    res.render('tipos', {
+        js: 'controllers_js/tipos.js',
+        style: 'controllers_css/dashboard.css',
+        title: 'UniCertified | Tipos Certificados',
+        user: req.session.user,
+        breadcrumb: 'Tipos',
+        tipos,
+    })
+})
+
+router.post('/tipos/alterar', async (req, res) => {
+    const { id,nome,valor1,valor2,valor3 } = req.body
+    var count_error = 0
+    if(!(id != ' ' && nome != ' ' && valor1 != ' ' && valor2 != ' ' && valor3 != ' ')){
+        count_error += 1
+        res.send({ error: 'Campos Vazios'})
+    }else if(!(nome.length >= 2 && nome.length <= 45)){
+        count_error += 1
+        res.send({ error: 'Tamanho do nome incorreto'})
+    }else if(!(valor1 >= 1 && valor1 <= 40) && !(valor2 >= 1 && valor2 <= 40) && !(valor3 >= 1 && valor3 <= 40)){
+        count_error += 1
+        res.send({ error: 'Valores incorretos'})
+    }else if(req.session.user.tipo_usuario != 1){
+        count_error += 1
+        res.send({ error: 'Sem permissão para realizar esta ação'})
+    }   
+
+    if(count_error != 0)
+        res.send({ error: 'Ocorreu um erro interno'})
+    else{
+        await TypeCertified.findOne({
+            where: {
+                id
+            }
+        }).then(r => {
+            if(r){
+                r.update({
+                    name_type_certified: nome,
+                    first_hour: valor1,
+                    second_hour: valor2,
+                    third_hour: valor3
+                }).then(ru => {
+                    if(ru)
+                        res.send({ success: 'Tipo atualizado com sucesso'})
+                    else    
+                        res.send({ error: 'Ocorreu um erro interno'})
+                })
+            }else
+                res.send({ error: 'Tipo não encontrado'})
+        })
+    }
+})
+
+router.post('/tipos/criar', async (req,res) => {
+    const { nome, valor1, valor2, valor3 } = req.body
+    var count_error = 0
+    if(!(nome != ' ' && valor1 != ' ' && valor2 != ' ' && valor3 != ' ')){
+        count_error += 1
+        res.send({ error: 'Campos Vazios'})
+    }else if(!(nome.length >= 2 && nome.length <= 45)){
+        count_error += 1
+        res.send({ error: 'Tamanho do nome incorreto'})
+    }else if(!(valor1 >= 1 && valor1 <= 40) && !(valor2 >= 1 && valor2 <= 40) && !(valor3 >= 1 && valor3 <= 40)){
+        count_error += 1
+        res.send({ error: 'Valores incorretos'})
+    }else if(req.session.user.tipo_usuario != 1){
+        count_error += 1
+        res.send({ error: 'Sem permissão para realizar esta ação'})
+    } 
+
+    if(count_error != 0)
+        res.send({ error: 'Ocorreu um erro interno'})
+    else{
+        TypeCertified.create({
+            name_type_certified: nome,
+            first_hour: valor1,
+            second_hour: valor2,
+            third_hour: valor3
+        }).then(r => {
+            if(r)
+                res.send({ success: 'Tipo criado com sucesso'})
+            else
+                res.send({ error: 'Ocorreu um erro ao tentar criar o tipo'})
+        })
+    }
+})
 module.exports = app => app.use('/sistema', router)
