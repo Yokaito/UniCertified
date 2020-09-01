@@ -159,75 +159,78 @@ $( document ).ready(function() {
             }).modal('show')
     })
 
-    $('button.alterarEstado').on('click', function(){
+    $('button.reprovarC').on('click', function(){
         var id = $(this).data("id")
         var comentario = $('textarea[name="comentario"]')
         var id_aluno = $('.header.dataid').data('id')
-        $('.ui.mini.modal.alterarEstado')
-            .modal({
-                onDeny    : function(){
-                    if($('.ui.form.alterarEstado').form('is valid')){
-                        $.post('/admin/procurar/alterarestado',{id,comentario: comentario.val(), acao: 0, id_aluno}, (response) => {
-                            if(response.success){
-                                swal({
-                                    closeOnEsc: false,
-                                    closeOnClickOutside: false,
-                                    title: response.success,
-                                    icon: "success",
-                                }).then(() =>{
-                                    $.post('/admin/procurar/criartabela', 
-                                    {id: id_aluno},
-                                    (response) => {
-                                        location.reload()
-                                    })
-                                })
-                            }else{
-                                swal({
-                                    closeOnEsc: false,
-                                    closeOnClickOutside: false,
-                                    title: response.error,
-                                    icon: "error",
-                                })
-                            }
-                        })
-                    }else
-                        return false
 
-                    comentario.val(' ')
-                    return true
-                },
-                onApprove : function() {
-                    if($('.ui.form.alterarEstado').form('is valid')){
-                        $.post('/admin/procurar/alterarestado',{id,comentario: comentario.val(), acao: 1, id_aluno}, (response) => {
-                            if(response.success){
-                                swal({
-                                    closeOnEsc: false,
-                                    closeOnClickOutside: false,
-                                    title: response.success,
-                                    icon: "success",
-                                }).then(() =>{
-                                    $.post('/admin/procurar/criartabela', 
-                                    {id: id_aluno},
-                                    (response) => {
-                                        location.reload()
-                                    })
+        $('.ui.mini.modal.alterarEstado').modal({
+            onDeny:()=>{
+                comentario.val(' ')
+                return true
+            },
+            onApprove:()=>{
+                if($('.ui.form.alterarEstado').form('is valid')){
+                    $.post('/admin/procurar/alterarestado',{id,comentario: comentario.val(), acao: 0, id_aluno}, r => {
+                        if(r.success){
+                            swal({
+                                closeOnEsc: false,
+                                closeOnClickOutside: false,
+                                title: r.success,
+                                icon: "success",
+                            }).then(() =>{
+                                $.post('/admin/procurar/criartabela', 
+                                {id: id_aluno},
+                                (response) => {
+                                    location.reload()
                                 })
-                            }else{
-                                swal({
-                                    closeOnEsc: false,
-                                    closeOnClickOutside: false,
-                                    title: response.error,
-                                    icon: "error",
-                                })
-                            }
-                        })
-                    }else  
-                        return false
-                    comentario.val(' ')
-                }
+                            })
+                        }else{
+                            swal({
+                                closeOnEsc: false,
+                                closeOnClickOutside: false,
+                                title: r.error,
+                                icon: "error",
+                            })
+                        }
+                    })
+                }else
+                    return false
+
+                comentario.val(' ')
+                return true
             }
-            ).modal('show');
+        }).modal('show')
     })
+
+    $('button.aprovarC').on('click', function(){
+        var id = $(this).data("id")
+        var id_aluno = $('.header.dataid').data('id')
+
+        $.post('/admin/procurar/alterarestado',{id, acao: 1, id_aluno}, r => {
+            if(r.success){
+                swal({
+                    closeOnEsc: false,
+                    closeOnClickOutside: false,
+                    title: r.success,
+                    icon: "success",
+                }).then(() =>{
+                    $.post('/admin/procurar/criartabela', 
+                    {id: id_aluno},
+                    (response) => {
+                        location.reload()
+                    })
+                })
+            }else{
+                swal({
+                    closeOnEsc: false,
+                    closeOnClickOutside: false,
+                    title: response.error,
+                    icon: "error",
+                })  
+            }
+        })
+    })    
 
     $('button.alterarAluno').on('click', function(){
         var id = $(this).data('id')

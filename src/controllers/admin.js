@@ -146,56 +146,55 @@ router.post('/procurar/criartabela', async (req, res) => {
 router.post('/procurar/alterarestado', async (req, res) => {
     var { id , comentario, acao, id_aluno } = req.body
     var count_error = 0
-    var acao = acao != 1 ? 3:1
+    acao = acao != 1 ? 3:1
+    var historico_id = acao != 1 ? 9:8 /* 8 Aprovar , 9 Reprovar */
+    comentario = comentario == undefined ? null: comentario
+    /* Se receber 1 Aprovar , se nao Reprovar */
 
-    if(!(comentario != ' ' && comentario.length <= 350))
-        count_error += 1        
+    if(comentario != null){
+        if(!(comentario != ' ' && comentario.length <= 350))
+            count_error += 1
+    }
     if(!(id != ' '))
-        count_error += 1    
+        count_error += 1
     if(req.session.alunoTabela != id_aluno)
-        count_error += 1 
+        count_error += 1
 
     if(count_error != 0)
         res.status(200).json({ error: 'Ocorreu um erro nos dados enviados'})
     else{
-        await Certified.update(
-            {
-                comments_certified: comentario,
-                id_state_foreign: acao,
-                updated_at: new Date()
-            },
-            {
-                where: {
-                    id
-                }
+        await Certified.findOne({
+            where: {
+                id,
+                id_user_foreign: id_aluno
             }
-        ).then(response => {
-            if(response){
-                if(acao == 1){
-                    hCertified.create({
-                        action_date_certified: new Date(),
-                        id_certified_foreign: id,
-                        id_user_foreign: req.session.user.id,
-                        id_type_action_foreign: 8 /* Aprovar certificado */
-                    })
-                    res.send({ success: 'Certificado aprovado com sucesso'})                    
-                }else{
-                    hCertified.create({
-                        action_date_certified: new Date(),
-                        id_certified_foreign: id,
-                        id_user_foreign: req.session.user.id,
-                        id_type_action_foreign: 9 /* Reprovar Certificado */
-                    })
-                    res.send({ success: 'Certificado reprovado com sucesso'})  
-                }
-                                  
-            }else
-                res.send({ error: 'Ocorreu um erro interno'})
-                
+        }).then(r => {
+            if(!r)
+                res.status(200).json({ error: 'Certificado não encontrado'})
+            else{
+                r.update({
+                    comments_certified: comentario,
+                    id_state_foreign: acao
+                }).then(ru => {
+                    if(!ru)
+                        res.status(200).json({ error: 'Ocorreu um erro ao atualizar o certificado'})
+                    else{
+                        hCertified.create({
+                            action_date_certified: new Date(),
+                            id_certified_foreign: id,
+                            id_user_foreign: req.session.user.id,
+                            id_type_action_foreign: historico_id
+                        }).then(hR => {
+                            if(!hR)
+                                res.send({ error: 'Houve um erro ao criar o historico'})
+                            else
+                                res.send({ success: 'Certificado atualizado com sucesso'})
+                        })
+                    }
+                })
+            }
         })
-    }
-    
-
+    } 
 })
 
 router.post('/procurar/habilitaredicao', async (req,res) => {

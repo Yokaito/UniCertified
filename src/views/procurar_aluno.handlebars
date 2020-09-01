@@ -193,16 +193,20 @@
                                 {{#ifCond this.estado '==' 2}}                                                     
                                 <td width="8%" class="center aligned">
                                     <div class="ui tiny icon buttons">   
-                                        <button data-tooltip="Pré-Aprovar o Certificado" data-position="left center" data-id="{{this.id}}" class="ui button green preAprovar">
+                                        <button data-tooltip="Pré-Aprovar o Certificado" data-position="left center" data-id="{{this.id}}" class="ui button teal preAprovar">
                                           <i class="check circle icon"></i>
                                         </button>                                     
                                         <button data-id="{{this.id}}" class="ui button blue editarCertificado">
                                           <i class="edit icon"></i>
                                         </button>
                                         
-                                        <button data-id="{{this.id}}" class="ui button teal alterarEstado">
-                                          <i class="tag icon"></i>
-                                        </button>                                                      
+                                        <button data-id="{{this.id}}" class="ui button green aprovarC">
+                                          <i class="checkmark icon"></i>
+                                        </button>  
+
+                                        <button data-id="{{this.id}}" class="ui button red reprovarC">
+                                          <i class="close icon"></i>
+                                        </button>                                                    
                                     </div>
                                 </td> 
                                 {{/ifCond}} 
@@ -213,9 +217,13 @@
                                           <i class="edit icon"></i>
                                         </button>
                                         
-                                        <button data-id="{{this.id}}" class="ui button teal alterarEstado">
-                                          <i class="tag icon"></i>
-                                        </button>                                                      
+                                        <button data-id="{{this.id}}" class="ui button green aprovarC">
+                                          <i class="checkmark icon"></i>
+                                        </button>  
+
+                                        <button data-id="{{this.is}}" class="ui button red reprovarC" >
+                                          <i class="close icon"></i>
+                                        </button>                                                        
                                     </div>
                                 </td> 
                                 {{/ifCond}}                               
@@ -257,7 +265,7 @@
 </div>
 
 <div class="ui mini modal alterarEstado">
-  <div class="header">Altera o status do Certificado</div>
+  <div class="header">Reprovar Certificado</div>
   <div class="content">
     <form class="ui form alterarEstado">
       
@@ -274,11 +282,11 @@
   </div>
   <div class="actions">
     <div class="ui cancel red left labeled icon button">
-        Reprovar
+        Cancelar
       <i class="close icon"></i>
     </div> 
     <div class="ui approve positive left labeled icon button">
-        Aprovar
+        Reprovar
       <i class="checkmark icon"></i>
     </div>   
   </div>
