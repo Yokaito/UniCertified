@@ -206,7 +206,6 @@ router.get('/certificado', async (req, res) => {
         })
     })
 
-    console.log(CertificadoUser);
     await TypeCertified.findAll().then(response => {
         TipoCertificado = response.map(tipo_certificado => {
             return Object.assign(
