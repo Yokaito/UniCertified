@@ -154,6 +154,7 @@ $(document).ready(function(){
                         data.set('nome_certificado', $('input[name="nome_certificado"]').val())
                         data.set('valor_certificado', $("input[name='valor_certificado']").val())
                         data.set('tipo_certificado', $('select[name=tipo_certificado]').val())
+                        $('#loaderFiles').attr('class', 'ui inverted active dimmer')
                         $.ajax({
                             type: 'POST',
                             url: "/dashboard/certificado/newcertificado",  
@@ -168,9 +169,11 @@ $(document).ready(function(){
                                         title: response.success,
                                         icon: "success",
                                     }).then((value) =>{
+                                        $('#loaderFiles').attr('class', 'ui inverted dimmer')
                                         location.reload()
                                     })
                                 }else{
+                                    $('#loaderFiles').attr('class', 'ui inverted dimmer')
                                     swal({
                                         closeOnEsc: false,
                                         closeOnClickOutside: false,
@@ -265,6 +268,7 @@ $(document).ready(function(){
                 if(formCertificado.form('is valid')){
                     var data = new FormData($('.editarCertificadoForm')[0])
                     data.set('id', id)
+                    $('#loaderFiles').attr('class', 'ui inverted active dimmer')
                     /* data.set('nome', inputNome.val())
                     data.set('valor', inputValor.val())
                     data.set('tipo', inputTipo.val()) */
@@ -285,6 +289,7 @@ $(document).ready(function(){
                                     title: response.success,
                                     icon: "success",
                                 }).then(() =>{
+                                    $('#loaderFiles').attr('class', 'ui inverted dimmer')
                                     location.reload()
                                 })
                             }else{
@@ -294,6 +299,7 @@ $(document).ready(function(){
                                     title: response.error,
                                     icon: "error",
                                 }).then(() => {
+                                    $('#loaderFiles').attr('class', 'ui inverted dimmer')
                                     location.reload()
                                 })
                             }

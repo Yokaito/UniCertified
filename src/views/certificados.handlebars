@@ -7,8 +7,11 @@
             {{> breadcrumb}}
             <div class="ui grid stackable padded">
                 <div class="column">
-                    <div class="ui segment">                                              
+                    <div class="ui segment">                                                                    
                         <h2 class="ui dividing header">Certificados</h2>
+                        <div id="loaderFiles" class="ui inverted dimmer">
+                          <div class="ui indeterminate text loader">Enviando Arquivos</div>
+                        </div>  
                         {{#ifCond UserB.estado '==' 1}}
                         <a class="ui rigth corner label green comentario">
                             <i class="tiny checkmark icon"></i>
