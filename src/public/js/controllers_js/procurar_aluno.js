@@ -109,17 +109,14 @@ $( document ).ready(function() {
 
     $('.mostrarImagemCertificado').on('click', function(){
         var urlFoto = $(this).attr('data-foto')
-        if(urlFoto == 'http://localhost:3000/tmp/uploads/'){
-            swal({
-                closeOnEsc: false,
-                closeOnClickOutside: false,
-                title: 'Ocorreu algum erro ao tentar exibir a imagem',
-                icon: "error",
-            })
+        var tipoFoto = $(this).data('type')
+        if(tipoFoto == 'pdf'){
+            $('.modificarPDF').attr('src', urlFoto)
+            $('.ui.basic.modal.mostrarPDF').modal('show')
         }else{
             $('.modificarImagem').attr('src', urlFoto)
-            $('.ui.basic.modal.mostrarImagem').modal('show')
-        }    
+            $('.ui.basic.modal.mostrarImagem').modal('show')        
+        }
     })
 
     $('button.habilitarEdicao').on('click', function(){

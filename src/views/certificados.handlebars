@@ -137,7 +137,7 @@
                                 <td data-type="{{this.numero_tipo_certificado}}">{{this.tipo_certificado}}</td>                                
                                 <td width="5%" class="center aligned">
                                     <a>
-                                        <button class="ui tiny circular icon blue button mostrarImagemCertificado" data-foto="{{this.picture_certificado}}">
+                                        <button class="ui tiny circular icon blue button mostrarImagemCertificado" data-type="{{this.mimetype}}" data-foto="{{this.picture_certificado}}">
                                           <i class="file image outline icon"></i>
                                         </button>
                                     </a>                                    
@@ -213,7 +213,8 @@
             <input type="number" name="valor_certificado" placeholder="Valor Certificado">
           </div>
         </div>
-        <div class="field" data-tooltip="Arquivos Permitidos: JPGE e PNG. Tamanho Maximo: 5Mb" data-position="top center" data-variation="very wide">
+        <div class="field">
+          <a class="ui orange label" style="margin-bottom: 3px;">Arquivos Permitidos: JPG, PNG, PDF. Tamanho Maximo: 5Mb</a><br>
           <div class="ui input">
             <input type="file" name="file" placeholder="Imagem certificado">            
           </div>
@@ -258,7 +259,8 @@
             <input type="number" name="new_valor_certificado" placeholder="Valor Certificado">
           </div>
         </div>
-        <div class="field" data-tooltip="Arquivos Permitidos: JPGE e PNG. Tamanho Maximo: 5Mb" data-position="top center" data-variation="very wide">
+        <div class="field">
+          <a class="ui orange label" style="margin-bottom: 3px;">Arquivos Permitidos: JPG, PNG, PDF. Tamanho Maximo: 5Mb</a><br>
           <div class="ui input">
             <input type="file" name="file" placeholder="Imagem certificado">            
           </div>
@@ -304,4 +306,9 @@
 
 <div class="ui basic modal mostrarImagem">  
     <img class="ui fluid image modificarImagem" src="">
+</div>
+
+
+<div class="ui basic modal mostrarPDF">
+  <iframe class="modificarPDF" src="" style="width: 100%; height: 700px; border: 0px;" frameborder="0"></iframe>
 </div>

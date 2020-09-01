@@ -9,10 +9,16 @@ module.exports = {
             callback(null, path.resolve(__dirname, '..', 'public', 'tmp', 'uploads'))
         },
         filename: (req, file, callback) => {
+            var fileObj = {
+                "image/png": ".png",
+                "image/jpeg": ".jpeg",
+                "image/jpg": ".jpg",
+                'application/pdf': ".pdf"
+            };
             crypto.randomBytes(16, (err, hash) => {
                 if (err) callback(err)
 
-                const FileName = `${req.session.user.id}-${hash.toString('hex')}-${file.originalname}`
+                const FileName = `${req.session.user.id}-${hash.toString('hex')}${fileObj[file.mimetype]}`
                 
                 callback(null, FileName)
             })
@@ -28,12 +34,13 @@ module.exports = {
             'image/jpeg',
             'image/pjpeg',
             'image/png',
+            'application/pdf'
         ]
 
         if(allowedMimes.includes(file.mimetype)){
             callback(null, true)
         }else{
-            callback(new Error('Arquivo invalido'))
+            return callback(new Error('Arquivo invalido'))
         }
     }   
 }

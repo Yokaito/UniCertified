@@ -59,6 +59,7 @@ router.get('/procurar', async (req, res) => {
                     nome: c.name_certified,
                     valor: c.value_certified,
                     foto: process.env.URL_PICTURE + c.picture_certified,
+                    mimetype: null,
                     numero_tipo: c.id_type_certified_foreign,
                     tipo: c.type_certified.get('name_type_certified'),
                     estado: c.id_state_foreign,
@@ -68,6 +69,9 @@ router.get('/procurar', async (req, res) => {
         })
 
         certificadoAluno.forEach(c => {
+            var spliter = c.foto.split('.')
+            c.mimetype = spliter[1]
+            
             if(c.estado == 1)
                 total += c.valor
             if(c.estado == 1 || c.estado == 4)

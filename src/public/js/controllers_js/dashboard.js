@@ -193,8 +193,15 @@ $(document).ready(function(){
     
     $('.mostrarImagemCertificado').on('click', function(){
         var urlFoto = $(this).attr('data-foto')
-        $('.modificarImagem').attr('src', urlFoto)
-        $('.ui.basic.modal.mostrarImagem').modal('show')
+        var tipoFoto = $(this).data('type')
+        if(tipoFoto == 'pdf'){
+            $('.modificarPDF').attr('src', urlFoto)
+            $('.ui.basic.modal.mostrarPDF').modal('show')
+        }else{
+            $('.modificarImagem').attr('src', urlFoto)
+            $('.ui.basic.modal.mostrarImagem').modal('show')        
+        }
+        
     })
 
     $('.deletarCertificado').on('click', function(){
