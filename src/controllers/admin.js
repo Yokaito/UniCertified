@@ -54,12 +54,16 @@ router.get('/procurar', async (req, res) => {
             }
         }).then(response => {
             certificadoAluno = response.map(c => {
+                var fotoCertificado = c.picture_certified
+                var spliter = fotoCertificado.split('.')
+                var mime = spliter[1]
+                
                 return Object.assign({},{
                     id: c.id,
                     nome: c.name_certified,
                     valor: c.value_certified,
                     foto: process.env.URL_PICTURE + c.picture_certified,
-                    mimetype: null,
+                    mimetype: mime,
                     numero_tipo: c.id_type_certified_foreign,
                     tipo: c.type_certified.get('name_type_certified'),
                     estado: c.id_state_foreign,
@@ -68,10 +72,7 @@ router.get('/procurar', async (req, res) => {
             })
         })
 
-        certificadoAluno.forEach(c => {
-            var spliter = c.foto.split('.')
-            c.mimetype = spliter[1]
-            
+        certificadoAluno.forEach(c => {            
             if(c.estado == 1)
                 total += c.valor
             if(c.estado == 1 || c.estado == 4)

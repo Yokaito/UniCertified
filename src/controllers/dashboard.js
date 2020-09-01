@@ -176,6 +176,9 @@ router.get('/certificado', async (req, res) => {
         }
     }).then(response => {
         CertificadoUser = response.map(certificado => {
+            var fotoCertificado = certificado.picture_certified
+            var spliter = fotoCertificado.split('.')
+            var mime = spliter[1]
             return Object.assign(
                 {},
                 {
@@ -184,7 +187,7 @@ router.get('/certificado', async (req, res) => {
                     nome_certificado: certificado.name_certified,
                     valor_certificado: certificado.value_certified,
                     picture_certificado: process.env.URL_PICTURE + certificado.picture_certified,
-                    mimetype: null,
+                    mimetype: mime,
                     comments_certificado: certificado.comments_certified,
                     numero_tipo_certificado: certificado.id_type_certified_foreign,
                     tipo_certificado: certificado.type_certified.get('name_type_certified'),
@@ -195,9 +198,6 @@ router.get('/certificado', async (req, res) => {
         })
 
         CertificadoUser.forEach(c => {
-            var spliter = c.picture_certificado.split('.')
-            c.mimetype = spliter[1]
-
             if(c.status == 1)
                 valor_total += c.valor_certificado
 
@@ -206,7 +206,7 @@ router.get('/certificado', async (req, res) => {
         })
     })
 
-
+    console.log(CertificadoUser);
     await TypeCertified.findAll().then(response => {
         TipoCertificado = response.map(tipo_certificado => {
             return Object.assign(
