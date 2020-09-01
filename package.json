@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/Yokaito/UniCertified.git",
-  "author": "Guilherme Fontes <guilhermefamorim2020@gmail.com>",
+  "author": "Guilherme Fontes <gui.fontes.amorim@gmail.com>",
   "license": "MIT",
   "scripts": {
     "dev": "nodemon src/server.js",

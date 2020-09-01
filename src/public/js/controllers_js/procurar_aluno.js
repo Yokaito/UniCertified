@@ -55,7 +55,7 @@ $( document ).ready(function() {
                     rules: [
                         {
                             type: 'empty',
-                            prompt: 'Informe um nome'
+                            prompt: 'Informe um comentario'
                         },
                         {
                             type: 'maxLength[350]',
