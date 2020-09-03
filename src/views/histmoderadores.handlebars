@@ -1,0 +1,42 @@
+{{> topnav}}
+{{> sidebar}}
+
+<div class="pusher">
+    <div class="main-content">
+        <br>
+        {{> breadcrumb}}
+        <div class="ui grid stackable padded">
+            <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
+                <div class="ui segment">
+                    <h4 class="ui horizontal divider header">
+                        <i class="user circle icon"></i>
+                        Historico Moderadores em Cada Certificado
+                    </h4>
+                    <table class="ui celled table" id="tabela_hist_cert">
+                        <thead>
+                            <tr>
+                                <th>Quem Fez</th>
+                                <th>Ação</th>
+                                <th>Dono Certificado</th>
+                                <th>Certificado</th>                                
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each historico_mod}}
+                                <tr>
+                                    <td>{{this.quem_fez}}</td>
+                                    <td>{{this.acao}}</td>
+                                    <td><a href="#" class="redirecionaTabela" data-id="{{this.id_dono}}">{{this.dono}}</a></td>
+                                    <td>{{this.certificado}}</td>
+                                    <td>{{this.data}}</td>
+                                </tr>
+                            {{/each}}
+                        </tbody>                       
+                    </table>
+                </div>
+            </div>
+        </div>
+        {{> footer}}
+    </div>
+</div>

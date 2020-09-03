@@ -33,7 +33,8 @@ $(document).ready(function(){
         "pageLength": 8
     });
     $('#tabela_all').DataTable({
-        searching: false,
+        language: { search: '<div class="ui small input focus">', searchPlaceholder: "Search...",},
+        searching: true,
         "lengthChange": false,
         "pageLength": 8
     });

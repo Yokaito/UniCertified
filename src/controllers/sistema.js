@@ -5,6 +5,9 @@ import User from '../models/user'
 import TypeUser from '../models/type_user'
 import hUser from '../models/history_user'
 import TypeCertified from '../models/type_certified'
+import hCertified from '../models/history_certified'
+import type_action from '../models/type_action'
+import Certified from '../models/certified'
 
 require('dotenv').config()
 
@@ -14,7 +17,7 @@ const router = express.Router()
 router.use((req, res, next) => {
     if(!req.session.user){
         res.redirect('/login')
-    }else if(req.session.user.tipo_usuario <= 1){
+    }else if(req.session.user.tipo_usuario == 1){
         next()
     }else{
         res.redirect('/dashboard')
@@ -283,4 +286,62 @@ router.post('/tipos/criar', async (req,res) => {
         })
     }
 })
+
+router.get('/moderadores/historico', async (req, res) => {
+    var historico_mod
+    await hCertified.findAll(
+        {
+            include: [
+                {
+                    model: type_action,
+                    required: true,
+                    attributes: ['name_type_action']
+                },
+                {
+                    model: User,
+                    required: true,
+                    attributes: ['name_user', 'id'],
+                    where: {
+                        id_type_user_foreign: 2
+                    }
+                },
+                {
+                    model: Certified,
+                    required: true,
+                    attributes: ['id', 'name_certified'],
+                    include: [{
+                        model: User,
+                        required: true,
+                        attributes: ['id','name_user']
+                    }]
+                }
+            ],
+            order: [
+                ['action_date_certified', 'DESC']
+            ]  
+        },              
+    ).then(r => {
+        historico_mod = r.map(h => {
+            return Object.assign({}, {
+                acao: h.type_action.name_type_action,    
+                id_dono: h.certified.user.id       ,     
+                dono: h.certified.user.name_user,
+                certificado: h.certified.name_certified,
+                id_quem_fez: h.user.id,
+                quem_fez: h.user.name_user,
+                data: formatarData(h.action_date_certified)
+            })
+        })   
+    })
+
+    res.render('histmoderadores', {
+        js: 'controllers_js/histmoderadores.js',
+        style: 'controllers_css/moderadores.css',
+        title: 'UniCertified | Historico Moderadores',
+        user: req.session.user,
+        breadcrumb: 'Historico',
+        historico_mod,
+    })
+})
+
 module.exports = app => app.use('/sistema', router)
