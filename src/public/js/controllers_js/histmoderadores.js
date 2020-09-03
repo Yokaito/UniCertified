@@ -16,4 +16,12 @@ $(() => {
         "lengthChange": false,
         "pageLength": 8
     })
+
+    $('.redirecionaTabela').on('click', function(){
+        var id = $(this).data('id')
+        $.post('/admin/procurar/criartabela', {id}, response => {
+            if(response.success)
+                window.location.href = '/admin/procurar'
+        })
+    })
 })
