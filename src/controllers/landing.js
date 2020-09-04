@@ -1,9 +1,9 @@
-import express from 'express'
+import express from "express";
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.redirect('/login')
-})
+router.get("/", (req, res) => {
+  res.redirect("/login");
+});
 
-module.exports = app => app.use('/', router)
+module.exports = (app) => app.use("/", router);
