@@ -1,5 +1,5 @@
-require('dotenv').config()
- 
+require("dotenv").config();
+
 module.exports = {
   dialect: process.env.DB_DIALECT,
   host: process.env.DB_HOST,
@@ -9,8 +9,8 @@ module.exports = {
   define: {
     timestamps: true,
     underscored: true,
-    freezeTableName: true
+    freezeTableName: true,
   },
-  timezone: '-03:00',
+  timezone: "-03:00",
   logging: false,
-}
+};
