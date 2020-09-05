@@ -36,6 +36,14 @@
                       <input type="password" name="cadastro_conf_senha" placeholder="Confirmar Senha" minlength="5" maxlength="40">
                     </div>
                   </div>
+                  <div class="field">
+                      <select class="ui fluid dropdown selection" tabindex="0" name="semestre">
+                        <option value="">Selecione o Semestre</option>
+                        {{#each semestres}}
+                            <option value="{{this.id}}">{{this.id}}</option>
+                        {{/each}}
+                      </select>
+                  </div>
                   <div class="ui fluid large blue submit button">Cadastrar</div>
                 </div>
           

@@ -73,7 +73,7 @@
                                         <button data-id="{{aluno.id}}" class="ui button teal alterarAluno">
                                           <i class="tag icon"></i>
                                         </button> 
-                                        <button data-id="{{aluno.id}}" class="ui button blue editarHoras">
+                                        <button data-id="{{aluno.id}}" class="ui button blue editarSemestre">
                                         <i class="edit icon"></i>
                                       </button>   
                                     </div>
@@ -368,18 +368,23 @@
   </div>
 </div>
 
-<div class="ui modal tiny editarHoras">
-  <div class="header">Editar Horas Necessarias</div>
+<div class="ui modal tiny editarSemestre">
+  <div class="header">Editar Semestre</div>
   <div class="content">
-    <p></p>
-    <form class="ui form editarHorasForm">
+    <form class="ui form editarSemestreForm">
       <div class="ui stacked segment">        
         <div class="field">
-          <div class="ui left icon input">
-            <i class="user icon"></i>
-            <input type="number" name="new_horas_aluno" placeholder="Horas Aluno">
-          </div>
-        </div>
+          <select class="ui fluid dropdown selection" tabindex="1" name="semestre_new">
+            <option value="">Semestres</option>
+            {{#each semestres}}
+              {{#if this.selected}}
+                <option value="{{this.id}}" selected>{{this.id}}</option>
+              {{else}}
+                <option value="{{this.id}}">{{this.id}}</option>
+              {{/if}}
+            {{/each}}
+          </select>
+        </div>  
       </div>
     </form>
   </div>

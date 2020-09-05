@@ -1,10 +1,11 @@
 import express from "express";
 import User from "../models/user";
 import { Op } from "sequelize";
-import Certified, { count } from "../models/certified";
+import Certified from "../models/certified";
 import TypeCertified from "../models/type_certified";
 import hCertified from "../models/history_certified";
 import hUser from "../models/history_user";
+import Variables from "../models/variables";
 
 require("dotenv").config();
 
@@ -26,6 +27,7 @@ router.get("/procurar", async (req, res) => {
   var total = 0;
   var total_parcial = 0;
   var TipoCertificado = null;
+
   if (req.session.mostrarTabela) {
     await User.findByPk(req.session.mostrarTabela).then((response) => {
       if (response) {
@@ -39,6 +41,22 @@ router.get("/procurar", async (req, res) => {
           horas: response.getDataValue("total_hours_user"),
         };
       }
+    });
+
+    var semestres = null;
+    var selected = null;
+    await Variables.findAll().then((r) => {
+      semestres = r.map((e) => {
+        if (aluno.semestre == e.id) selected = true;
+        else selected = false;
+        return Object.assign(
+          {},
+          {
+            id: e.id,
+            selected,
+          }
+        );
+      });
     });
 
     await Certified.findAll({
@@ -104,6 +122,7 @@ router.get("/procurar", async (req, res) => {
     total: total,
     parcial: total_parcial,
     certificados: certificadoAluno,
+    semestres,
     breadcrumb: `Procurar Aluno`,
   });
 });
@@ -400,12 +419,20 @@ router.post("/procurar/habilitaraluno", async (req, res) => {
   }
 });
 
-router.post("/procurar/editarhoras", async (req, res) => {
-  var { id, horas } = req.body;
+router.post("/procurar/editarsemestre", async (req, res) => {
+  var { id, semestre } = req.body;
   var count_error = 0;
 
   if (!(id != " ")) count_error += 1;
-  if (!(horas != " ") && !(horas >= 1 && horas <= 1000)) count_error += 1;
+
+  var horas;
+  await Variables.findByPk(semestre).then((r) => {
+    if (r) {
+      horas = r.value_variable;
+    } else {
+      count_error += 1;
+    }
+  });
 
   if (count_error != 0)
     res.send({ error: "Ocorreu um erro nos dados enviado" });
@@ -417,6 +444,7 @@ router.post("/procurar/editarhoras", async (req, res) => {
     }).then((r) => {
       if (r) {
         r.update({
+          half_user: semestre,
           total_hours_user: horas,
         }).then((ru) => {
           if (ru) {
@@ -425,18 +453,15 @@ router.post("/procurar/editarhoras", async (req, res) => {
               id_type_action_foreign: 16 /* Horas necessarias alteradas */,
               id_user_foreign: id,
             });
-            res.send({ success: "Horas do aluno atualizada com sucesso" });
+            res.send({ success: "Semestre do aluno atualizado com sucesso" });
           } else
             res.send({
-              error: "Ocorreu um erro ao atualizar as horas do aluno",
+              error: "Ocorreu um erro ao atualizar o semestre do aluno",
             });
         });
       } else res.send({ error: "Aluno não encontrado" });
     });
   }
-
-  console.log(id);
-  console.log(horas);
 });
 /* Aluno */
 

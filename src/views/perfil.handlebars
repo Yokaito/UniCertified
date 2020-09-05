@@ -12,7 +12,11 @@
                         <i class="user circle icon"></i>
                         Editar Dados
                     </h4>
-                    <form class="ui form atualizarAlunoF">
+                    <form class="ui form atualizarAlunoF">   
+                        <div class="field disabled">
+                            <label>Horas a Completar</label>
+                            <input type="text" placeholder="Horas a Completar" value="{{usuario.horas}}">
+                        </div>                     
                         <div class="field disabled">
                             <label>Email</label>
                             <input type="text" name="email_user" placeholder="Email" value="{{usuario.email}}">
@@ -20,15 +24,15 @@
                         <div class="field">
                             <label>Nome</label>
                             <input type="text" name="name_user" placeholder="Nome" value="{{usuario.nome}}">
-                        </div>
+                        </div>                        
                         <div class="field">
                             <label>Semestre</label>
-                            <select class="ui dropdown" name="semestre">
-                                {{#each html}}
+                            <select class="ui fluid dropdown selection" tabindex="0" name="semestre">
+                                {{#each semestres}}
                                     {{#if this.selected}}
-                                        <option value="{{this.value}}" selected>{{this.value}}</option>
+                                        <option value="{{this.id}}" selected>{{this.id}}</option>
                                     {{else}}
-                                        <option value="{{this.value}}">{{this.value}}</option>
+                                        <option value="{{this.id}}">{{this.id}}</option>
                                     {{/if}}
                                 {{/each}}
                             </select>

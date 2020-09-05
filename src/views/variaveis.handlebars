@@ -16,12 +16,11 @@
                       <div class="header">
                         Leia Importante
                       </div>
-                      <p>Ao alterar esses valores, voce estara alterando o funcionamento da aplicação.<br>Exemplo: Alterando o valor das horas totais, todo novo aluno ficará com esse valor predefinido em sua conta, no qual esse valor setara qual a horas que ele de cumprir.</p>
+                      <p>Ao alterar esses valores, voce estara alterando o funcionamento da aplicação.<br>Exemplo: Ao alterar o valor de um semestre todo aluno que atualizar para aquele semestre irá pegar aquele valor para si.</p>
                     </div>
                     <table class="ui celled table">
                         <thead>
                             <tr>
-                                <th>Id</th>
                                 <th>Nome</th>
                                 <th>Valor</th>
                                 <th>Criada Em</th>
@@ -32,7 +31,6 @@
                         <tbody>
                             {{#each variaveis}}
                             <tr>
-                                <td>{{this.id}}</td>
                                 <td>{{this.nome}}</td>
                                 <td>{{this.valor}}</td>
                                 <td width="15%">{{this.criada}}</td>

@@ -5,6 +5,7 @@ import hash from "../functions/hash";
 import variables from "../models/variables";
 import send_email from "../functions/email";
 import bcrypt from "bcryptjs";
+import Variables from "../models/variables";
 
 const router = express.Router();
 
@@ -14,11 +15,24 @@ router.use((req, res, next) => {
   else res.redirect("/dashboard");
 });
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
+  var semestres = null;
+  await Variables.findAll().then((r) => {
+    semestres = r.map((e) => {
+      return Object.assign(
+        {},
+        {
+          id: e.id,
+          valor: e.value_variable,
+        }
+      );
+    });
+  });
   res.render("register", {
     style: "controllers_css/registro.css",
     js: "controllers_js/registro.js",
     title: "UniCertified | Cadastro",
+    semestres,
   });
 });
 
@@ -147,31 +161,26 @@ router.post("/registrar", async (req, res) => {
     count_errors += 1;
 
   var horas_totais;
-  await variables
-    .findOne({
-      where: {
-        id: 1,
-      },
-    })
-    .then((r) => {
-      if (r) horas_totais = r.value_variable;
-      else count_errors += 1;
-    });
+  var id_semestre;
+  await Variables.findByPk(data.semestre).then((r) => {
+    if (r) {
+      horas_totais = r.value_variable;
+      id_semestre = r.id;
+    } else count_errors += 1;
+  });
 
   if (count_errors == 0) {
-    // 📍 Encontra o email
     await User.findOne({
       where: {
         email_user: data.email_usuario,
       },
     }).then((response_findOne) => {
       if (!response_findOne) {
-        /* 📍 Se encontrar é negado e realiza a criacao  */
         User.create({
           email_user: data.email_usuario,
           name_user: data.nome_usuario,
           password_user: data.senha_usuario,
-          half_user: 1,
+          half_user: id_semestre,
           course_user: "Engenharia de Software",
           total_hours_user: horas_totais,
           id_type_user_foreign: 3,
@@ -181,13 +190,11 @@ router.post("/registrar", async (req, res) => {
           id_activation_state_foreign: 2,
         }).then((response_create) => {
           if (response_create) {
-            /* 📍 Se foi criado send um status  */
-            /* 🟡 Aqui vai ser enviado o email com o link de ativação, ainda falta criar o template  */
             let mailOptions = {
-              from: `UniCertified <${process.env.NM_EMAIL_FROM}>`, // sender address
-              to: response_create.get("email_user"), // list of receivers
-              subject: `UniCertified | Ative Sua Conta ${data.nome_usuario}`, // Subject line
-              template: "ativacao", // qual template sera utilizado para a ativacao da conta
+              from: `UniCertified <${process.env.NM_EMAIL_FROM}>`,
+              to: response_create.get("email_user"),
+              subject: `UniCertified | Ative Sua Conta ${data.nome_usuario}`,
+              template: "ativacao",
               context: {
                 link: `${process.env.NM_CONTEXT_LINK_ATIVAR}token=${token}`,
                 nome: data.nome_usuario,
@@ -198,13 +205,9 @@ router.post("/registrar", async (req, res) => {
               success: "Conta criada com sucesso.",
               link: process.env.URL_FRONT_LOGIN,
             });
-          } /* 📍 Caso de algum erro enviar um status */ else
-            res.send({ error: "Ocorreu um erro interno" });
+          } else res.send({ error: "Ocorreu um erro interno" });
         });
-      } else {
-        /* 📍 Caso ja exista o email envia o status */
-        res.send({ error: "Email já está em uso" });
-      }
+      } else res.send({ error: "Email já está em uso" });
     });
   } else {
     res.send({ error: "Ocorreu um erro nos dados enviados" });

@@ -1,5 +1,6 @@
 $(document).ready(function () {
   $(".ui.dropdown").dropdown();
+
   $(".sidebar-menu-toggler").on("click", function () {
     var target = $(this).data("target");
     $(target)
@@ -64,20 +65,16 @@ $(document).ready(function () {
     },
   });
 
-  $(".ui.form.editarHorasForm").form({
+  $(".ui.form.editarSemestreForm").form({
     inline: true,
     on: "blur",
     fields: {
-      valor: {
-        identifier: "new_horas_aluno",
+      semestre: {
+        identifier: "semestre_new",
         rules: [
           {
             type: "empty",
-            prompt: "Informe um valor",
-          },
-          {
-            type: "integer[1..1000]",
-            prompt: "Informe um valor inteiro entre (1-1000)",
+            prompt: "Informe um semestre",
           },
         ],
       },
@@ -428,27 +425,23 @@ $(document).ready(function () {
       .modal("show");
   });
 
-  $(".button.editarHoras").on("click", function () {
+  $("button.editarSemestre").on("click", function () {
     var id = $(this).data("id");
-    var horas = $(".getHorasAluno").data("horas");
-    var formHoras = $(".ui.form.editarHorasForm");
-    var inputValor = $('input[name="new_horas_aluno"]');
-    inputValor.val(horas);
-    $(".ui.modal.tiny.editarHoras")
+    var formSemestre = $(".ui.form.editarSemestreForm");
+
+    $(".ui.modal.tiny.editarSemestre")
       .modal({
         closable: false,
         onDeny: () => {
-          inputValor.val("");
           return true;
         },
         onApprove: () => {
-          if (formHoras.form("is valid")) {
+          if (formSemestre.form("is valid")) {
             $.post(
-              "/admin/procurar/editarhoras",
-              { id, horas: inputValor.val() },
+              "/admin/procurar/editarsemestre",
+              { id, semestre: $('select[name="semestre_new"]').val() },
               (r) => {
                 if (r.success) {
-                  inputValor.val("");
                   swal({
                     closeOnEsc: false,
                     closeOnClickOutside: false,
@@ -475,7 +468,6 @@ $(document).ready(function () {
             );
           } else return false;
 
-          inputValor.val("");
           return true;
         },
       })

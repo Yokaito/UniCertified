@@ -3,7 +3,6 @@ import User from "../models/user";
 import Certified from "../models/certified";
 import TypeCertified from "../models/type_certified";
 import Certificado from "../models/certified";
-import StatusCertified from "../models/state";
 import formatarData from "../functions/formatDate";
 import multer from "multer";
 import multerConfig from "../config/multer";
@@ -11,7 +10,7 @@ import fsCertificado from "../functions/fs_certificado";
 import hCertified from "../models/history_certified";
 import hUser from "../models/history_user";
 import type_action from "../models/type_action";
-import Sequelize from "sequelize";
+import Variables from "../models/variables";
 
 require("dotenv").config();
 
@@ -572,25 +571,31 @@ router.get("/perfil", async (req, res) => {
       email: r.email_user,
       nome: r.name_user,
       semestre: r.half_user,
+      horas: r.total_hours_user,
     };
   });
 
-  var i = 1;
-  var html = [];
-  while (i <= 8) {
-    if (i == usuario.semestre) {
-      html.push({
-        value: i,
-        selected: true,
-      });
-    } else {
-      html.push({
-        value: i,
-        selected: false,
-      });
-    }
-    i++;
-  }
+  var semestres = null;
+  var selected = false;
+
+  await Variables.findAll().then((r) => {
+    semestres = r.map((e) => {
+      if (usuario.semestre == e.id) {
+        selected = true;
+      } else {
+        selected = false;
+      }
+      return Object.assign(
+        {},
+        {
+          id: e.id,
+          valor: e.value_variable,
+          selected,
+        }
+      );
+    });
+  });
+
   res.render("perfil", {
     js: "controllers_js/perfil.js",
     style: "controllers_css/dashboard.css",
@@ -600,7 +605,7 @@ router.get("/perfil", async (req, res) => {
     historico: historico_usr,
     historico_c: historico_cert_usr,
     usuario,
-    html,
+    semestres,
   });
 });
 
@@ -612,6 +617,11 @@ router.post("/perfil/atualizar", async (req, res) => {
   if (!(semestre >= 1 && semestre <= 8)) count_error += 1;
   if (id != req.session.user.id) count_error += 1;
 
+  var horas_atualizadas;
+  await Variables.findByPk(semestre).then((r) => {
+    horas_atualizadas = r.value_variable;
+  });
+
   if (count_error != 0)
     res.send({ error: "Houve um erro com os dados enviados" });
   else {
@@ -619,6 +629,7 @@ router.post("/perfil/atualizar", async (req, res) => {
       {
         name_user: nome,
         half_user: semestre,
+        total_hours_user: horas_atualizadas,
         updated_at: new Date(),
       },
       {

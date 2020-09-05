@@ -58,8 +58,8 @@ $(document).ready(function () {
     var inputNome = $('input[name="new_nome_variable"]');
     var inputValor = $('input[name="new_value_variable"]');
 
-    inputNome.val(tds[1].textContent);
-    inputValor.val(tds[2].textContent);
+    inputNome.val(tds[0].textContent);
+    inputValor.val(tds[1].textContent);
 
     $(".ui.modal.tiny.editar")
       .modal({
