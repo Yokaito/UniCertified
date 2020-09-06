@@ -149,50 +149,59 @@
                                         </button>
                                     </a>                                    
                                 </td>
-                                {{#ifCond this.status '!=' 2}}
-                                  {{#ifCond this.flag_user '==' 1}}
-                                    <td width="8%" class="center aligned" >
-                                      <div data-tooltip="Esse certificado não pode mais ser alterado" data-position="left center">
-                                        <i class="icon attention red link"></i>
-                                      </div>                            
-                                        
-                                    </td>
-                                  {{/ifCond}}
-                                {{/ifCond}}
-                                {{#ifCond this.status '!=' 2}}
-                                  {{#ifCond this.flag_user '!=' 1}}
-                                    <td width="8%" class="center aligned" >
-                                      <div data-tooltip="Esse certificado não pode mais ser alterado" data-position="left center">
-                                        <i class="icon attention red link"></i>
-                                      </div>                            
-                                        
-                                    </td>
-                                  {{/ifCond}}     
-                                {{/ifCond}}     
-                                {{#ifCond this.flag_user '!=' 1}}                                      
-                                  {{#ifCond this.status '==' 2}}                                                     
-                                  <td width="8%" class="center aligned">
-                                      <div class="ui tiny icon buttons">                                        
-                                          <button data-id="{{this.id}}" class="ui button blue editarCertificado">
-                                            <i class="edit icon"></i>
-                                          </button>
+                                {{#ifCond this.estado_user '!=' 1}}
+                                  {{#ifCond this.status '!=' 2}}
+                                    {{#ifCond this.flag_user '==' 1}}
+                                      <td width="8%" class="center aligned" >
+                                        <div data-tooltip="Esse certificado não pode mais ser alterado" data-position="left center">
+                                          <i class="icon attention red link"></i>
+                                        </div>                            
                                           
-                                          <button data-id="{{this.id}}" class="ui button red deletarCertificado">
-                                            <i class="trash icon"></i>
-                                          </button>                                                                               
-                                      </div>
-                                  </td> 
-                                  {{/ifCond}}  
+                                      </td>
+                                    {{/ifCond}}
+                                  {{/ifCond}}
+                                  {{#ifCond this.status '!=' 2}}
+                                    {{#ifCond this.flag_user '!=' 1}}
+                                      <td width="8%" class="center aligned" >
+                                        <div data-tooltip="Esse certificado não pode mais ser alterado" data-position="left center">
+                                          <i class="icon attention red link"></i>
+                                        </div>                            
+                                          
+                                      </td>
+                                    {{/ifCond}}     
+                                  {{/ifCond}}     
+                                  {{#ifCond this.flag_user '!=' 1}}                                      
+                                    {{#ifCond this.status '==' 2}}                                                     
+                                    <td width="8%" class="center aligned">
+                                        <div class="ui tiny icon buttons">                                        
+                                            <button data-id="{{this.id}}" class="ui button blue editarCertificado">
+                                              <i class="edit icon"></i>
+                                            </button>
+                                            
+                                            <button data-id="{{this.id}}" class="ui button red deletarCertificado">
+                                              <i class="trash icon"></i>
+                                            </button>                                                                               
+                                        </div>
+                                    </td> 
+                                    {{/ifCond}}  
+                                  {{/ifCond}}
+                                  {{#ifCond this.status '==' 2}}
+                                    {{#ifCond this.flag_user '==' 1}}  
+                                      <td width="8%" class="center aligned" >
+                                        <div data-tooltip="Esse certificado não pode mais ser alterado" data-position="left center">
+                                          <i class="icon attention red link"></i>
+                                        </div>              
+                                      </td>
+                                    {{/ifCond}}    
+                                  {{/ifCond}} 
                                 {{/ifCond}}
-                                {{#ifCond this.status '==' 2}}
-                                  {{#ifCond this.flag_user '==' 1}}  
-                                    <td width="8%" class="center aligned" >
-                                      <div data-tooltip="Esse certificado não pode mais ser alterado" data-position="left center">
-                                        <i class="icon attention red link"></i>
-                                      </div>              
-                                    </td>
-                                  {{/ifCond}}    
-                                {{/ifCond}}                 
+                                {{#ifCond this.estado_user '==' 1}}
+                                <td width="8%" class="center aligned" >
+                                        <div data-tooltip="Aluno já aprovado" data-position="left center">
+                                          <i class="icon check circle green link"></i>
+                                        </div>              
+                                      </td>
+                                {{/ifCond}}                
                             </tr>       
                             {{/each}}                             
                                                  
@@ -201,10 +210,12 @@
                                 <tr>
                                   <th></th>
                                   <th colspan="5">
-                                    {{#ifCond UserB.flag '!=' 1}}
-                                      <div class="ui right floated small primary labeled icon button novoCertificado">
-                                        <i class="file alternate icon"></i> Novo Certificado
-                                      </div>
+                                    {{#ifCond UserB.estado '!=' 1}}
+                                      {{#ifCond UserB.flag '!=' 1}}
+                                        <div class="ui right floated small primary labeled icon button novoCertificado">
+                                          <i class="file alternate icon"></i> Novo Certificado
+                                        </div>
+                                      {{/ifCond}}
                                     {{/ifCond}}
                                     <div class="ui small teal labeled icon button" data-tooltip="Somado pré-aprovados e aprovados" data-position="right center">
                                       <i class="table icon"></i> Pontos Parciais: {{total_parcial}}

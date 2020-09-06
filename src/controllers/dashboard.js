@@ -202,6 +202,7 @@ router.get("/certificado", async (req, res) => {
           nome_usuario: req.session.user.nome,
           criado_em: formatarData(certificado.createdAt),
           flag_user: UserB.flag,
+          estado_user: UserB.estado,
         }
       );
     });
