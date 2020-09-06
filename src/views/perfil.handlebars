@@ -36,8 +36,13 @@
                                     {{/if}}
                                 {{/each}}
                             </select>
-                        </div>                        
-                        <div class="ui button positive fluid atualizarAluno" data-id="{{usuario.id}}">Atualizar</div>
+                        </div>
+                        {{#ifCond usuario.flag '!=' 1}}                        
+                            <div class="ui button positive fluid atualizarAluno" data-id="{{usuario.id}}">Atualizar</div>
+                        {{/ifCond}}
+                        {{#ifCond usuario.flag '==' 1}}
+                            <div class="ui button red fluid">Aluno Desativado</div>
+                        {{/ifCond}}
                     </form>
                 </div>
             </div> 

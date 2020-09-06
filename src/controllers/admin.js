@@ -6,6 +6,7 @@ import TypeCertified from "../models/type_certified";
 import hCertified from "../models/history_certified";
 import hUser from "../models/history_user";
 import Variables from "../models/variables";
+import State from "../models/state";
 
 require("dotenv").config();
 
@@ -39,6 +40,7 @@ router.get("/procurar", async (req, res) => {
           semestre: response.getDataValue("half_user"),
           estado: response.getDataValue("id_state_foreign"),
           horas: response.getDataValue("total_hours_user"),
+          flag: response.getDataValue("flag_user"),
         };
       }
     });
@@ -134,6 +136,9 @@ router.get("/procurar/alunos", async (req, res) => {
     where: {
       name_user: {
         [Op.like]: `${req.query["q"]}%`,
+      },
+      flag_user: {
+        [Op.eq]: 0,
       },
     },
   });
@@ -338,6 +343,45 @@ router.post("/procurar/preaprovar", async (req, res) => {
     });
   }
 });
+
+router.post("/procurar/setestadoaluno", async (req, res) => {
+  var { id, action, aluno } = req.body;
+  var count_error = 0;
+  var msg_erro = null;
+  var msg_succ =
+    action == 1 ? "Aluno desativado com sucesso" : "Aluno ativado com sucesso";
+
+  if (!(id != " ") && !(action != " ") && !(aluno != " ")) {
+    count_error += 1;
+    msg_erro = "Campos de envio estão vazios";
+  } else if (id != aluno) {
+    count_error += 1;
+    msg_erro = "Dados do aluno incorretos";
+  } else if (!(action >= 0 && action <= 1)) {
+    count_error += 1;
+    msg_erro = "Ação inexistente";
+  }
+
+  if (count_error != 0) {
+    res.send({ error: msg_erro });
+  } else {
+    await User.findByPk(id).then((r) => {
+      if (r) {
+        r.update({
+          flag_user: action,
+        }).then((ru) => {
+          if (ru) {
+            res.send({ success: msg_succ });
+          } else {
+            res.send({ error: "Ocorreu um erro ao atualizar o aluno" });
+          }
+        });
+      } else {
+        res.send({ error: "Aluno não encontrado" });
+      }
+    });
+  }
+});
 /* Certificados */
 
 /* Aluno */
@@ -488,6 +532,9 @@ router.get("/listagem", async (req, res) => {
     await User.findAll({
       where: {
         half_user: listagem,
+        flag_user: {
+          [Op.eq]: 0,
+        },
       },
     }).then((r) => {
       if (r) {
@@ -508,7 +555,13 @@ router.get("/listagem", async (req, res) => {
     });
   }
 
-  await User.findAll().then((r) => {
+  await User.findAll({
+    where: {
+      flag_user: {
+        [Op.eq]: 0,
+      },
+    },
+  }).then((r) => {
     if (r) {
       user_all = r.map((u) => {
         cont3 += 1;
@@ -551,5 +604,70 @@ router.post("/listagem/semestre", async (req, res) => {
   }
 });
 /* Listagem de Alunos */
+
+/* Listagem Desativados */
+
+router.get("/desativados", async (req, res) => {
+  var UserD;
+  await User.findAll({
+    where: {
+      flag_user: 1,
+    },
+    include: [
+      {
+        model: State,
+        required: true,
+      },
+    ],
+  }).then((r) => {
+    UserD = r.map((e) => {
+      return Object.assign(
+        {},
+        {
+          id: e.id,
+          nome: e.name_user,
+          id_estado: e.state.id,
+          estado: e.state.name_state,
+        }
+      );
+    });
+  });
+
+  res.render("desativados", {
+    js: "controllers_js/desativados.js",
+    style: "controllers_css/dashboard.css",
+    title: "UniCertified | Alunos Desativados",
+    user: req.session.user,
+    breadcrumb: `Desativados`,
+    UserD,
+  });
+});
+
+router.post("/desativados/ativaraluno", async (req, res) => {
+  var { id } = req.body;
+  var count_error = 0;
+
+  if (!(id != " ")) count_error += 1;
+
+  if (count_error != 0) {
+    res.send({ error: "Ocorreu um erro nos dados enviado" });
+  } else {
+    await User.findByPk(id).then((r) => {
+      if (r) {
+        r.update({
+          flag_user: 0,
+        }).then((ru) => {
+          if (ru) {
+            res.send({ success: "Usuario ativado com sucesso" });
+          } else {
+            res.send({ error: "Ocorreu um erro ao ativar o aluno" });
+          }
+        });
+      } else {
+        res.send({ error: "Usuario nao encontrado" });
+      }
+    });
+  }
+});
 
 module.exports = (app) => app.use("/admin", router);

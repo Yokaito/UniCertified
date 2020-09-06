@@ -183,6 +183,7 @@ router.post("/registrar", async (req, res) => {
           half_user: id_semestre,
           course_user: "Engenharia de Software",
           total_hours_user: horas_totais,
+          flag_user: 0,
           id_type_user_foreign: 3,
           id_state_foreign: 2,
           last_access_date_user: new Date(),

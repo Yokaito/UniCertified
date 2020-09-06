@@ -53,6 +53,14 @@
                 <div class="column">
                     <div class="ui segment">
                         {{#ifCond user.tipo_usuario '==' 3}}
+                        {{#ifCond user.flag '==' 1}}                        
+                            <div class="ui message warning">
+                                <div class="header">
+                                    Leia Importante
+                                </div>
+                                <p>Essa conta foi desativada, voce ainda tera acesso aos seus certificados cadastros, mas nao podera inserir novos certificados ou editar os existentes.</p>
+                            </div>
+                        {{/ifCond}}
                         <h4 class="ui horizontal divider header">
                             <i class="table icon"></i>Seus Certificados
                         </h4>

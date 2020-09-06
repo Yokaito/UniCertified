@@ -96,6 +96,11 @@ router.get("/moderadores", async (req, res) => {
   var usuarios = [];
 
   await User.findAll({
+    where: {
+      flag_user: {
+        [Op.eq]: 0,
+      },
+    },
     include: [
       {
         model: TypeUser,

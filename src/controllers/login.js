@@ -93,6 +93,7 @@ router.post("/auth", async (req, res) => {
               tipo_usuario: response_findOne.get("id_type_user_foreign"),
               estado_usuario: response_findOne.get("id_state_foreign"),
               ativacao: response_findOne.get("id_activation_state_foreign"),
+              flag: response_findOne.get("flag_user"),
             };
 
             res.send({ link: process.env.URL_REDIRECT_DASHBOARD });
@@ -119,12 +120,10 @@ router.post("/auth", async (req, res) => {
               };
               send_email(mailOptions);
 
-              res
-                .cookie("token", token, { maxAge: 600000 })
-                .send({
-                  error:
-                    "Esta conta não esta ativa, foi enviado um email para realizar a ativação",
-                });
+              res.cookie("token", token, { maxAge: 600000 }).send({
+                error:
+                  "Esta conta não esta ativa, foi enviado um email para realizar a ativação",
+              });
             } else {
               res.send({ error: "Ocorreu um erro interno" });
             }

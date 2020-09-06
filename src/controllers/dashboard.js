@@ -11,6 +11,7 @@ import hCertified from "../models/history_certified";
 import hUser from "../models/history_user";
 import type_action from "../models/type_action";
 import Variables from "../models/variables";
+import { Op } from "sequelize";
 
 require("dotenv").config();
 
@@ -72,6 +73,11 @@ router.get("/", async (req, res) => {
         {
           model: User,
           required: true,
+          where: {
+            flag_user: {
+              [Op.eq]: 0,
+            },
+          },
         },
       ],
       limit: 10,
@@ -159,6 +165,7 @@ router.get("/certificado", async (req, res) => {
       semestre: r.half_user,
       estado: r.id_state_foreign,
       horas: r.total_hours_user,
+      flag: r.flag_user,
     };
   });
 
@@ -194,6 +201,7 @@ router.get("/certificado", async (req, res) => {
           ),
           nome_usuario: req.session.user.nome,
           criado_em: formatarData(certificado.createdAt),
+          flag_user: UserB.flag,
         }
       );
     });
@@ -232,247 +240,261 @@ router.get("/certificado", async (req, res) => {
 });
 
 router.post("/certificado/newcertificado", async (req, res) => {
-  upload(req, res, async (err) => {
-    if (err) res.send({ error: "Arquivo Invalido" });
-    else {
-      let certificado = req.body; /* vem o nome,valor e tipo */
-      let file = req.file;
-      var estado = null;
-      var data_tooltip = null;
-      var icon = null;
-      var estado_certificado = null;
-      var count_error = 0;
-
-      if (
-        !(
-          certificado.nome_certificado != " " &&
-          certificado.nome_certificado.length >= 5 &&
-          certificado.nome_certificado.length <= 45
-        )
-      )
-        count_error += 1;
-      if (
-        !(
-          certificado.valor_certificado != " " &&
-          certificado.valor_certificado > 0 &&
-          certificado.valor_certificado <= 40
-        )
-      )
-        count_error += 1;
-      /* Criar as validações dos campos de entrada e retornar os erros devidos */
-      TypeCertified.findByPk(certificado.tipo_certificado).then(
-        (responseFindByPK) => {
-          estado_certificado = responseFindByPK.getDataValue(
-            "name_type_certified"
-          );
-        }
-      );
-      if (!(estado_certificado != " ")) count_error += 1;
-
-      if (count_error != 0)
-        res.send({ error: "Houve um erro na criação do certificado" });
+  if (req.session.user.flag != 1) {
+    upload(req, res, async (err) => {
+      if (err) res.send({ error: "Arquivo Invalido" });
       else {
-        await Certificado.create({
-          name_certified: certificado.nome_certificado,
-          value_certified: certificado.valor_certificado,
-          picture_certified: file.filename,
-          id_type_certified_foreign: certificado.tipo_certificado,
-          id_user_foreign: req.session.user.id,
-          id_state_foreign: 2,
-        }).then((response) => {
-          if (!response)
-            res.send({ error: "Houve um erro interno ao registrar" });
-          else {
-            hCertified.create({
-              action_date_certified: new Date(),
-              id_certified_foreign: response.getDataValue("id"),
-              id_user_foreign: req.session.user.id,
-              id_type_action_foreign: 11 /* Criar Certificado */,
-              type_user: req.session.user.tipo_usuario,
-            });
-            switch (response.getDataValue("id_state_foreign")) {
-              case 1:
-                estado = "positive";
-                data_tooltip = "Aprovado";
-                icon = "icon checkmark";
-                break;
-              case 2:
-                estado = "warning";
-                data_tooltip = "Em Analise";
-                icon = "orange icon spinner";
-                break;
-              case 3:
-                estado = "error";
-                data_tooltip = "Reprovado";
-                icon = "icon attention";
-                break;
-            }
-            var html = `<tr data-id="${response.getDataValue(
-              "id"
-            )}" class="${estado}">
-                            <td width="3%" class="center aligned" data-tooltip="${data_tooltip}" data-position="top center" data-variation="mini"><i class="${icon}"></i></td>
-                            <td>${response.getDataValue("name_certified")}</td>
-                            <td>${response.getDataValue("value_certified")}</td>
-                            <td>${estado_certificado}</td>
-                            <td width="5%" class="center aligned">
-                                <a>
-                                    <i class="large file image icon mostrarImagemCertificado" data-foto="http://localhost:3000/tmp/uploads/${response.getDataValue(
-                                      "picture_certified"
-                                    )}"></i>
-                                </a>
-                            </td>
-                            <td width="8%" class="center aligned">
-                                <div class="ui tiny icon buttons">
-                                    <button data-id="${response.getDataValue(
-                                      "id"
-                                    )}" class="ui button blue editarCertificado">
-                                        <i class="edit icon"></i>
-                                    </button>
-                                    <button data-id="${response.getDataValue(
-                                      "id"
-                                    )}" class="ui button red deletarCertificado">
-                                        <i class="trash icon"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>`;
-            res.send({
-              success: "Cadastrado com sucesso",
-              html: html,
-            });
+        let certificado = req.body; /* vem o nome,valor e tipo */
+        let file = req.file;
+        var estado = null;
+        var data_tooltip = null;
+        var icon = null;
+        var estado_certificado = null;
+        var count_error = 0;
+
+        if (
+          !(
+            certificado.nome_certificado != " " &&
+            certificado.nome_certificado.length >= 5 &&
+            certificado.nome_certificado.length <= 45
+          )
+        )
+          count_error += 1;
+        if (
+          !(
+            certificado.valor_certificado != " " &&
+            certificado.valor_certificado > 0 &&
+            certificado.valor_certificado <= 40
+          )
+        )
+          count_error += 1;
+        /* Criar as validações dos campos de entrada e retornar os erros devidos */
+        TypeCertified.findByPk(certificado.tipo_certificado).then(
+          (responseFindByPK) => {
+            estado_certificado = responseFindByPK.getDataValue(
+              "name_type_certified"
+            );
           }
-        });
+        );
+        if (!(estado_certificado != " ")) count_error += 1;
+
+        if (count_error != 0)
+          res.send({ error: "Houve um erro na criação do certificado" });
+        else {
+          await Certificado.create({
+            name_certified: certificado.nome_certificado,
+            value_certified: certificado.valor_certificado,
+            picture_certified: file.filename,
+            id_type_certified_foreign: certificado.tipo_certificado,
+            id_user_foreign: req.session.user.id,
+            id_state_foreign: 2,
+          }).then((response) => {
+            if (!response)
+              res.send({ error: "Houve um erro interno ao registrar" });
+            else {
+              hCertified.create({
+                action_date_certified: new Date(),
+                id_certified_foreign: response.getDataValue("id"),
+                id_user_foreign: req.session.user.id,
+                id_type_action_foreign: 11 /* Criar Certificado */,
+                type_user: req.session.user.tipo_usuario,
+              });
+              switch (response.getDataValue("id_state_foreign")) {
+                case 1:
+                  estado = "positive";
+                  data_tooltip = "Aprovado";
+                  icon = "icon checkmark";
+                  break;
+                case 2:
+                  estado = "warning";
+                  data_tooltip = "Em Analise";
+                  icon = "orange icon spinner";
+                  break;
+                case 3:
+                  estado = "error";
+                  data_tooltip = "Reprovado";
+                  icon = "icon attention";
+                  break;
+              }
+              var html = `<tr data-id="${response.getDataValue(
+                "id"
+              )}" class="${estado}">
+                              <td width="3%" class="center aligned" data-tooltip="${data_tooltip}" data-position="top center" data-variation="mini"><i class="${icon}"></i></td>
+                              <td>${response.getDataValue(
+                                "name_certified"
+                              )}</td>
+                              <td>${response.getDataValue(
+                                "value_certified"
+                              )}</td>
+                              <td>${estado_certificado}</td>
+                              <td width="5%" class="center aligned">
+                                  <a>
+                                      <i class="large file image icon mostrarImagemCertificado" data-foto="http://localhost:3000/tmp/uploads/${response.getDataValue(
+                                        "picture_certified"
+                                      )}"></i>
+                                  </a>
+                              </td>
+                              <td width="8%" class="center aligned">
+                                  <div class="ui tiny icon buttons">
+                                      <button data-id="${response.getDataValue(
+                                        "id"
+                                      )}" class="ui button blue editarCertificado">
+                                          <i class="edit icon"></i>
+                                      </button>
+                                      <button data-id="${response.getDataValue(
+                                        "id"
+                                      )}" class="ui button red deletarCertificado">
+                                          <i class="trash icon"></i>
+                                      </button>
+                                  </div>
+                              </td>
+                          </tr>`;
+              res.send({
+                success: "Cadastrado com sucesso",
+                html: html,
+              });
+            }
+          });
+        }
       }
-    }
-  });
+    });
+  } else {
+    res.send({ error: "Usuario Desativado" });
+  }
 });
 
 router.post("/certificado/editcertificado", async (req, res) => {
-  upload(req, res, async (err) => {
-    if (err) res.send({ error: "Arquivo Invalido" });
-    else {
-      var certificado = req.body;
-      var file = typeof req.file == "undefined" ? null : req.file;
-      var count_error = 0;
-      var estado_certificado;
+  if (req.session.user.flag != 1) {
+    upload(req, res, async (err) => {
+      if (err) res.send({ error: "Arquivo Invalido" });
+      else {
+        var certificado = req.body;
+        var file = typeof req.file == "undefined" ? null : req.file;
+        var count_error = 0;
+        var estado_certificado;
 
-      if (
-        !(
-          certificado.new_nome_certificado != " " &&
-          certificado.new_nome_certificado.length >= 5 &&
-          certificado.new_nome_certificado.length <= 45
+        if (
+          !(
+            certificado.new_nome_certificado != " " &&
+            certificado.new_nome_certificado.length >= 5 &&
+            certificado.new_nome_certificado.length <= 45
+          )
         )
-      )
-        count_error += 1;
-      if (
-        !(
-          certificado.new_valor_certificado != " " &&
-          certificado.new_valor_certificado > 0 &&
-          certificado.new_valor_certificado <= 40
+          count_error += 1;
+        if (
+          !(
+            certificado.new_valor_certificado != " " &&
+            certificado.new_valor_certificado > 0 &&
+            certificado.new_valor_certificado <= 40
+          )
         )
-      )
-        count_error += 1;
+          count_error += 1;
 
-      TypeCertified.findByPk(certificado.new_tipo_certificado).then(
-        (responseFindByPK) => {
-          estado_certificado = responseFindByPK.getDataValue(
-            "name_type_certified"
-          );
-        }
-      );
-
-      if (!(estado_certificado != " ")) count_error += 1;
-
-      if (count_error != 0) {
-        if (file != null) fsCertificado.deletarCertificado(file.filename);
-
-        res.send({ error: "Um erro ocorreu" });
-      } else {
-        var oldNameCertificado = null;
-        var newNameCertificado = null;
-
-        await Certified.findByPk(certificado.id).then((response) => {
-          oldNameCertificado = response.getDataValue("picture_certified");
-        });
-
-        if (file == null) {
-          newNameCertificado = oldNameCertificado;
-        } else {
-          newNameCertificado = file.filename;
-          fsCertificado.deletarCertificado(oldNameCertificado);
-        }
-
-        await Certified.update(
-          {
-            name_certified: certificado.new_nome_certificado,
-            value_certified: certificado.new_valor_certificado,
-            id_type_certified_foreign: certificado.new_tipo_certificado,
-            picture_certified: newNameCertificado,
-            updated_at: new Date(),
-          },
-          {
-            where: {
-              id: certificado.id,
-            },
+        TypeCertified.findByPk(certificado.new_tipo_certificado).then(
+          (responseFindByPK) => {
+            estado_certificado = responseFindByPK.getDataValue(
+              "name_type_certified"
+            );
           }
-        ).then((response) => {
-          if (response) {
-            hCertified.create({
-              action_date_certified: new Date(),
-              id_certified_foreign: certificado.id,
-              id_user_foreign: req.session.user.id,
-              id_type_action_foreign: 13 /* Editou um certificado */,
-              type_user: req.session.user.tipo_usuario,
-            });
-            res.send({ success: "Certificado atualizado com sucesso" });
-          } else
-            res.send({ error: "Ocorreu um erro interno, tente novamente" });
-        });
+        );
+
+        if (!(estado_certificado != " ")) count_error += 1;
+
+        if (count_error != 0) {
+          if (file != null) fsCertificado.deletarCertificado(file.filename);
+
+          res.send({ error: "Um erro ocorreu" });
+        } else {
+          var oldNameCertificado = null;
+          var newNameCertificado = null;
+
+          await Certified.findByPk(certificado.id).then((response) => {
+            oldNameCertificado = response.getDataValue("picture_certified");
+          });
+
+          if (file == null) {
+            newNameCertificado = oldNameCertificado;
+          } else {
+            newNameCertificado = file.filename;
+            fsCertificado.deletarCertificado(oldNameCertificado);
+          }
+
+          await Certified.update(
+            {
+              name_certified: certificado.new_nome_certificado,
+              value_certified: certificado.new_valor_certificado,
+              id_type_certified_foreign: certificado.new_tipo_certificado,
+              picture_certified: newNameCertificado,
+              updated_at: new Date(),
+            },
+            {
+              where: {
+                id: certificado.id,
+              },
+            }
+          ).then((response) => {
+            if (response) {
+              hCertified.create({
+                action_date_certified: new Date(),
+                id_certified_foreign: certificado.id,
+                id_user_foreign: req.session.user.id,
+                id_type_action_foreign: 13 /* Editou um certificado */,
+                type_user: req.session.user.tipo_usuario,
+              });
+              res.send({ success: "Certificado atualizado com sucesso" });
+            } else
+              res.send({ error: "Ocorreu um erro interno, tente novamente" });
+          });
+        }
       }
-    }
-  });
+    });
+  } else res.send({ error: "Usuario Desativado" });
 });
 
 router.post("/certificado/deletacertificado", async (req, res) => {
-  var certificado = null;
-  var count_error = 0;
+  if (req.session.user.flag != 1) {
+    var certificado = null;
+    var count_error = 0;
 
-  await Certified.findByPk(req.body.id).then((response) => {
-    if (response) {
-      certificado = {
-        id: response.getDataValue("id"),
-        ownerId: response.getDataValue("id_user_foreign"),
-        picture: response.getDataValue("picture_certified"),
-        state: response.getDataValue("id_state_foreign"),
-      };
-    } else {
-      count_error += 1;
-    }
-  });
-  if (!(certificado != null && req.session.user.id == certificado.ownerId))
-    count_error += 1;
-  if (certificado.state != 2) count_error += 1;
-
-  if (count_error != 0)
-    res.send({ error: "Ocorreu um erro ao tentar excluir o certificado" });
-  else {
-    hCertified.destroy({
-      where: {
-        id_certified_foreign: certificado.id,
-      },
-    });
-    await Certified.destroy({
-      where: {
-        id: certificado.id,
-        id_user_foreign: certificado.ownerId,
-      },
-    }).then((response) => {
+    await Certified.findByPk(req.body.id).then((response) => {
       if (response) {
-        fsCertificado.deletarCertificado(certificado.picture);
+        certificado = {
+          id: response.getDataValue("id"),
+          ownerId: response.getDataValue("id_user_foreign"),
+          picture: response.getDataValue("picture_certified"),
+          state: response.getDataValue("id_state_foreign"),
+        };
+      } else {
+        count_error += 1;
       }
     });
+    if (!(certificado != null && req.session.user.id == certificado.ownerId))
+      count_error += 1;
+    if (certificado.state != 2) count_error += 1;
 
-    res.send({ success: "Certificado excluido com sucesso" });
+    if (count_error != 0)
+      res.send({ error: "Ocorreu um erro ao tentar excluir o certificado" });
+    else {
+      hCertified.destroy({
+        where: {
+          id_certified_foreign: certificado.id,
+        },
+      });
+      await Certified.destroy({
+        where: {
+          id: certificado.id,
+          id_user_foreign: certificado.ownerId,
+        },
+      }).then((response) => {
+        if (response) {
+          fsCertificado.deletarCertificado(certificado.picture);
+        }
+      });
+
+      res.send({ success: "Certificado excluido com sucesso" });
+    }
+  } else {
+    res.send({ error: "Usuario Desativado" });
   }
 });
 
@@ -572,6 +594,7 @@ router.get("/perfil", async (req, res) => {
       nome: r.name_user,
       semestre: r.half_user,
       horas: r.total_hours_user,
+      flag: r.flag_user,
     };
   });
 
@@ -610,43 +633,48 @@ router.get("/perfil", async (req, res) => {
 });
 
 router.post("/perfil/atualizar", async (req, res) => {
-  var { id, nome, semestre } = req.body;
-  var count_error = 0;
+  if (req.session.user.flag != 1) {
+    var { id, nome, semestre } = req.body;
+    var count_error = 0;
 
-  if (nome == " " && !(nome.length >= 5 && nome.length <= 40)) count_error += 1;
-  if (!(semestre >= 1 && semestre <= 8)) count_error += 1;
-  if (id != req.session.user.id) count_error += 1;
+    if (nome == " " && !(nome.length >= 5 && nome.length <= 40))
+      count_error += 1;
+    if (!(semestre >= 1 && semestre <= 8)) count_error += 1;
+    if (id != req.session.user.id) count_error += 1;
 
-  var horas_atualizadas;
-  await Variables.findByPk(semestre).then((r) => {
-    horas_atualizadas = r.value_variable;
-  });
-
-  if (count_error != 0)
-    res.send({ error: "Houve um erro com os dados enviados" });
-  else {
-    await User.update(
-      {
-        name_user: nome,
-        half_user: semestre,
-        total_hours_user: horas_atualizadas,
-        updated_at: new Date(),
-      },
-      {
-        where: {
-          id,
-        },
-      }
-    ).then((r) => {
-      if (r) {
-        hUser.create({
-          action_data_user: new Date(),
-          id_type_action_foreign: 14 /* Inserção */,
-          id_user_foreign: id,
-        });
-        res.send({ success: "Atualizado com sucesso" });
-      } else res.send({ success: "Ocorreu um erro interno" });
+    var horas_atualizadas;
+    await Variables.findByPk(semestre).then((r) => {
+      horas_atualizadas = r.value_variable;
     });
+
+    if (count_error != 0)
+      res.send({ error: "Houve um erro com os dados enviados" });
+    else {
+      await User.update(
+        {
+          name_user: nome,
+          half_user: semestre,
+          total_hours_user: horas_atualizadas,
+          updated_at: new Date(),
+        },
+        {
+          where: {
+            id,
+          },
+        }
+      ).then((r) => {
+        if (r) {
+          hUser.create({
+            action_data_user: new Date(),
+            id_type_action_foreign: 14 /* Inserção */,
+            id_user_foreign: id,
+          });
+          res.send({ success: "Atualizado com sucesso" });
+        } else res.send({ success: "Ocorreu um erro interno" });
+      });
+    }
+  } else {
+    res.send({ error: "Usuario Desativado" });
   }
 });
 

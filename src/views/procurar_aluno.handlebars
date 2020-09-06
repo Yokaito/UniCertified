@@ -57,7 +57,11 @@
                                 <img src="https://semantic-ui.com/images/wireframe/image.png">
                               </div>
                               <div class="content">
-                                <a class="header dataid" data-id="{{aluno.id}}">{{aluno.nome}}</a>                                
+                                <a class="header dataid" data-id="{{aluno.id}}">{{aluno.nome}}
+                                  {{#ifCond aluno.flag '==' 1}}
+                                    <div class="ui red horizontal label">Aluno Desativado</div>
+                                  {{/ifCond}}  
+                                </a>                                
                                 <div class="meta">
                                   <span>Curso: {{aluno.curso}}</span><br>
                                   <span>Semestre: {{aluno.semestre}}</span><br> 
@@ -74,7 +78,7 @@
                                           <i class="tag icon"></i>
                                         </button> 
                                         <button data-id="{{aluno.id}}" class="ui button blue editarSemestre">
-                                        <i class="edit icon"></i>
+                                        <i class="edit icon"></i>                                        
                                       </button>   
                                     </div>
                                     {{/ifCond}}
@@ -88,6 +92,17 @@
                                       </button>                                       
                                     </div>
                                     {{/ifCond}} 
+                                    {{#ifCond aluno.flag '==' 0}}                                      
+                                      <button data-id="{{aluno.id}}" data-action="1" class="ui labeled icon tiny red button setEstadoAluno">
+                                       <i class="close icon icon"></i>Desativar Aluno
+                                      </button>                                      
+                                    {{/ifCond}}
+                                    {{#ifCond aluno.flag '==' 1}}                                      
+                                      <button data-id="{{aluno.id}}" data-action="0" class="ui labeled icon tiny green button setEstadoAluno">
+                                       <i class="check icon"></i>Ativar Aluno
+                                      </button>                                      
+                                    {{/ifCond}}
+                                    <br>
                                     {{#ifCond aluno.estado '!=' 1}}
                                       {{#ifCond aluno.estado '!=' 3}}
                                         {{#ifCond total '>=' aluno.horas}}
@@ -100,7 +115,7 @@
                                     {{/ifCond}}
                                     {{#ifCond aluno.estado '==' 3}}
                                       <div class="ui red horizontal label">Aluno Reprovado</div>
-                                    {{/ifCond}}                                       
+                                    {{/ifCond}}                
                                 </div> 
                               </div>
                             </div>

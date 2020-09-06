@@ -10,6 +10,7 @@ class user extends Model {
         course_user: DataTypes.STRING,
         half_user: DataTypes.INTEGER,
         total_hours_user: DataTypes.INTEGER,
+        flag_user: DataTypes.INTEGER,
         password_user: DataTypes.STRING,
         last_access_date_user: DataTypes.DATE,
         activation_key_user: DataTypes.INTEGER,

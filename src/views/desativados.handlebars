@@ -1,0 +1,60 @@
+{{> topnav}}
+{{> sidebar}}
+
+<div class="pusher">
+    <div class="main-content">
+        <br>
+        {{> breadcrumb}}
+        <div class="ui grid stackable padded">
+            <div class="column">
+                <div class="ui segment">
+                     <h4 class="ui horizontal divider header">
+                        <i class="user icon"></i>
+                        Alunos Desativados
+                    </h4>
+                    <table class="ui celled table desativados">
+                        <thead>
+                            <tr>    
+                                <td width="15%" class="center aligned">Status</td>                            
+                                <td>Nome</td>                                
+                                <td width="15%" class="center aligned">Estado</td>
+                                <td width="10%" class="center aligned">Ações</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each UserD}}
+                                <tr>                 
+                                    <td class="error center aligned">Aluno Desativado</td>                   
+                                    <td><a href="#" class="redirecionaTabela" data-id="{{this.id}}">{{this.nome}}</a></td>                                    
+                                    {{#ifCond this.id_estado '==' 1}}
+                                    <td class="center aligned positive" data-tooltip="Aprovado" data-position="top center" data-variation="mini">
+                                        <i class="icon checkmark"></i>
+                                    </td>
+                                    {{/ifCond}}
+                                    {{#ifCond this.id_estado '==' 2}}
+                                    <td class="center aligned warning" data-tooltip="Em Analise" data-position="top center" data-variation="mini">
+                                        <i class="orange icon spinner"></i>
+                                    </td>
+                                    {{/ifCond}}
+                                    {{#ifCond this.id_estado '==' 3}}
+                                    <td class="center aligned error" data-tooltip="Reprovado" data-position="top center" data-variation="mini">
+                                        <i class="icon attention"></i>
+                                    </td>
+                                    {{/ifCond}}
+                                    <td class="center aligned">
+                                        <div class="ui icon mini buttons">
+                                            <button data-tooltip="Ativar Aluno" data-position="left center" data-id="{{this.id}}" class="ui button green retirarDesativado">
+                                                <i class="icon plus"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>            
+        </div>
+        {{> footer}}
+    </div>
+</div>

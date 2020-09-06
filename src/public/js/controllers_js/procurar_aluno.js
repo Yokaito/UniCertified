@@ -499,4 +499,31 @@ $(document).ready(function () {
       }
     });
   });
+
+  $(".setEstadoAluno").on("click", function () {
+    var id = $(this).data("id");
+    var action = $(this).data("action");
+    var aluno = $(".header.dataid").data("id");
+    $.post("/admin/procurar/setestadoaluno", { id, action, aluno }, (r) => {
+      if (r.success) {
+        swal({
+          closeOnEsc: false,
+          closeOnClickOutside: false,
+          title: r.success,
+          icon: "success",
+        }).then(() => {
+          $.post("/admin/procurar/criartabela", { id: aluno }, (response) => {
+            location.reload();
+          });
+        });
+      } else {
+        swal({
+          closeOnEsc: false,
+          closeOnClickOutside: false,
+          title: r.error,
+          icon: "error",
+        });
+      }
+    });
+  });
 });
