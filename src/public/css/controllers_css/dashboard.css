@@ -8,6 +8,15 @@
     margin-top: 40px;
 }
 
+@media print{
+    .no-print{
+        display: none !important;
+    }
+    .legendas{
+        display: inline !important;
+    }
+}
+
 @media (min-width: 768px){
     .ui.vertical.menu.sidebar-menu{
         visibility: visible;
