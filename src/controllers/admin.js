@@ -28,6 +28,7 @@ router.get("/procurar", async (req, res) => {
   var total = 0;
   var total_parcial = 0;
   var TipoCertificado = null;
+  var year = new Date()
 
   if (req.session.mostrarTabela) {
     await User.findByPk(req.session.mostrarTabela).then((response) => {
@@ -126,6 +127,7 @@ router.get("/procurar", async (req, res) => {
     certificados: certificadoAluno,
     semestres,
     breadcrumb: `Procurar Aluno`,
+    anoAtual: year.getFullYear()
   });
 });
 
@@ -140,6 +142,7 @@ router.get("/procurar/alunos", async (req, res) => {
       flag_user: {
         [Op.eq]: 0,
       },
+      id_activation_state_foreign: 1
     },
   });
 
@@ -535,6 +538,7 @@ router.get("/listagem", async (req, res) => {
         flag_user: {
           [Op.eq]: 0,
         },
+        id_activation_state_foreign: 1
       },
     }).then((r) => {
       if (r) {
@@ -560,6 +564,7 @@ router.get("/listagem", async (req, res) => {
       flag_user: {
         [Op.eq]: 0,
       },
+      id_activation_state_foreign: 1
     },
   }).then((r) => {
     if (r) {
@@ -612,6 +617,7 @@ router.get("/desativados", async (req, res) => {
   await User.findAll({
     where: {
       flag_user: 1,
+      id_activation_state_foreign: 1
     },
     include: [
       {

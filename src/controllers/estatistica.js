@@ -70,6 +70,7 @@ router.post("/datau", async (req, res) => {
       created_at: {
         [Op.between]: [`${year}-01-01`, `${year}-12-31`],
       },
+      id_activation_state_foreign: 1
     },
     order: [["created_at", "ASC"]],
   });

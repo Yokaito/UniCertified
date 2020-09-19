@@ -28,7 +28,7 @@ $(document).ready(function () {
             prompt: "Informe um valor",
           },
           {
-            type: "integer[1..40]",
+            type: "integer[0..40]",
             prompt: "Informe um valor inteiro entre (0-40)",
           },
         ],
@@ -369,9 +369,9 @@ $(document).ready(function () {
     var id_aluno = $(".header.dataid").data("id");
     var inputValor = $('input[name="new_valor_certificado"]');
     var inputTipo = $('select[name="new_tipo_certificado"]');
-
-    inputValor.val(tds[2].textContent);
-    inputTipo.val(tds[3].dataset.type).change();
+    
+    inputTipo.val(tds[2].dataset.type).change();
+    inputValor.val(tds[3].textContent);
 
     $(".ui.modal.tiny.editar")
       .modal({

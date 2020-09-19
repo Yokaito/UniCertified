@@ -41,6 +41,11 @@ $(() => {
             type: "maxLength[40]",
             prompt: "O email deve conter no máximo 40 caracteres.",
           },
+          {
+            type: "regExp",
+            value: /([0-9]+[.]+[0-9]+@alunos.unigran.br)|([a-zA-Z._]+@unigran.br)/,
+            prompt: 'Informe um email da instituição'
+          }
         ],
       },
       email_conf: {

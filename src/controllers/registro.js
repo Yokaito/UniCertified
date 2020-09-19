@@ -125,7 +125,7 @@ router.post("/registrar", async (req, res) => {
       data.email_usuario.length >= 5 &&
       data.email_usuario.length <= 40 &&
       data.email_usuario.match(
-        /[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,6}/g
+        /([0-9]+[.]+[0-9]+@alunos.unigran.br)|([a-zA-Z._]+@unigran.br)/
       )
     )
   )
@@ -136,7 +136,7 @@ router.post("/registrar", async (req, res) => {
       data.email_conf_usuario.length >= 5 &&
       data.email_conf_usuario.length <= 40 &&
       data.email_conf_usuario.match(
-        /[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,6}/g
+        /([0-9]+[.]+[0-9]+@alunos.unigran.br)|([a-zA-Z._]+@unigran.br)/
       ) &&
       data.email_conf_usuario == data.email_usuario
     )

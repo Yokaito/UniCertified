@@ -249,18 +249,18 @@
             <i class="user icon"></i>
             <input type="text" name="nome_certificado" placeholder="Nome Certificado">
           </div>
-        </div>
-        <div class="field">
+        </div>        
+        {{!-- <div class="field">
           <div class="ui left icon input">
             <i class="user icon"></i>
             <input type="number" name="valor_certificado" placeholder="Valor Certificado">
           </div>
-        </div>
-        <div class="field">
-          <a class="ui orange label" style="margin-bottom: 3px;">Arquivos Permitidos: JPG, PNG, PDF. Tamanho Maximo: 5Mb</a><br>
+        </div> --}}
+        <div class="field">          
           <div class="ui input">
             <input type="file" name="file" placeholder="Imagem certificado">            
           </div>
+          <a class="ui orange label" style="margin-top: 3px;">Arquivos Permitidos: JPG, PNG, PDF. Tamanho Maximo: 5Mb</a><br>
         </div>
         <div class="field">
           <select class="ui dropdown" name="tipo_certificado">
@@ -268,6 +268,9 @@
             <option value="{{this.id}}">{{this.nome_tipo_certificado}}</option>
             {{/each}}
           </select>
+        </div>
+        <div class="field">
+          <a class="ui label red">O valor do certificado será aplicado pelo administrador</a><br>
         </div>
       </div>
     </form>
@@ -296,12 +299,12 @@
             <input type="text" name="new_nome_certificado" placeholder="Nome Certificado">
           </div>
         </div>
-        <div class="field">
+        {{!-- <div class="field">
           <div class="ui left icon input">
             <i class="user icon"></i>
             <input type="number" name="new_valor_certificado" placeholder="Valor Certificado">
           </div>
-        </div>
+        </div> --}}
         <div class="field">
           <a class="ui orange label" style="margin-bottom: 3px;">Arquivos Permitidos: JPG, PNG, PDF. Tamanho Maximo: 5Mb</a><br>
           <div class="ui input">

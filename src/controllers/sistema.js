@@ -100,6 +100,7 @@ router.get("/moderadores", async (req, res) => {
       flag_user: {
         [Op.eq]: 0,
       },
+      id_activation_state_foreign: 1
     },
     include: [
       {

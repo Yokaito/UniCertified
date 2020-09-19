@@ -37,6 +37,7 @@ router.get("/", async (req, res) => {
   await User.count({
     where: {
       id_type_user_foreign: 3,
+      id_activation_state_foreign: 1
     },
   }).then((response) => {
     total_alunos = response;
@@ -45,6 +46,7 @@ router.get("/", async (req, res) => {
   await User.count({
     where: {
       id_state_foreign: 1,
+      id_activation_state_foreign: 1
     },
   }).then((response) => {
     total_alunos_aprovados = response;
@@ -53,6 +55,7 @@ router.get("/", async (req, res) => {
   await User.count({
     where: {
       id_state_foreign: 3,
+      id_activation_state_foreign: 1
     },
   }).then((response) => {
     total_alunos_reprovados = response;
@@ -261,14 +264,6 @@ router.post("/certificado/newcertificado", async (req, res) => {
           )
         )
           count_error += 1;
-        if (
-          !(
-            certificado.valor_certificado != " " &&
-            certificado.valor_certificado > 0 &&
-            certificado.valor_certificado <= 40
-          )
-        )
-          count_error += 1;
         /* Criar as validações dos campos de entrada e retornar os erros devidos */
         TypeCertified.findByPk(certificado.tipo_certificado).then(
           (responseFindByPK) => {
@@ -284,7 +279,7 @@ router.post("/certificado/newcertificado", async (req, res) => {
         else {
           await Certificado.create({
             name_certified: certificado.nome_certificado,
-            value_certified: certificado.valor_certificado,
+            value_certified: 0,
             picture_certified: file.filename,
             id_type_certified_foreign: certificado.tipo_certificado,
             id_user_foreign: req.session.user.id,
@@ -382,14 +377,6 @@ router.post("/certificado/editcertificado", async (req, res) => {
           )
         )
           count_error += 1;
-        if (
-          !(
-            certificado.new_valor_certificado != " " &&
-            certificado.new_valor_certificado > 0 &&
-            certificado.new_valor_certificado <= 40
-          )
-        )
-          count_error += 1;
 
         TypeCertified.findByPk(certificado.new_tipo_certificado).then(
           (responseFindByPK) => {
@@ -423,7 +410,7 @@ router.post("/certificado/editcertificado", async (req, res) => {
           await Certified.update(
             {
               name_certified: certificado.new_nome_certificado,
-              value_certified: certificado.new_valor_certificado,
+              value_certified: 0,
               id_type_certified_foreign: certificado.new_tipo_certificado,
               picture_certified: newNameCertificado,
               updated_at: new Date(),

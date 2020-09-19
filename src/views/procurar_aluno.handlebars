@@ -64,9 +64,9 @@
                                 </a>                                
                                 <div class="meta">
                                   <span>Curso: {{aluno.curso}}</span><br>
-                                  <span>Semestre: {{aluno.semestre}}</span><br> 
-                                  <span class="getHorasAluno" data-horas="{{aluno.horas}}">Pontos a Completar: {{aluno.horas}}</span><br>   
-                                  <span>Email: {{aluno.email}}</span><br>                                         
+                                  <span>Semestre: {{aluno.semestre}} / {{anoAtual}}</span><br>                                      
+                                  <span>Email: {{aluno.email}}</span><br>  
+                                  <span class="getHorasAluno no-print" data-horas="{{aluno.horas}}">Pontos a Completar: {{aluno.horas}}</span>                                      
                                 </div>
                                 <div class="description">
                                   <p></p>
@@ -74,10 +74,10 @@
                                 <div class="extra">
                                     {{#ifCond aluno.estado '==' 2}}
                                       <div class="ui tiny icon buttons no-print">             
-                                        <button data-id="{{aluno.id}}" class="ui button teal alterarAluno">
+                                        <button data-tooltip="Aprovar ou Reprovar Aluno" data-position="top center" data-id="{{aluno.id}}" class="ui button teal alterarAluno">
                                           <i class="tag icon"></i>
                                         </button> 
-                                        <button data-id="{{aluno.id}}" class="ui button blue editarSemestre">
+                                        <button data-tooltip="Editar Semestre" data-position="top center" data-id="{{aluno.id}}" class="ui button blue editarSemestre">
                                         <i class="edit icon"></i>                                        
                                       </button>   
                                     </div>
@@ -125,8 +125,8 @@
                               <tr>
                                 <th>Status</th>
                                 <th>Nome Certificado</th>
-                                <th>Pontos</th>
-                                <th>Tipo</th>                            
+                                <th>Tipo</th> 
+                                <th>Pontos</th>                                                           
                                 <th class="no-print">Foto</th>                                                           
                                 <th class="no-print">Ações</th>                           
                               </tr>
@@ -182,8 +182,8 @@
                                     <td>{{this.nome}}</td>
                                   {{/ifCond}}
                                 {{/ifCond}}
-                                <td>{{this.valor}}</td>                                
-                                <td data-type="{{this.numero_tipo}}">{{this.tipo}}</td>                                
+                                <td data-type="{{this.numero_tipo}}">{{this.tipo}}</td>
+                                <td>{{this.valor}}</td>                                                         
                                 <td width="5%" class="center aligned no-print">
                                     <a>
                                         <button class="ui tiny circular icon blue button mostrarImagemCertificado" data-type="{{this.mimetype}}"  data-foto="{{this.foto}}">
@@ -208,18 +208,18 @@
                                 {{#ifCond this.estado '==' 2}}                                                     
                                 <td width="8%" class="center aligned no-print">
                                     <div class="ui tiny icon buttons">   
-                                        <button data-tooltip="Pré-Aprovar o Certificado" data-position="left center" data-id="{{this.id}}" class="ui button teal preAprovar">
+                                        <button data-tooltip="Pré-Aprovar" data-position="left center" data-id="{{this.id}}" class="ui button teal preAprovar">
                                           <i class="check circle icon"></i>
                                         </button>                                     
-                                        <button data-id="{{this.id}}" class="ui button blue editarCertificado">
+                                        <button data-tooltip="Editar" data-position="left center" data-id="{{this.id}}" class="ui button blue editarCertificado">
                                           <i class="edit icon"></i>
                                         </button>
                                         
-                                        <button data-id="{{this.id}}" class="ui button green aprovarC">
+                                        <button data-tooltip="Aprovar" data-position="left center" data-id="{{this.id}}" class="ui button green aprovarC">
                                           <i class="checkmark icon"></i>
                                         </button>  
 
-                                        <button data-id="{{this.id}}" class="ui button red reprovarC">
+                                        <button data-tooltip="Reprovar" data-position="left center" data-id="{{this.id}}" class="ui button red reprovarC">
                                           <i class="close icon"></i>
                                         </button>                                                    
                                     </div>

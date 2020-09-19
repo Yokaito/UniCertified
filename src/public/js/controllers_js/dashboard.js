@@ -53,19 +53,6 @@ $(document).ready(function () {
           },
         ],
       },
-      valor: {
-        identifier: "valor_certificado",
-        rules: [
-          {
-            type: "empty",
-            prompt: "Informe um valor",
-          },
-          {
-            type: "integer[1..40]",
-            prompt: "Informe um valor inteiro entre (0-40)",
-          },
-        ],
-      },
       file: {
         identifier: "file",
         rules: [
@@ -108,19 +95,6 @@ $(document).ready(function () {
           },
         ],
       },
-      valor: {
-        identifier: "new_valor_certificado",
-        rules: [
-          {
-            type: "empty",
-            prompt: "Informe um valor",
-          },
-          {
-            type: "integer[1..40]",
-            prompt: "Informe um valor inteiro entre (0-40)",
-          },
-        ],
-      },
       tipo_certificado: {
         identifier: "new_tipo_certificado",
         rules: [
@@ -140,7 +114,6 @@ $(document).ready(function () {
         closable: false,
         onDeny: function () {
           $("input[name='nome_certificado']").val("");
-          $("input[name='valor_certificado']").val("");
           return true;
         },
         onApprove: function () {
@@ -149,10 +122,6 @@ $(document).ready(function () {
             data.set(
               "nome_certificado",
               $('input[name="nome_certificado"]').val()
-            );
-            data.set(
-              "valor_certificado",
-              $("input[name='valor_certificado']").val()
             );
             data.set(
               "tipo_certificado",
@@ -188,7 +157,6 @@ $(document).ready(function () {
               },
             });
             $("input[name='nome_certificado']").val("");
-            $("input[name='valor_certificado']").val("");
             return true;
           }
           return false;
@@ -252,12 +220,12 @@ $(document).ready(function () {
     var tds = trs[0].cells;
     var formCertificado = $(".editarCertificadoForm");
     var inputNome = $('input[name="new_nome_certificado"]');
-    var inputValor = $('input[name="new_valor_certificado"]');
+    //var inputValor = $('input[name="new_valor_certificado"]');
     var inputTipo = $('select[name="new_tipo_certificado"]');
     var inputFile = $('input[name="file"]');
 
     inputNome.val(tds[1].textContent);
-    inputValor.val(tds[2].textContent);
+    //inputValor.val(tds[2].textContent);
     inputTipo.val(tds[3].dataset.type).change();
 
     $(".ui.modal.tiny.editar")
@@ -265,7 +233,6 @@ $(document).ready(function () {
         closable: false,
         onDeny: () => {
           inputNome.val("");
-          inputValor.val("");
           inputFile.val("");
           return true;
         },
@@ -286,7 +253,6 @@ $(document).ready(function () {
               success: (response) => {
                 if (response.success) {
                   inputNome.val("");
-                  inputValor.val("");
                   inputFile.val("");
                   swal({
                     closeOnEsc: false,
