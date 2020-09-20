@@ -538,7 +538,8 @@ router.get("/listagem", async (req, res) => {
         flag_user: {
           [Op.eq]: 0,
         },
-        id_activation_state_foreign: 1
+        id_activation_state_foreign: 1,
+        id_type_user_foreign: 3
       },
     }).then((r) => {
       if (r) {
@@ -564,7 +565,8 @@ router.get("/listagem", async (req, res) => {
       flag_user: {
         [Op.eq]: 0,
       },
-      id_activation_state_foreign: 1
+      id_activation_state_foreign: 1,
+      id_type_user_foreign: 3
     },
   }).then((r) => {
     if (r) {
