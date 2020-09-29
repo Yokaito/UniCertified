@@ -83,7 +83,6 @@ router.get("/", async (req, res) => {
           },
         },
       ],
-      limit: 10,
       order: [["updated_at", "DESC"]],
     }).then((response) => {
       CertificadoObj = response.map((certificado) => {
