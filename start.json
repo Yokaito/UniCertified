@@ -1,0 +1,9 @@
+{
+"apps": [
+    {
+        "name": "deploy-unicertified",
+        "script": "npm start sucrase-node src/server.js",
+        "args": "start"
+    }
+  ]
+}

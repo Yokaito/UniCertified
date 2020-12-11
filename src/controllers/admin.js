@@ -265,7 +265,7 @@ router.post("/procurar/editarcertificado", async (req, res) => {
   var msg_envio = null;
   var name_tipo = null;
 
-  if (valor == " " && tipo == " " && id == " " && !(valor > 0 && valor <= 40)) {
+  if (valor == " " && tipo == " " && id == " " && !(valor > 0 && valor <= 70)) {
     count_error += 1;
     msg_envio = "Dados enviados invalidos";
   } else if (!(req.session.user.tipo_usuario <= 2)) {
