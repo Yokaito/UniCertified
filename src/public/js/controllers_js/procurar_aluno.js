@@ -28,8 +28,8 @@ $(document).ready(function () {
             prompt: "Informe um valor",
           },
           {
-            type: "integer[0..40]",
-            prompt: "Informe um valor inteiro entre (0-40)",
+            type: "integer[0..70]",
+            prompt: "Informe um valor inteiro entre (0-70)",
           },
         ],
       },
